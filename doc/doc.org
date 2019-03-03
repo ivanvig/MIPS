@@ -1,0 +1,69 @@
+* Implementacion del MIPS
+** Intrucciones implementadas
+
+
+*** Tipo R
+
+| Instruccion | Descripcion                                                                                                                       | Codigo                                  | Señales |
+|-------------+-----------------------------------------------------------------------------------------------------------------------------------+-----------------------------------------+---------|
+| SLL         | Shiftea hacia la izquierda un registro (T) una cantidad listada en la instruccion (H) y lo almacena en otro registro (D)          | 0000_00SS_SSST_TTTT_DDDD_DHHH_HH00_0000 |         |
+| SRL         | Shiftea hacia la derecha un registro (T) una cantidad listada en la instruccion (H) y lo almacena en otro registro (D)            | 0000_00SS_SSST_TTTT_DDDD_DHHH_HH00_0010 |         |
+| SRA         | Shiftea aritmetico hacia la derecha un registro (T) una cantidad listada en la instruccion (H) y lo almacena en otro registro (D) | 0000_00SS_SSST_TTTT_DDDD_DHHH_HH00_0011 |         |
+| SLLV        | Shiftea hacia la izquierda un registro (T) una cantidad que esta en otro registro (S) y lo almacena en otro registro (D)          | 0000_00SS_SSST_TTTT_DDDD_DHHH_HH00_0100 |         |
+| SRLV        | Shiftea hacia la derecha un registro (T) una cantidad que esta en otro registro (S) y lo almacena en otro registro (D)            | 0000_00SS_SSST_TTTT_DDDD_DHHH_HH00_0110 |         |
+| SRAV        | Shiftea aritmetico hacia la derecha un registro (T) una cantidad que esta en otro registro (S) y lo almacena en otro registro (D) | 0000_00SS_SSST_TTTT_DDDD_DHHH_HH00_0111 |         |
+| ADDU        | Add unsigned, suma dos registros y almacena el resultado en un registro                                                           | 0000_00SS_SSST_TTTT_DDDD_D000_0010_0001 |         |
+| SUBU        | Substract unsigned, resta dos registros y almacena el resultado en un registro                                                    | 0000_00SS_SSST_TTTT_DDDD_D000_0010_0011 |         |
+| AND         | Bitwise AND dos registros y almacena el resultado en un registro                                                                  | 0000_00SS_SSST_TTTT_DDDD_D000_0010_0100 |         |
+| OR          | Bitwise OR dos registros y almacena el resultado en un registro                                                                   | 0000_00SS_SSST_TTTT_DDDD_D000_0010_0101 |         |
+| XOR         | Bitwise XOR dos registros y almacena el resultado en un registro                                                                  | 0000_00SS_SSST_TTTT_DDDD_D000_0010_0110 |         |
+| NOR         | Bitwise NOR dos registros y almacena el resultado en un registro                                                                  | 0000_00SS_SSST_TTTT_DDDD_D000_0010_0111 |         |
+| SLT         | Si S < T setea D a 1 else 0                                                                                                       | 0000_00SS_SSST_TTTT_DDDD_D000_0010_1010 |         |
+| JR          | Jumpea a la addr del registro S                                                                                                   | 0000_00SS_SSST_TTTT_DDDD_D000_0000_1000 |         |
+| JALR        | Jumpea a la addr del registro S y guarda PC + 4 en D                                                                              | 0000_00SS_SSST_TTTT_DDDD_D000_0000_1001 |         |
+
+*** Tipo I
+
+| Instruccion | Descripcion                                                                                                          | Codigo                                  | Señales |
+|-------------+----------------------------------------------------------------------------------------------------------------------+-----------------------------------------+---------|
+| LB          | Load byte, carga un byte a un registro (T) desde MEM(S + I)                                                          | 1000_00SS_SSST_TTTT_IIII_IIII_IIII_IIII |         |
+| LH          | Load half word, carga half word a un registro (T) desde MEM(S + I)                                                   | 1000_01SS_SSST_TTTT_IIII_IIII_IIII_IIII |         |
+| LW          | Load word, carga word a un registro (T) desde MEM(S + I)                                                             | 1000_11SS_SSST_TTTT_IIII_IIII_IIII_IIII |         |
+| LBU         | Load byte unsigned, carga unsigned byte a un registro (T) desde MEM(S + I)                                           | 1001_00SS_SSST_TTTT_IIII_IIII_IIII_IIII |         |
+| LHU         | Load half word unsigned, carga unsigned half word a un registro (T) desde MEM(S + I)                                 | 1001_01SS_SSST_TTTT_IIII_IIII_IIII_IIII |         |
+| LWU         | Load word unsigned, carga unsigned word a un registro (T) desde MEM(S + I)                                           | 1001_11SS_SSST_TTTT_IIII_IIII_IIII_IIII |         |
+| SB          | Store byte, carga el byte menos significativo desde un registro (T) a MEM(S + I)                                     | 1010_00SS_SSST_TTTT_IIII_IIII_IIII_IIII |         |
+| SH          | Store half word, carga el half word menos significativo desde un registro (T) a MEM(S + I)                           | 1010_01SS_SSST_TTTT_IIII_IIII_IIII_IIII |         |
+| SW          | Store word, carga el word desde un registro (T) a MEM(S + I)                                                         | 1010_11SS_SSST_TTTT_IIII_IIII_IIII_IIII |         |
+| ADDI        | Suma un registro (S) con el inmediato (I) y lo guarda en otro registro (T)                                           | 0010_01SS_SSST_TTTT_IIII_IIII_IIII_IIII |         |
+| ANDI        | Bitwise AND un registro (S) con el inmediato (I) y lo guarda en otro registro (T)                                    | 0011_00SS_SSST_TTTT_IIII_IIII_IIII_IIII |         |
+| ORI         | Bitwise OR un registro (S) con el inmediato (I) y lo guarda en otro registro (T)                                     | 0011_01SS_SSST_TTTT_IIII_IIII_IIII_IIII |         |
+| XORI        | Bitwise XOR un registro (S) con el inmediato (I) y lo guarda en otro registro (T)                                    | 0011_10SS_SSST_TTTT_IIII_IIII_IIII_IIII |         |
+| LUI         | El valor inmediato (I) es shifteado a la izquierda 16 bits y guardado en el registro (T)                             | 0011_11SS_SSST_TTTT_IIII_IIII_IIII_IIII |         |
+| SLTI        | If S < I => T = 1, else T = 0                                                                                        | 0010_10SS_SSST_TTTT_IIII_IIII_IIII_IIII |         |
+| BEQ         | Branchea a PC + I*4 si ambos registros (S y T) equalean                                                              | 0001_00SS_SSST_TTTT_IIII_IIII_IIII_IIII |         |
+| BNE         | Branchea a PC + I*4 si ambos registros (S y T) no equalean                                                           | 0001_01SS_SSST_TTTT_IIII_IIII_IIII_IIII |         |
+|             |                                                                                                                      |                                         |         |
+|             |                                                                                                                      |                                         |         |
+|             |                                                                                                                      |                                         |         |
+|             |                                                                                                                      |                                         |         |
+|             |                                                                                                                      |                                         |         |
+|             |                                                                                                                      |                                         |         |
+  
+*** Tipo J
+
+| Instruccion | Descripcion                                                                                                          | Codigo                                  | Señales |
+|-------------+----------------------------------------------------------------------------------------------------------------------+-----------------------------------------+---------|
+| J           | PC = (PC & 0xF0000000) OR (I << 2)                                                                                   | 0000_10II_IIII_IIII_IIII_IIII_IIII_IIII |         |
+| JAL         | Jumpea a la direccion calculada [PC = (PC & 0xF0000000) OR (I << 2)] y storea la direccion de retorno en RA = PC + 4 | 0000_10II_IIII_IIII_IIII_IIII_IIII_IIII |         |
+|             |                                                                                                                      |                                         |         |
+|             |                                                                                                                      |                                         |         |
+|             |                                                                                                                      |                                         |         |
+|             |                                                                                                                      |                                         |         |
+|             |                                                                                                                      |                                         |         |
+|             |                                                                                                                      |                                         |         |
+|             |                                                                                                                      |                                         |         |
+|             |                                                                                                                      |                                         |         |
+
+
+
