@@ -43,12 +43,6 @@
 | SLTI        | If S < I => T = 1, else T = 0                                                                                        | 0010_10SS_SSST_TTTT_IIII_IIII_IIII_IIII |         |
 | BEQ         | Branchea a PC + I*4 si ambos registros (S y T) equalean                                                              | 0001_00SS_SSST_TTTT_IIII_IIII_IIII_IIII |         |
 | BNE         | Branchea a PC + I*4 si ambos registros (S y T) no equalean                                                           | 0001_01SS_SSST_TTTT_IIII_IIII_IIII_IIII |         |
-|             |                                                                                                                      |                                         |         |
-|             |                                                                                                                      |                                         |         |
-|             |                                                                                                                      |                                         |         |
-|             |                                                                                                                      |                                         |         |
-|             |                                                                                                                      |                                         |         |
-|             |                                                                                                                      |                                         |         |
   
 *** Tipo J
 
@@ -56,14 +50,6 @@
 |-------------+----------------------------------------------------------------------------------------------------------------------+-----------------------------------------+---------|
 | J           | PC = (PC & 0xF0000000) OR (I << 2)                                                                                   | 0000_10II_IIII_IIII_IIII_IIII_IIII_IIII |         |
 | JAL         | Jumpea a la direccion calculada [PC = (PC & 0xF0000000) OR (I << 2)] y storea la direccion de retorno en RA = PC + 4 | 0000_10II_IIII_IIII_IIII_IIII_IIII_IIII |         |
-|             |                                                                                                                      |                                         |         |
-|             |                                                                                                                      |                                         |         |
-|             |                                                                                                                      |                                         |         |
-|             |                                                                                                                      |                                         |         |
-|             |                                                                                                                      |                                         |         |
-|             |                                                                                                                      |                                         |         |
-|             |                                                                                                                      |                                         |         |
-|             |                                                                                                                      |                                         |         |
 
 
 
