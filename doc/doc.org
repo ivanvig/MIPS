@@ -49,7 +49,7 @@
 | Instruccion | Descripcion                                                                                                          | Codigo                                  | Señales |
 |-------------+----------------------------------------------------------------------------------------------------------------------+-----------------------------------------+---------|
 | J           | PC = (PC & 0xF0000000) OR (I << 2)                                                                                   | 0000_10II_IIII_IIII_IIII_IIII_IIII_IIII |         |
-| JAL         | Jumpea a la direccion calculada [PC = (PC & 0xF0000000) OR (I << 2)] y storea la direccion de retorno en RA = PC + 4 | 0000_10II_IIII_IIII_IIII_IIII_IIII_IIII |         |
+| JAL         | Jumpea a la direccion calculada [PC = (PC & 0xF0000000) OR (I << 2)] y storea la direccion de retorno en RA = PC + 4 | 0000_11II_IIII_IIII_IIII_IIII_IIII_IIII |         |
 
 
 
