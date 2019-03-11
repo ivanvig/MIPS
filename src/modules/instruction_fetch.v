@@ -32,11 +32,11 @@ module instruction_fetch
        pc <= {NB_REG{1'b0}};
      else if (i_valid) begin
         case ({i_branch, i_jump_rs, i_jump_inm})
-          3'b000: pc <= pc ;
+          3'b000: pc <= pc+4 ;
           3'b001: pc <= (pc & 32'hF0000000) | (i_inm_j << 2); //J/JAL
           3'b010: pc <= i_rs; //JR/JALR
           3'b100: pc <= pc*4+i_inm_i*4; //BEQ/BNE
-          default: pc <= pc+4;
+          default: pc <= pc;
         endcase // case
      end
    end // always @ (posedge i_clock)
