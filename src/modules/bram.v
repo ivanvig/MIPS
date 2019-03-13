@@ -10,14 +10,14 @@ module byte_enable_bram
     parameter RAM_DEPTH = 512,                      // Specify RAM depth (number of entries)
     parameter INIT_FILE = ""                        // Specify name/location of RAM initialization file if using one (leave blank if not)
     ) (
-       output [(NB_COL*COL_WIDTH)-1:0] o_dout // RAM output data
+       output [(NB_COL*COL_WIDTH)-1:0] o_dout, // RAM output data
        input [clogb2(RAM_DEPTH-1)-1:0] i_waddr, // Write address bus, width determined from RAM_DEPTH
        input [clogb2(RAM_DEPTH-1)-1:0] i_raddr, // Read address bus, width determined from RAM_DEPTH
        input [(NB_COL*COL_WIDTH)-1:0]  i_din, // RAM input data
        input                           i_clk, // Clock
        input [NB_COL-1:0]              i_wen, // Byte-write enable
        input                           i_ren, // Read Enable, for additional power savings, disable when not in use
-       input                           i_rst, // Output reset (does not affect memory contents)
+       input                           i_rst // Output reset (does not affect memory contents)
        );
    
    reg [(NB_COL*COL_WIDTH)-1:0]        BRAM [RAM_DEPTH-1:0];

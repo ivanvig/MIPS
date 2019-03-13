@@ -2,7 +2,8 @@ module instruction_fetch
 #(
   parameter NB_REG = 32,
   parameter NB_INSTR = 32,
-  parameter NB_RT = 5,
+  parameter N_ADDR = 2048,
+  parameter LOG2_N_INSMEM_ADDR = clogb2(N_ADDR),
   parameter NB_INM_I = 16,
   parameter NB_INM_J = 26
 )
@@ -42,4 +43,26 @@ module instruction_fetch
    end // always @ (posedge i_clock)
 
    assign o_instruction = (i_nop_reg==1'b0) ? mem_ir : 32'h0000_0000 ;
+
+   instruction_memory
+     #(
+       .NB_DATA            (NB_REG),
+       .N_ADDR             (N_ADDR),
+       .LOG2_N_INSMEM_ADDR (LOG2_N_INSMEM_ADDR)
+       )
+   u_instruction_memory
+   (
+    .o_data                (o_instruction),
+    .i_addr                (pc),
+    .i_clock               (i_clock),
+    .i_enable              (1'b1),
+    .i_reset               (i_reset)
+    ) ;
+    
+   function integer clogb2;
+      input integer                   depth;
+      for (clogb2=0; depth>0; clogb2=clogb2+1)
+        depth = depth >> 1;
+   endfunction
+   
 endmodule
