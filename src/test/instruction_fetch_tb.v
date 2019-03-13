@@ -16,7 +16,7 @@ module instruction_fetch_tb ();
     //==========================================================================
     wire [NB_INSTR-1:0] tb_instruction_o;
                             
-    reg                 tb_inop_reg_i;
+    reg                 tb_nop_reg_i;
     reg [NB_INM_I-1:0]  tb_i_inm_i;
     reg [NB_INM_J-1:0]  tb_inm_j_i;
     reg [NB_REG-1:0]    tb_rs_i;
@@ -53,6 +53,7 @@ module instruction_fetch_tb ();
     u_instruction_fetch
     (
       .o_instruction            (tb_instruction_o),
+      .i_nop_reg                (tb_nop_reg_i),
       .i_inm_i                  (tb_i_inm_i),
       .i_inm_j                  (tb_inm_j_i),
       .i_rs                     (tb_rs_i),
@@ -80,6 +81,7 @@ module instruction_fetch_tb ();
     
     always @ (*)
     begin
+    tb_nop_reg_i = 1'b0;
         case(tb_timer)
         4: begin
             tb_i_inm_i = 16'h0001;
@@ -106,6 +108,7 @@ module instruction_fetch_tb ();
             tb_branch_i = 1'b1 ;
         end
         7: begin
+            tb_nop_reg_i = 1'b1;
             tb_i_inm_i =  16'h0004;                       
             tb_inm_j_i =  26'b0011_1111_0000_1100_1111_0011_11;
             tb_rs_i =     32'haaa3_bbbb;                       
@@ -147,9 +150,6 @@ module instruction_fetch_tb ();
             end
         endcase
     end
- 
-
-    
 
    function integer clogb2;
       input integer                   depth;

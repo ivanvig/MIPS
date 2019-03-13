@@ -42,7 +42,7 @@ module instruction_fetch
      end
    end // always @ (posedge i_clock)
 
-   assign o_instruction = (i_nop_reg==1'b0) ? mem_ir : 32'h0000_0000 ;
+   assign o_instruction = (i_nop_reg)? 32'h0000_0000 : mem_ir ;
 
    instruction_memory
      #(
@@ -52,7 +52,7 @@ module instruction_fetch
        )
    u_instruction_memory
    (
-    .o_data                (o_instruction),
+    .o_data                (mem_ir),
     .i_addr                (pc),
     .i_clock               (i_clock),
     .i_enable              (1'b1),
