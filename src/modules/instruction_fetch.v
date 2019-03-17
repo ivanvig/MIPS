@@ -9,6 +9,7 @@ module instruction_fetch
 )
 (
  output wire [NB_INSTR-1:0] o_instruction, //Output from IR or NOP depending on i_nop_reg
+ output wire [NB_REG-1:0]   o_pc,
 
  input wire                 i_nop_reg, //Input from NOP_REG which indicates that there was a jump/branch
  input wire [NB_INM_I-1:0]  i_inm_i, //Branch addr in type i instructions, from instr[0-15]
@@ -31,6 +32,7 @@ module instruction_fetch
    begin
      if (i_reset)
        pc <= {NB_REG{1'b0}};
+       o_pc <= {NB_REG{1'b0}};
      else if (i_valid) begin
         case ({i_branch, i_jump_rs, i_jump_inm})
           3'b000: pc <= pc+4 ;
@@ -39,6 +41,7 @@ module instruction_fetch
           3'b100: pc <= pc*4+i_inm_i*4; //BEQ/BNE
           default: pc <= pc;
         endcase // case
+        o_pc <= pc+4; //pc to be 
      end
    end // always @ (posedge i_clock)
 
