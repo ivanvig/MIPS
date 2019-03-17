@@ -13,19 +13,19 @@ module execution_tb ();
     //==========================================================================
     // INTERNAL SIGNALS.
     //==========================================================================
-   reg [NB_REG-1:0]                     tb_alu_o;
-   reg [NB_REG-1:0]                     tb_b_o;
-   reg [NB_MEM-1:0]                     tb_mem_o;
-   reg [NB_WB-1:0]                      tb_wb_o;
-   reg [NB_REG-1:0]                     tb_pc_o;
+   wire [NB_REG-1:0]                     tb_alu_o;
+   wire [NB_REG-1:0]                     tb_b_o;
+   wire [NB_MEM-1:0]                     tb_mem_o;
+   wire [NB_WB-1:0]                      tb_wb_o;
+   wire [NB_REG-1:0]                     tb_pc_o;
 
-   wire [NB_REG-1:0]                    tb_a_i;
-   wire [NB_REG-1:0]                    tb_b_i;
-   wire [NB_INM-1:0]                    tb_inm_i;
-   wire [NB_EX-1:0]                     tb_ex_i;
-   wire [NB_MEM-1:0]                    tb_mem_i;
-   wire [NB_WB-1:0]                     tb_wb_i;
-   wire [NB_REG-1:0]                    tb_pc_i;
+   reg [NB_REG-1:0]                    tb_a_i;
+   reg [NB_REG-1:0]                    tb_b_i;
+   reg [NB_INM-1:0]                    tb_inm_i;
+   reg [NB_EX-1:0]                     tb_ex_i;
+   reg [NB_MEM-1:0]                    tb_mem_i;
+   reg [NB_WB-1:0]                     tb_wb_i;
+   reg [NB_REG-1:0]                    tb_pc_i;
 
    wire                                 tb_valid_i ;   // Throughput control.
 
@@ -102,55 +102,55 @@ module execution_tb ();
      begin
         case(tb_timer)
           4: begin
-             tb_a_i = 32'h0000_0000;
-             tb_b_i = 32'h0000_0000;
-             tb_inm_i = 16'h0000;
-             tb_ex_i = 6'b0000_0_0;
+             tb_a_i = 32'h0000_0001;
+             tb_b_i = 32'h0000_0001;
+             tb_inm_i = 16'h0001;
+             tb_ex_i = 6'b0000_0_0; //ADD A+B
              tb_mem_i = 5'b00001;
              tb_wb_i = 8'b0000_0001;
              tb_pc_i = 32'h0000_0005;
           end
           5: begin
-             tb_a_i = 32'h0000_0000;
-             tb_b_i = 32'h0000_0000;
-             tb_inm_i = 16'h0000;
-             tb_ex_i = 6'b0000_0_0;
+             tb_a_i = 32'h0000_0002;
+             tb_b_i = 32'h0000_0002;
+             tb_inm_i = 16'h0002;
+             tb_ex_i = 6'b1011_1_1; //LUI unsigned
              tb_mem_i = 5'b00001;
              tb_wb_i = 8'b0000_0001;
              tb_pc_i = 32'h0000_0005;
           end
           6: begin
-             tb_a_i = 32'h0000_0000;
-             tb_b_i = 32'h0000_0000;
-             tb_inm_i = 16'h0000;
-             tb_ex_i = 6'b0000_0_0;
+             tb_a_i = 32'h0000_0003;
+             tb_b_i = 32'h0000_0002;1
+             tb_inm_i = 16'h0003;
+             tb_ex_i = 6'b1010_0_0; //SLT deberia dar 0
              tb_mem_i = 5'b00001;
              tb_wb_i = 8'b0000_0001;
              tb_pc_i = 32'h0000_0005;
           end
           7: begin
-             tb_a_i = 32'h0000_0000;
-             tb_b_i = 32'h0000_0000;
-             tb_inm_i = 16'h0000;
-             tb_ex_i = 6'b0000_0_0;
+             tb_a_i = 32'h0000_0004;
+             tb_b_i = 32'h0000_0004;
+             tb_inm_i = 16'h0004;
+             tb_ex_i = 6'b0111_0_0; //SLL
              tb_mem_i = 5'b00001;
              tb_wb_i = 8'b0000_0001;
              tb_pc_i = 32'h0000_0005;
           end
           8: begin
-             tb_a_i = 32'h0000_0000;
-             tb_b_i = 32'h0000_0000;
-             tb_inm_i = 16'h0000;
-             tb_ex_i = 6'b0000_0_0;
+             tb_a_i = 32'h0000_0005;
+             tb_b_i = 32'h0000_0003;
+             tb_inm_i = 16'h0005;
+             tb_ex_i = 6'b0010_0_0; //AND deberia dar 1
              tb_mem_i = 5'b00001;
              tb_wb_i = 8'b0000_0001;
              tb_pc_i = 32'h0000_0005;
           end
           9: begin
-             tb_a_i = 32'h0000_0000;
-             tb_b_i = 32'h0000_0000;
-             tb_inm_i = 16'h0000;
-             tb_ex_i = 6'b0000_0_0;
+             tb_a_i = 32'h0000_0006;
+             tb_b_i = 32'h0000_0006;
+             tb_inm_i = 16'h0006;
+             tb_ex_i = 6'b0101_0_0; //NOR
              tb_mem_i = 5'b00001;
              tb_wb_i = 8'b0000_0001;
              tb_pc_i = 32'h0000_0005;

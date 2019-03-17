@@ -9,7 +9,7 @@ module instruction_fetch
 )
 (
  output wire [NB_INSTR-1:0] o_instruction, //Output from IR or NOP depending on i_nop_reg
- output wire [NB_REG-1:0]   o_pc,
+ output reg  [NB_REG-1:0]   o_pc,
 
  input wire                 i_nop_reg, //Input from NOP_REG which indicates that there was a jump/branch
  input wire [NB_INM_I-1:0]  i_inm_i, //Branch addr in type i instructions, from instr[0-15]
@@ -30,10 +30,10 @@ module instruction_fetch
    //Program counter logic
    always @(posedge i_clock)
    begin
-     if (i_reset)
+     if (i_reset) begin
        pc <= {NB_REG{1'b0}};
        o_pc <= {NB_REG{1'b0}};
-     else if (i_valid) begin
+     end else if (i_valid) begin
         case ({i_branch, i_jump_rs, i_jump_inm})
           3'b000: pc <= pc+4 ;
           3'b001: pc <= (pc & 32'hF0000000) | (i_inm_j << 2); //J/JAL

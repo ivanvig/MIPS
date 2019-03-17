@@ -78,7 +78,7 @@ module alu
           SLT:
             o_result = (i_data_a < i_data_b) ? {{NB_DATA-1{1'b0}}, 1'b1} : {NB_DATA{1'b0}};
           LUI:
-            o_result = i_data_b << 16 ;
+            o_result = $signed(i_data_b) << 16 ;
           default: o_result = {NB_DATA{1'b1}};
         endcase
      end
