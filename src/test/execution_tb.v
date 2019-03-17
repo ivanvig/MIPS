@@ -7,9 +7,9 @@ module execution_tb ();
     //==========================================================================
    localparam NB_REG = 32;
    localparam NB_INM = 16;
-   localparam NB_EX = 7;
-   localparam NB_MEM = 32;
-   localparam NB_WB = 32;
+   localparam NB_EX = 6;
+   localparam NB_MEM = 5;
+   localparam NB_WB = 8;
     //==========================================================================
     // INTERNAL SIGNALS.
     //==========================================================================
@@ -82,15 +82,88 @@ module execution_tb ();
 
    assign tb_reset_i = (tb_timer == 2) ; // Reset at time 2
    assign tb_valid_i = 1'b1 ;
+
+   //ADD          = 4'b0000
+   //SUB          = 4'b0001
+   //AND          = 4'b0010
+   //OR           = 4'b0011
+   //XOR          = 4'b0100
+   //NOR          = 4'b0101
+   //SRL          = 4'b0110
+   //SLL          = 4'b0111
+   //SRA          = 4'b1000
+   //SLA          = 4'b1001
+   //SLT          = 4'b1010
+   //LUI          = 4'b1011
+
+   //EX: - !6 alu_control 2! b_i ! s_u !
    
    always @ (*)
      begin
         case(tb_timer)
           4: begin
-
+             tb_a_i = 32'h0000_0000;
+             tb_b_i = 32'h0000_0000;
+             tb_inm_i = 16'h0000;
+             tb_ex_i = 6'b0000_0_0;
+             tb_mem_i = 5'b00001;
+             tb_wb_i = 8'b0000_0001;
+             tb_pc_i = 32'h0000_0005;
           end
-          default: begin
+          5: begin
+             tb_a_i = 32'h0000_0000;
+             tb_b_i = 32'h0000_0000;
+             tb_inm_i = 16'h0000;
+             tb_ex_i = 6'b0000_0_0;
+             tb_mem_i = 5'b00001;
+             tb_wb_i = 8'b0000_0001;
+             tb_pc_i = 32'h0000_0005;
+          end
+          6: begin
+             tb_a_i = 32'h0000_0000;
+             tb_b_i = 32'h0000_0000;
+             tb_inm_i = 16'h0000;
+             tb_ex_i = 6'b0000_0_0;
+             tb_mem_i = 5'b00001;
+             tb_wb_i = 8'b0000_0001;
+             tb_pc_i = 32'h0000_0005;
+          end
+          7: begin
+             tb_a_i = 32'h0000_0000;
+             tb_b_i = 32'h0000_0000;
+             tb_inm_i = 16'h0000;
+             tb_ex_i = 6'b0000_0_0;
+             tb_mem_i = 5'b00001;
+             tb_wb_i = 8'b0000_0001;
+             tb_pc_i = 32'h0000_0005;
+          end
+          8: begin
+             tb_a_i = 32'h0000_0000;
+             tb_b_i = 32'h0000_0000;
+             tb_inm_i = 16'h0000;
+             tb_ex_i = 6'b0000_0_0;
+             tb_mem_i = 5'b00001;
+             tb_wb_i = 8'b0000_0001;
+             tb_pc_i = 32'h0000_0005;
+          end
+          9: begin
+             tb_a_i = 32'h0000_0000;
+             tb_b_i = 32'h0000_0000;
+             tb_inm_i = 16'h0000;
+             tb_ex_i = 6'b0000_0_0;
+             tb_mem_i = 5'b00001;
+             tb_wb_i = 8'b0000_0001;
+             tb_pc_i = 32'h0000_0005;
+          end
 
+          default: begin
+             tb_a_i = 32'h0000_0000;
+             tb_b_i = 32'h0000_0000;
+             tb_inm_i = 16'h0000;
+             tb_ex_i = 6'b0000_0_0;
+             tb_mem_i = 5'b00001;
+             tb_wb_i = 8'b0000_0001;
+             tb_pc_i = 32'h0000_0005;
           end
         endcase
      end

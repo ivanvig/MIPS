@@ -5,28 +5,32 @@ OPERATIONS
 module alu
   #(
     // Parameters.
-    parameter                                       NB_DATA                     = 8 ,   // Nr of bits in the registers
-    parameter                                       NB_OPERATION                = 6 ,    // Nr of bits in the operation input
-    localparam ADD =        6'b100000,
-    localparam SUB =        6'b100010,
-    localparam AND =        6'b100100,
-    localparam OR  =        6'b100101,
-    localparam XOR =        6'b100110,
-    localparam SRA =        6'b000011,
-    localparam SRL =        6'b000010,
-    localparam NOR =        6'b100111
+    parameter NB_DATA       = 32 ,   // Nr of bits in the registers
+    parameter NB_OPERATION  = 4 ,    // Nr of bits in the operation input
+    localparam ADD          = 4'b0000,
+    localparam SUB          = 4'b0001,
+    localparam AND          = 4'b0010,
+    localparam OR           = 4'b0011,
+    localparam XOR          = 4'b0100,
+    localparam NOR          = 4'b0101,
+    localparam SRL          = 4'b0110,
+    localparam SLL          = 4'b0111,
+    localparam SRA          = 4'b1000,
+    localparam SLA          = 4'b1001,
+    localparam SLT          = 4'b1010,
+    localparam LUI          = 4'b1011
     )
    (
     // Outputs.
     output reg [NB_DATA-1:0] o_result , // Result of the operation
-    
+
     // Inputs.
     input wire [NB_DATA-1:0] i_data_a,
     input wire [NB_DATA-1:0] i_data_b,
     input wire [NB_OPERATION-1:0] i_op
     ) ;
-   
-   integer                   i;
+
+   integer i;
 
    always @(*)
      begin
@@ -41,13 +45,8 @@ module alu
             o_result = i_data_a | i_data_b ;
           XOR: // XOR
             o_result = i_data_a ^ i_data_b ;
-          SRA: begin// SRA (Arithmetic: keep sign)
-             o_result = 'b0;
-             for(i = 0; i<2**NB_DATA; i=i+1) begin
-                if(i_data_b == i)
-                  o_result = $signed(i_data_a) >>> i;
-             end
-          end
+          NOR: // NOR
+            o_result = ~ (i_data_a & i_data_b);
           SRL: begin// SRL (Logical: fills with zero)
              o_result = 'b0;
              for(i = 0; i<2**NB_DATA; i=i+1) begin
@@ -55,8 +54,31 @@ module alu
                   o_result = i_data_a >> i;
              end
           end
-          NOR: // NOR
-            o_result = ~ (i_data_a & i_data_b);
+          SLL: begin// SLL (Logical: fills with zero)
+             o_result = 'b0;
+             for(i = 0; i<2**NB_DATA; i=i+1) begin
+                if(i_data_b == i)
+                  o_result = i_data_a << i;
+             end
+          end
+          SRA: begin// SRA (Arithmetic: keep sign)
+             o_result = 'b0;
+             for(i = 0; i<2**NB_DATA; i=i+1) begin
+                if(i_data_b == i)
+                  o_result = $signed(i_data_a) >>> i;
+             end
+          end
+          SLA: begin// SLA (Arithmetic: keep sign)
+             o_result = 'b0;
+             for(i = 0; i<2**NB_DATA; i=i+1) begin
+                if(i_data_b == i)
+                  o_result = $signed(i_data_a) <<< i;
+             end
+          end
+          SLT:
+            o_result = (i_data_a < i_data_b) ? {{NB_DATA-1{1'b0}}, 1'b1} : {NB_DATA{1'b0}};
+          LUI:
+            o_result = i_data_b << 16 ;
           default: o_result = {NB_DATA{1'b1}};
         endcase
      end

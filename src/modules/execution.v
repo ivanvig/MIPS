@@ -2,9 +2,9 @@ module execution
   #(
     parameter NB_REG = 32,
     parameter NB_INM = 16,
-    parameter NB_EX = 7,
-    parameter NB_MEM = 32,
-    parameter NB_WB = 32
+    parameter NB_EX = 6,
+    parameter NB_MEM = 5,
+    parameter NB_WB = 8
     )
    (
     output reg [NB_REG-1:0] o_alu,
@@ -25,7 +25,7 @@ module execution
     input wire              i_clock,
     input wire              i_valid
     ) ;
-   localparam NB_ALUCONTROL = 5;
+   localparam NB_ALUCONTROL = 4;
 
    wire [NB_REG-1:0]        alu_b ;
    wire [NB_REG-1:0]        alu_out ;
@@ -43,8 +43,8 @@ module execution
    // Control signals and registers to next pipeline stage
    always @ (posedge i_clock)
      begin
-        if (i_reset) begin
-           o_mem <= {NB_MEM{1'b0}};
+     if (i_reset) begin
+        o_mem <= {NB_MEM{1'b0}};
         o_wb <= {NB_WB{1'b0}};
         o_pc <= {NB_REG{1'b0}};
         o_b <= {NB_REG{1'b0}};
