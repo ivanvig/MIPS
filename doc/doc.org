@@ -89,10 +89,20 @@
     - REG_WE
     - MEM/ALU
     - DATA/PC
+
+** Estructura de bits de control
+ 
+***  EX (7 bits)
+   |6      |1  |0  |
+   |ALUCTRL|B/I|S/U|
    
-
-
-      
+*** MEM (5 bits)
+   |4	  |3	 |2    |1			 |
+   | RE | WE | S/U | DSIZE |
+   
+*** WB (8 bits)
+   |7		  |2			 |1				 |0				 |
+   | DEST | REG_WE | MEM/ALU | DATA/PC |
 
 
 
