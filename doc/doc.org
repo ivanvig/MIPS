@@ -93,8 +93,8 @@
 ** Estructura de bits de control
  
 ***  EX (7 bits)
-   |6      |1  |0  |
-   |ALUCTRL|B/I|S/U|
+   |6        |2    |1    |0      |
+   | ALUCTRL | B/I | S/U | SHAMT |
    
 *** MEM (5 bits)
    |4	  |3	 |2    |1			 |
