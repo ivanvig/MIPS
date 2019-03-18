@@ -8,7 +8,7 @@ module instruction_decode
     parameter NB_REG_ADDR = 5,
     parameter NB_J_INM = 26,
     parameter NB_ALUOP = 4,
-    parameter NB_EX = NB_ALUOP+2,
+    parameter NB_EX = NB_ALUOP+3,
     parameter NB_MEM = 5,
     parameter NB_WB = NB_REG_ADDR+3,
 
@@ -74,6 +74,8 @@ module instruction_decode
     output [NB_REG-1:0]   o_a,
     output [NB_REG-1:0]   o_b,
     output [NB_INM-1:0]   o_inm,
+    output [NB_SHAMT-1:0] o_shamt,
+    output                o_use_shamt,
     output                o_nop,
     output                o_branch,
     output                o_jump_rs,
@@ -93,8 +95,8 @@ module instruction_decode
   // Control Frame Structure:																															//
   //																																											//
   // EX (7 bits):																																					//
-  // |6      |1  |0  |																																		//
-  // |ALUCTRL|B/I|S/U|																																		//
+  // |6    	   |2  	 |1 	 |0 		 |																											//
+  // | ALUCTRL | B/I | S/U | SHAMT |																											//
   //																																											//
   // MEM (5 bits):																																				//
   // |4	  |3	 |2    |1			 |																														//
@@ -160,16 +162,18 @@ module instruction_decode
    reg                    nop_reg;
 
    //OUTPUT assign
-   assign o_pc       = pc;
-   assign o_ex_ctrl  = ex_reg;
-   assign o_mem_ctrl = mem_reg;
-   assign o_wb_ctrl  = wb_reg;
-   assign o_inm      = inm;
-   assign o_nop      = nop_reg;
-   assign o_branch   = is_branch;
-   assign o_jump_rs  = jrs;
-   assign o_jump_inm = jinm;
+   assign o_pc            = pc;
+   assign o_ex_ctrl       = ex_reg;
+   assign o_mem_ctrl      = mem_reg;
+   assign o_wb_ctrl       = wb_reg;
+   assign o_inm           = inm;
+   assign o_nop           = nop_reg;
+   assign o_branch        = is_branch;
+   assign o_jump_rs       = jrs;
+   assign o_jump_inm      = jinm;
    assign o_jump_inm_addr = j_inm_addr;
+   assign o_shamt         = shamt;
+   assign o_use_shamt     = use_shamt;
 
    //Instruction values
    assign opcode     = i_instruction[MSB_OPCODE-:NB_OPCODE];
@@ -192,7 +196,8 @@ module instruction_decode
         pc <= i_pc;
    end
    // Jump logic
-   assign comp = rs == rt;
+   // TODO [!!!!!!!!!] : no comparar rs y rt, sino el valor de los registros a donde apuntan rs y rt
+   assign comp = rs == rt; // <----- MAL
    assign branch_result = beq_bne ? ~comp : comp;
 
    always @ (posedge i_clk) begin
@@ -209,7 +214,7 @@ module instruction_decode
       if(i_rst)
         ex_reg <= {NB_EX{1'b0}};
       else
-        ex_reg <= {aluop, b_i, s_u_ex};
+        ex_reg <= {aluop, b_i, s_u_ex, shamt};
    end
 
    // MEM logic
