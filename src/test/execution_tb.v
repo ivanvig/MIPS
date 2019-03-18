@@ -121,7 +121,7 @@ module execution_tb ();
           end
           6: begin
              tb_a_i = 32'h0000_0003;
-             tb_b_i = 32'h0000_0002;1
+             tb_b_i = 32'h0000_0002;
              tb_inm_i = 16'h0003;
              tb_ex_i = 6'b1010_0_0; //SLT deberia dar 0
              tb_mem_i = 5'b00001;
