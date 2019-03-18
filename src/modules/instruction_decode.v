@@ -3,6 +3,9 @@ module instruction_decode
     parameter NB_OPCODE = 6,
     parameter NB_REG = 32,
     parameter NB_INM = 16,
+    parameter NB_SHAMT = 5,
+    parameter NB_REG_ADDR = 5,
+    parameter NB_J_INM = 26,
     parameter NB_ALUOP = 5,
     parameter NB_EX = NB_ALUOP+2,
     parameter NB_MEM = 0,
@@ -28,7 +31,7 @@ module instruction_decode
     localparam BEQ  	= 6'b0001_00,
     localparam BNE  	= 6'b0001_01,
     localparam J	  	= 6'b0000_10,
-    localparam JAL  	= 6'b0000_11
+    localparam JAL  	= 6'b0000_11,
 
     //ALU code
     localparam ADD = 4'b0000,
@@ -53,17 +56,20 @@ module instruction_decode
     output [NB_REG-1:0] o_b,
     output [NB_INM-1:0] o_inm,
     output              o_nop,
-    
+    output              o_branch,
+    output              o_jump_rs,
+    output              o_jump_inm,
+   
     input [NB_REG-1:0]  i_instruction,
     input [NB_REG-1:0]  i_pc,
-
+   
     // input               i_valid,
     input               i_clk,
     input               i_rst
-    
+   
     );
-
-  //////////////////////////////////////////////////////////////////////////////////////////
+   //
+   //////////////////////////////////////////////////////////////////////////////////////////
   // Control Frame Structure:																															//
   //																																											//
   // EX (7 bits):																																					//
@@ -79,8 +85,15 @@ module instruction_decode
   // | DEST | REG_WE | MEM/ALU | DATA/PC |																								//
   //																																											//
   //////////////////////////////////////////////////////////////////////////////////////////
-   
 
+   localparam MSB_INM    = 15;
+   localparam MSB_OPCODE = 31;
+   localparam MSB_RD     = 15;
+   localparam MSB_RT     = 20;
+   localparam MSB_RS     = 25;
+   localparam MSB_SHAMT  = 10;
+   localparam MSB_J_INM  = 25;
+   
    // DEC signals
    wire                 to_ra_reg, use_shamt, use_2nd_lut;
    wire                 is_branch, beq_bne, jrs, jinm;
@@ -95,13 +108,38 @@ module instruction_decode
    wire                 reg_we, mem_alu, data_pc;
    wire                 data_pc1, data_pc2;
 
-   
-   wire [NB_OPCODE-1:0] opcode;
+   wire [NB_REG_ADDR-1:0] rt, rd, rs;
+   wire [NB_OPCODE-1:0]   opcode;
+   wire [NB_INM-1:0]      inm;
+   wire [NB_SHAMT-1:0]    shamt;
+   wire [NB_J_INM-1:0]    j_inm_addr;
+
+   wire                   comp, branch_result;
+   reg                    nop_reg;
 
 
-   
-   assign opcode = i_instruction[NB_REG-1-:NB_OPCODE];
-   
+
+   assign opcode     = i_instruction[MSB_OPCODE-:NB_OPCODE];
+   assign inm        = i_instruction[MSB_INM-:NB_INM];
+
+   assign rt         = i_instruction[MSB_RT-:NB_REG_ADDR];
+   assign rs         = i_instruction[MSB_RS-:NB_REG_ADDR];
+   assign rd         = i_instruction[MSB_RD-:NB_REG_ADDR];
+
+   assign shamt      = i_instruction[MSB_SHAMT-:NB_SHAMT];
+   assign j_inm_addr = i_instruction[MSB_J_INM-:NB_J_INM];
+
+   // Branch logic
+   assign comp = rs == rt;
+   assign branch_result = beq_bne ? ~comp : comp;
+
+   always @ (i_clock) begin
+      if (i_rst)
+        nop_reg <= 1'b0;
+      else
+        nop_reg <= (jrs | jinm | (branch_result & is_branch));
+   end
+
    always @ (*) begin
       case(opcode)
         R_INST: begin
@@ -548,8 +586,8 @@ module instruction_decode
    end
 
    @(*)
-   always @(posedge i_clk) begin
-   end
+     always @(posedge i_clk) begin
+     end
    
 endmodule
 
