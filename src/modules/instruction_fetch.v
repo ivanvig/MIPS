@@ -5,7 +5,8 @@ module instruction_fetch
     parameter N_ADDR = 2048,
     parameter LOG2_N_INSMEM_ADDR = clogb2(N_ADDR),
     parameter NB_INM_I = 16,
-    parameter NB_INM_J = 26
+    parameter NB_INM_J = 26,
+    parameter INIT_FILE = ""
     )
    (
     output reg  [NB_INSTR-1:0] o_ir, //Output from IR or NOP depending on i_nop_reg
@@ -15,7 +16,7 @@ module instruction_fetch
     input wire [NB_INM_I-1:0]  i_inm_i, //Branch addr in type i instructions, from instr[0-15]
     input wire [NB_INM_J-1:0]  i_inm_j, //Jump addr in type j instructions, from instr[0-25]
     input wire [NB_REG-1:0]    i_rs, //Jump addr in type R instructions, from RS
-   
+
     input wire                 i_jump_inm,
     input wire                 i_jump_rs,
     input wire                 i_branch,
@@ -43,7 +44,7 @@ module instruction_fetch
           3'b100: pc <= pc*4+i_inm_i*4; //BEQ/BNE
           default: pc <= pc;
         endcase // case
-        o_pc <= pc+4; //pc to be 
+        o_pc <= pc+4; //pc to be
      end
      end // always @ (posedge i_clock)
 
@@ -56,13 +57,14 @@ module instruction_fetch
         else if (i_valid)
           o_ir <= instruction;
      end
-   
+
    instruction_memory
      #(
        .NB_DATA            (NB_REG),
        .N_ADDR             (N_ADDR),
-       .LOG2_N_INSMEM_ADDR (LOG2_N_INSMEM_ADDR)
-       )
+       .LOG2_N_INSMEM_ADDR (LOG2_N_INSMEM_ADDR),
+       .INIT_FILE          (INIT_FILE)
+        )
    u_instruction_memory
      (
       .o_data                (mem_ir),
@@ -71,11 +73,11 @@ module instruction_fetch
       .i_enable              (1'b1),
       .i_reset               (i_reset)
       ) ;
-   
+
    function integer clogb2;
       input integer                   depth;
       for (clogb2=0; depth>0; clogb2=clogb2+1)
         depth = depth >> 1;
    endfunction
-   
+
 endmodule
