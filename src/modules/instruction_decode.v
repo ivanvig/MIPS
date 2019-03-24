@@ -112,7 +112,7 @@ module instruction_decode
    //                                       //
    ///////////////////////////////////////////
 
-   localparam RA_REG_ADDR = {NB_REG_ADDR{1'b0}};
+   localparam RA_REG_ADDR = {NB_REG_ADDR{1'b1}};
 
    localparam MSB_INM     = 15;
    localparam MSB_OPCODE  = 31;
