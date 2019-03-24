@@ -76,7 +76,6 @@ module instruction_decode
     output [NB_REG-1:0]     o_b,
     output [NB_INM-1:0]     o_inm,
     output [NB_SHAMT-1:0]   o_shamt,
-    output                  o_use_shamt,
     output                  o_nop,
     output                  o_branch,
     output                  o_jump_rs,
@@ -178,7 +177,6 @@ module instruction_decode
    assign o_jump_inm      = jinm;
    assign o_jump_inm_addr = j_inm_addr;
    assign o_shamt         = shamt;
-   assign o_use_shamt     = use_shamt;
    assign o_a             = regfile_o1;
    assign o_b             = regfile_o2;
    
@@ -237,7 +235,7 @@ module instruction_decode
       if(i_rst)
         ex_reg <= {NB_EX{1'b0}};
       else
-        ex_reg <= {aluop, b_i, s_u_ex, shamt};
+        ex_reg <= {aluop, b_i, s_u_ex, use_shamt};
    end
 
    // MEM logic
