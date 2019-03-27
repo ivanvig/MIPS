@@ -2,7 +2,8 @@ module memory_access
   #(
     parameter NB_REG = 32,
     parameter NB_MEM = 5,
-    parameter NB_WB = 8
+    parameter NB_WB = 8,
+    parameter DATA_FILE = ""
     )
    (
     output reg [NB_REG-1:0]  o_reg_wb,
@@ -90,13 +91,13 @@ module memory_access
         o_ext_mem_o <= extended_mem_o ;
      end
      end // always @ (posedge i_clock)
-   
+
 
   byte_enabled_ram #(
     .NB_COL(NB_REG/8),                           // Specify number of columns (number of bytes)
     .COL_WIDTH(8),                        // Specify column width (byte width, typically 8 or 9)
     .RAM_DEPTH(1024),                     // Specify RAM depth (number of entries)
-    .INIT_FILE(""),                        // Specify name/location of RAM initialization file if using one (leave blank if not)
+    .INIT_FILE(DATA_FILE),                        // Specify name/location of RAM initialization file if using one (leave blank if not)
     .NB_ADDR(NB_ADDR)
   )
    u_byte_enabled_ram (

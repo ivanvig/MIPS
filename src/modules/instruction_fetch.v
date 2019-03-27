@@ -1,12 +1,12 @@
 module instruction_fetch
   #(
-    parameter NB_REG = 32,
-    parameter NB_INSTR = 32,
-    parameter N_ADDR = 2048,
+    parameter NB_REG             = 32,
+    parameter NB_INSTR           = 32,
+    parameter N_ADDR             = 2048,
     parameter LOG2_N_INSMEM_ADDR = clogb2(N_ADDR),
-    parameter NB_INM_I = 16,
-    parameter NB_INM_J = 26,
-    parameter INIT_FILE = ""
+    parameter NB_INM_I           = 16,
+    parameter NB_INM_J           = 26,
+    parameter INSTR_FILE         = ""
     )
    (
     output reg  [NB_INSTR-1:0] o_ir, //Output from IR or NOP depending on i_nop_reg
@@ -63,15 +63,15 @@ module instruction_fetch
        .NB_DATA            (NB_REG),
        .N_ADDR             (N_ADDR),
        .LOG2_N_INSMEM_ADDR (LOG2_N_INSMEM_ADDR),
-       .INIT_FILE          (INIT_FILE)
+       .INIT_FILE          (INSTR_FILE)
         )
    u_instruction_memory
-     (
-      .o_data                (mem_ir),
-      .i_addr                (pc),
-      .i_clock               (i_clock),
-      .i_enable              (1'b1),
-      .i_reset               (i_reset)
+      (
+      .o_data              (mem_ir),
+      .i_addr              (pc),
+      .i_clock             (i_clock),
+      .i_enable            (1'b1),
+      .i_reset             (i_reset)
       ) ;
 
    function integer clogb2;
