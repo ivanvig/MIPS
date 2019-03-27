@@ -17,11 +17,11 @@ module pipeline
     parameter NB_EX              = NB_ALUOP+3,
     parameter NB_MEM             = 5,
     parameter NB_WB              = NB_REG_ADDR+3,
-    parameter REGFILE_DEPTH      = 32
+    parameter REGFILE_DEPTH      = 32,
 
     //Files
-    localparam INSTR_FILE        = "";
-    localparam DATA_FILE         = "";
+    parameter INSTR_FILE        = "",
+    parameter DATA_FILE         = ""
     )
 
    (
