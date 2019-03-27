@@ -4,6 +4,7 @@
 # D:   registro D
 # T:   registro T
 # S:   registro S
+# H:   shamt
 # I:   valor inmediato
 # (I): valor inmediato pasado como offset (lectura/escritura memoria)
 # II:  inmediato largo (instrucciones de tipo J)
