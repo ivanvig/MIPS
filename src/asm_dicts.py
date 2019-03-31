@@ -1,4 +1,4 @@
-# Referencia:
+# Rerencia:
 # args es una tupla que dice que significa cada argumentos de la instruccion:
 
 # D:   registro D
@@ -6,7 +6,7 @@
 # S:   registro S
 # H:   shamt
 # I:   valor inmediato
-# (I): valor inmediato pasado como offset (lectura/escritura memoria)
+# (S): registro S operaciones de lectura/escritura
 # II:  inmediato largo (instrucciones de tipo J)
 # A:   Tag
 
@@ -105,55 +105,55 @@ op_dict = {
     {
         'bin'  : 0b100000,
         'func' : 0b000000,
-        'args' : ('T', 'S', '(I)')
+        'args' : ('T', 'I', '(S)')
     },
     'LH':
     {
         'bin'  : 0b100001,
         'func' : 0b000000,
-        'args' : ('T', 'S', '(I)')
+        'args' : ('T', 'I', '(S)')
     },
     'LW':
     {
         'bin'  : 0b100011,
         'func' : 0b000000,
-        'args' : ('T', 'S', '(I)')
+        'args' : ('T', 'I', '(S)')
     },
     'LBU':
     {
         'bin'  : 0b100100,
         'func' : 0b000000,
-        'args' : ('T', 'S', '(I)')
+        'args' : ('T', 'I', '(S)')
     },
     'LHU':
     {
         'bin'  : 0b100101,
         'func' : 0b000000,
-        'args' : ('T', 'S', '(I)')
+        'args' : ('T', 'I', '(S)')
     },
     'LWU':
     {
         'bin'  : 0b100111,
         'func' : 0b000000,
-        'args' : ('T', 'S', '(I)')
+        'args' : ('T', 'I', '(S)')
     },
     'SB':
     {
         'bin'  : 0b101000,
         'func' : 0b000000,
-        'args' : ('T', 'S', '(I)')
+        'args' : ('T', 'I', '(S)')
     },
     'SH':
     {
         'bin'  : 0b101001,
         'func' : 0b000000,
-        'args' : ('T', 'S', '(I)')
+        'args' : ('T', 'I', '(S)')
     },
     'SW':
     {
         'bin'  : 0b101011,
         'func' : 0b000000,
-        'args' : ('T', 'S', '(I)')
+        'args' : ('T', 'I', '(S)')
     },
     'ADDI':
     {
@@ -216,3 +216,39 @@ op_dict = {
         'args' : ('II',)
     }
 }
+
+reg_dict = {
+    '$0'  : 0,
+    '$at' : 1,
+    '$v0' : 2,
+    '$v1' : 3,
+    '$a0' : 4,
+    '$a1' : 5,
+    '$a2' : 6,
+    '$a3' : 7,
+    '$t0' : 8,
+    '$t1' : 9,
+    '$t2' : 10,
+    '$t3' : 11,
+    '$t4' : 12,
+    '$t5' : 13,
+    '$t6' : 14,
+    '$t7' : 15,
+    '$s0' : 16,
+    '$s1' : 17,
+    '$s2' : 18,
+    '$s3' : 19,
+    '$s4' : 20,
+    '$s5' : 21,
+    '$s6' : 22,
+    '$s7' : 23,
+    '$t8' : 24,
+    '$t9' : 25,
+    '$k0' : 26,
+    '$k1' : 27,
+    '$gp' : 28,
+    '$sp' : 29,
+    '$fp' : 30,
+    '$ra' : 31
+}
+

@@ -10,7 +10,7 @@
 
 LOOP:
   ADDU  $t1, $t1, $t2
-  OR    $t2, $0, t1
+  OR    $t2, $0, $t1
   SW    $t1, 0($t3)
   ADDI  $t3, $t3, 1
   BNE   $t0, $t3, LOOP
