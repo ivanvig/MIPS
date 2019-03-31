@@ -1,4 +1,5 @@
 import ctypes
+import sys
 import re
 from asm_dicts import *
 
@@ -48,7 +49,7 @@ def toint(str):
 code_list = list()
 labels = LabelReplacer(code_list)
 
-with open('fib.asm', 'r') as fp:
+with open(sys.argv[1], 'r') as fp:
 
 
     if __debug__:
@@ -159,16 +160,19 @@ with open('fib.asm', 'r') as fp:
                 raise SystemError("We shouldn't even be here mate, wtf happened. >:v")
 
 
-        code_list.append(ctypes.c_uint32((opcode << 26) + argcode + opdata['func']))
+        code_list.append((opcode << 26) + argcode + opdata['func'])
         if __debug__:
             print("\t\tfunc\t->\t{:06b}".format(opdata['func']))
-            print("\t\tCodified instruction: {:032b}".format(code_list[-1].value))
+            print("\t\tCodified instruction: {:032b}".format(code_list[-1]))
+
 
     if labels.reqlabel_dict:
         raise EOFError("WHERE'S THE LABEL LEBOWSKI?")
 
-# with open('asd.bin', 'wb') as fo:
-#     fo.write(code_list)
+if len(sys.argv) > 2:
+    with open(sys.argv[2], 'wb') as fo:
+        for code in code_list:
+            fo.write(code.to_bytes(4, byteorder='little', signed=False))
 
 
 
