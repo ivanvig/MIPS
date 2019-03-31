@@ -20,6 +20,10 @@ class LabelReplacer:
 
         if label in self.reqlabel_dict:
             for l in self.reqlabel_dict[label]:
+                if __debug__:
+                    print('\t\tPrevious reference to this label found at {}° instruction'.format(l))
+                    print('\t\tUpdated\t->\ttype: A\t|\tvalue: {}\t|\tcode: {:016b}[{}] '.format(label, (n - l) & 0xFFFF, (n-l)))
+
                 self.code_list[l] += (n - l) & 0xFFFF
 
             del self.reqlabel_dict[label]
@@ -28,6 +32,8 @@ class LabelReplacer:
         if label in self.label_dict:
             return (self.label_dict[label] - n) & 0xFFFF
         else:
+            if __debug__:
+                print("\t\t\t[*]Label '{}' not found, {}° instruction added to requester list".format(label, n))
 
             if label in self.reqlabel_dict:
                 self.reqlabel_dict[label].append(n)
@@ -102,7 +108,7 @@ with open(sys.argv[1], 'r') as fp:
                 argcode += regaddr << 11
 
                 if __debug__:
-                    print("\t\t{}° arg\t->\ttype: {}\t;\tvalue: {}\t;\tcode: {:05b}".format(n, arg, parsed[n], regaddr))
+                    print("\t\t{}° arg\t->\ttype: {}\t|\tvalue: {}\t|\tcode: {:05b}".format(n, arg, parsed[n], regaddr))
 
             elif arg == 'T':
                 if parsed[n] not in reg_dict:
@@ -111,7 +117,7 @@ with open(sys.argv[1], 'r') as fp:
                 argcode += regaddr << 16
 
                 if __debug__:
-                    print("\t\t{}° arg\t->\ttype: {}\t;\tvalue: {}\t;\tcode: {:05b}".format(n, arg, parsed[n], regaddr))
+                    print("\t\t{}° arg\t->\ttype: {}\t|\tvalue: {}\t|\tcode: {:05b}".format(n, arg, parsed[n], regaddr))
 
             elif arg == 'S':
                 if parsed[n] not in reg_dict:
@@ -120,7 +126,7 @@ with open(sys.argv[1], 'r') as fp:
                 argcode += regaddr << 21
 
                 if __debug__:
-                    print("\t\t{}° arg\t->\ttype: {}\t;\tvalue: {}\t;\tcode: {:05b}".format(n, arg, parsed[n], regaddr))
+                    print("\t\t{}° arg\t->\ttype: {}\t|\tvalue: {}\t|\tcode: {:05b}".format(n, arg, parsed[n], regaddr))
 
             elif arg == '(S)':
                 if parsed[n+1] not in reg_dict:
@@ -129,32 +135,32 @@ with open(sys.argv[1], 'r') as fp:
                 argcode += regaddr << 21
 
                 if __debug__:
-                    print("\t\t{}° arg\t->\ttype: {}\t;\tvalue: {}\t;\tcode: {:05b}".format(n, arg, parsed[n+1], regaddr))
+                    print("\t\t{}° arg\t->\ttype:{}|\tvalue: {}\t|\tcode: {:05b}".format(n, arg, parsed[n+1], regaddr))
 
             elif arg == 'H':
                 argcode += (toint(parsed[n]) & 0b11111) << 6
 
                 if __debug__:
-                    print("\t\t{}° arg\t->\ttype: {}\t;\tvalue: {}\t;\tcode: {:05b}".format(n, arg, parsed[n], toint(parsed[n]) & 0b11111))
+                    print("\t\t{}° arg\t->\ttype: {}\t|\tvalue: {}\t|\tcode: {:05b}".format(n, arg, parsed[n], toint(parsed[n]) & 0b11111))
 
             elif arg in ('I'):
                 argcode += toint(parsed[n]) & 0xFFFF
 
                 if __debug__:
-                    print("\t\t{}° arg\t->\ttype: {}\t;\tvalue: {}\t;\tcode: {:016b}".format(n, arg, parsed[n], toint(parsed[n]) & 0xFFFF))
+                    print("\t\t{}° arg\t->\ttype: {}\t|\tvalue: {}\t|\tcode: {:016b}".format(n, arg, parsed[n], toint(parsed[n]) & 0xFFFF))
 
             elif arg in ('II'):
                 argcode += toint(parsed[n]) & ~(0b111111 << 26)
 
                 if __debug__:
-                    print("\t\t{}° arg\t->\ttype: {}\t;\tvalue: {}\t;\tcode: {:026b}".format(n, arg, parsed[n], toint(parsed[n]) & ~(0b111111 << 26)))
+                    print("\t\t{}° arg\t->\ttype: {}\t|\tvalue: {}\t|\tcode: {:026b}".format(n, arg, parsed[n], toint(parsed[n]) & ~(0b111111 << 26)))
 
             elif arg == 'A':
                 offset = labels.get_addr_from_label(parsed[n], len(code_list))
                 argcode += offset
 
                 if __debug__:
-                    print("\t\t{}° arg\t->\ttype: {}\t;\tvalue: {}\t;\tcode: {:016b}[{}]".format(n, arg, parsed[n], offset, ctypes.c_int16(offset).value))
+                    print("\t\t{}° arg\t->\ttype: {}\t|\tvalue: {}\t|\tcode: {:016b}[{}]".format(n, arg, parsed[n], offset, ctypes.c_int16(offset).value))
 
             else:
                 raise SystemError("We shouldn't even be here mate, wtf happened. >:v")
