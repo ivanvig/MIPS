@@ -176,11 +176,9 @@ with open(sys.argv[1], 'r') as fp:
         raise EOFError("WHERE'S THE LABEL LEBOWSKI?")
 
 if len(sys.argv) > 2:
-    with open(sys.argv[2], 'wb') as fo:
+    with open(sys.argv[2], 'w') as fo:
+        loquetepinte = ''
         for code in code_list:
-            fo.write(code.to_bytes(4, byteorder='little', signed=False))
-
-
-
-
-
+            loquetepinte += '{:032b} '.format(code)
+        fo.write(loquetepinte)
+            #fo.write(code.to_bytes(4, byteorder='little', signed=False))

@@ -82,17 +82,17 @@ module instruction_decode
     output [NB_REG-1:0]     o_jump_rs_addr,
     output                  o_jump_inm,
     output [NB_J_INM-1:0]   o_jump_inm_addr,
-   
+
     input [NB_REG-1:0]      i_instruction,
     input [NB_REG-1:0]      i_pc,
     input [NB_REG_ADDR-1:0] i_regfile_addr,
     input [NB_REG-1:0]      i_regfile_data,
     input                   i_regfile_we,
-   
+
     // input               i_valid,
     input                   i_clk,
     input                   i_rst
-   
+
     );
    //
    ///////////////////////////////////////////
@@ -122,36 +122,38 @@ module instruction_decode
    localparam MSB_RS      = 25;
    localparam MSB_SHAMT   = 10;
    localparam MSB_J_INM   = 25;
-   
+
    reg [NB_REG-1:0]         pc;
-   
+
    // REG File
    reg [NB_REG-1:0]         regfile [REGFILE_DEPTH-1:0];
    wire [NB_REG-1:0]        regfile_o1;
    wire [NB_REG-1:0]        regfile_o2;
-   
+
    // DEC signals
    reg                      to_ra_reg, use_shamt, use_2nd_lut;
    reg                      is_branch, beq_bne, jrs, jinm;
    // EX signals
    reg [NB_EX-1:0]          ex_reg;
-   
+   reg [NB_INM-1:0]         inm_reg;
+   reg [NB_SHAMT-1:0]       shamt_reg;
+
    wire [NB_ALUOP-1:0]      aluop;
    reg [NB_ALUOP-1:0]       aluop1, aluop2;
    reg                      s_u_ex, b_i;
    // MEM signals
    reg [NB_MEM-1:0]         mem_reg;
-   
+
    reg                      renb, wenb, s_u_mem;
    reg [1:0]                dsize;
    // WB signals
    reg [NB_WB-1:0]          wb_reg;
-   
+
    wire                     data_pc;
    wire [NB_REG_ADDR-1:0]   dest;
    reg                      reg_we, mem_alu;
    reg                      data_pc1, data_pc2;
-   
+
    // from instruction
    wire [NB_REG_ADDR-1:0]   rt, rd, rs;
    wire [NB_OPCODE-1:0]     opcode;
@@ -159,41 +161,43 @@ module instruction_decode
    wire [NB_INM-1:0]        inm;
    wire [NB_SHAMT-1:0]      shamt;
    wire [NB_J_INM-1:0]      j_inm_addr;
-   
+
    // branch
    wire                     comp, branch_result;
-   reg                      nop_reg;
-   
+   reg                      nop_reg, is_branch_reg, jrs_reg, jinm_reg;
+   reg [NB_J_INM-1:0]      j_inm_addr_reg;
+
+
    //OUTPUT assign
    assign o_pc            = pc;
    assign o_ex_ctrl       = ex_reg;
    assign o_mem_ctrl      = mem_reg;
    assign o_wb_ctrl       = wb_reg;
-   assign o_inm           = inm;
+   assign o_inm           = inm_reg;
    assign o_nop           = nop_reg;
-   assign o_branch        = is_branch;
-   assign o_jump_rs       = jrs;
+   assign o_branch        = is_branch_reg;
+   assign o_jump_rs       = jrs_reg;
    assign o_jump_rs_addr  = regfile_o1;
-   assign o_jump_inm      = jinm;
-   assign o_jump_inm_addr = j_inm_addr;
-   assign o_shamt         = shamt;
+   assign o_jump_inm      = jinm_reg;
+   assign o_jump_inm_addr = j_inm_addr_reg;
+   assign o_shamt         = shamt_reg;
    assign o_a             = regfile_o1;
    assign o_b             = regfile_o2;
-   
+
 
    //Instruction values
    assign opcode     = i_instruction[MSB_OPCODE-:NB_OPCODE];
    assign func       = i_instruction[MSB_FUNC-:NB_FUNCCODE];
    assign inm        = i_instruction[MSB_INM-:NB_INM];
-   
+
    assign rt         = i_instruction[MSB_RT-:NB_REG_ADDR];
    assign rs         = i_instruction[MSB_RS-:NB_REG_ADDR];
    assign rd         = i_instruction[MSB_RD-:NB_REG_ADDR];
-   
+
    assign shamt      = i_instruction[MSB_SHAMT-:NB_SHAMT];
    assign j_inm_addr = i_instruction[MSB_J_INM-:NB_J_INM];
-   
-   
+
+
    //PC
    always @ (posedge i_clk) begin
       if (i_rst)
@@ -205,33 +209,45 @@ module instruction_decode
    // REGFILE
    assign regfile_o1 = regfile[rs];
    assign regfile_o2 = regfile[rt];
-   
+
    always @ (posedge i_clk) begin
       if (i_rst) begin: reset
          integer index;
          for (index = 0; index < REGFILE_DEPTH; index = index + 1)
            regfile[index] <= {(NB_REG){1'b0}};
       end else begin: no_reset_jeje
-         if (i_regfile_we)
+         if (i_regfile_we )//& &i_regfile_addr)
            regfile[i_regfile_addr] <= i_regfile_data;
       end
    end
-   
+
    // Jump logic
    assign comp = (regfile_o1 == regfile_o2);
    assign branch_result = beq_bne ? ~comp : comp;
 
    always @ (posedge i_clk) begin
-      if (i_rst)
-        nop_reg <= 1'b0;
-      else
-        nop_reg <= (jrs | jinm | (branch_result & is_branch));
+      if (i_rst) begin
+         nop_reg <= 1'b0;
+         j_inm_addr_reg <= 'b0;
+         is_branch_reg <= 1'b0;
+         jrs_reg <= 1'b0;
+         jinm_reg <= 1'b0;
+      end else begin
+         nop_reg <= (jrs | jinm | (branch_result & is_branch));
+         j_inm_addr_reg <= j_inm_addr;
+         is_branch_reg <= is_branch;
+         jrs_reg <= jrs;
+         jinm_reg <= jinm;
+      end
    end
 
    // EX logic
    assign aluop = use_2nd_lut ? aluop2 : aluop1;
 
    always @ (posedge i_clk) begin
+      inm_reg <= inm;
+      shamt_reg <= shamt;
+
       if(i_rst)
         ex_reg <= {NB_EX{1'b0}};
       else
@@ -840,4 +856,3 @@ module instruction_decode
       endcase
    end
 endmodule
-

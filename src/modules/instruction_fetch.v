@@ -37,7 +37,6 @@ module instruction_fetch
         o_pc <= {NB_REG{1'b0}};
      end else if (i_valid) begin
         case ({i_branch, i_jump_rs, i_jump_inm})
-          // TODO: aca se va a romper todo
           3'b000: pc <= pc+4 ;
           3'b001: pc <= (pc & 32'hF0000000) | (i_inm_j << 2); //J/JAL
           3'b010: pc <= i_rs; //JR/JALR

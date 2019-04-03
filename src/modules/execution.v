@@ -38,7 +38,7 @@ module execution
    wire                       s_u ;
    wire                       shamt;
 
-   assign {alu_control, b_i , s_u} = i_ex ;
+   assign {alu_control, b_i , s_u, shamt} = i_ex ;
 
    assign ext_inm = (s_u) ? { {NB_REG-NB_INM{1'b0}}, i_inm} : {{NB_REG-NB_INM{i_inm[NB_INM-1]}}, i_inm}; //s_u == 1'b1 : unsigned, else signed
 
@@ -81,4 +81,3 @@ module execution
          .i_op(alu_control)
          );
 endmodule // execution
-

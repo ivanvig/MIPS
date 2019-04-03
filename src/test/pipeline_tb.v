@@ -17,12 +17,12 @@ module pipeline_tb #();
    localparam NB_MEM             = 5;
    localparam NB_WB              = NB_REG_ADDR+3;
    localparam REGFILE_DEPTH      = 32;
-   localparam INSTR_FILE         = "";
+   localparam INSTR_FILE         = "/home/jsoriano/ArqDeComputadoras/TP_FINAL/src/output";
    localparam DATA_FILE          = "";
 
    wire                                 tb_valid_i ;   // Throughput control.
 
-   wire                                 tb_reset_i ;
+   reg                                  tb_reset_i ;
    reg                                  tb_clock_i = 1'b0 ;
    integer                              tb_timer = 0 ;
 
@@ -44,7 +44,9 @@ module pipeline_tb #();
       .NB_EX              (NB_EX ),
       .NB_MEM             (NB_MEM ),
       .NB_WB              (NB_WB ),
-      .REGFILE_DEPTH      (REGFILE_DEPTH )
+      .REGFILE_DEPTH      (REGFILE_DEPTH ),
+      .INSTR_FILE         (INSTR_FILE),
+      .DATA_FILE          (DATA_FILE)
       )
    u_pipeline
      (
@@ -52,7 +54,12 @@ module pipeline_tb #();
       .i_valid            (tb_valid_i),
       .i_reset            (tb_reset_i)
       ) ;
-
+      
+    initial begin
+    #(20) tb_reset_i = 1'b1;
+    #(60) tb_reset_i = 1'b0;
+    end
+    
        always
          begin
             #(50) tb_clock_i = ~tb_clock_i ;
@@ -63,7 +70,6 @@ module pipeline_tb #();
         tb_timer   <= tb_timer + 1;
      end
 
-   assign tb_reset_i = (tb_timer == 2) ; // Reset at time 2
    assign tb_valid_i = 1'b1 ;
    function integer clogb2;
       input integer                   depth;

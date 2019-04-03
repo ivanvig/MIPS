@@ -26,15 +26,18 @@ module instruction_memory
    //==========================================================================
    reg [NB_DATA-1:0]                    mem_bank [N_ADDR-1:0] ;
    reg [NB_DATA-1:0]                    data ;
+   wire [LOG2_N_INSMEM_ADDR-2-1:0]      truncated_addr;                   
 
    //==========================================================================
    // ALGORITHM.
    //==========================================================================
+   assign truncated_addr = i_addr[LOG2_N_INSMEM_ADDR-1:2];
+   
    //  | 15 Opcode 11 | 10 Operand 0 | Instruction format
    generate
       if (INIT_FILE != "") begin: use_init_file
          initial
-           $readmemh(INIT_FILE, mem_bank, 0, N_ADDR-1);
+           $readmemb(INIT_FILE, mem_bank, 0, N_ADDR-1);
       end else begin: init_bram_to_zero
          integer ram_index;
          initial
@@ -50,7 +53,7 @@ module instruction_memory
         if (i_reset)
           data <= mem_bank[0];
         else if (i_enable)
-          data <= mem_bank[i_addr];
+          data <= mem_bank[truncated_addr];
      end
 
    function integer clogb2;
