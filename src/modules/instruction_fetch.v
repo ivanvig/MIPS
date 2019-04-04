@@ -9,7 +9,7 @@ module instruction_fetch
     parameter INSTR_FILE         = ""
     )
    (
-    output reg  [NB_INSTR-1:0] o_ir, //Output from IR or NOP depending on i_nop_reg
+    output wire  [NB_INSTR-1:0] o_ir, //Output from IR or NOP depending on i_nop_reg
     output reg [NB_REG-1:0]    o_pc,
 
     input wire                 i_nop_reg, //Input from NOP_REG which indicates that there was a jump/branch
@@ -27,7 +27,6 @@ module instruction_fetch
     ) ;
    reg [NB_REG-1:0]            pc ;
    wire [NB_INSTR-1:0]         mem_ir ; //IR register from Instr Mem
-   wire [NB_INSTR-1:0]         instruction;
 
    //Program counter logic
    always @(posedge i_clock)
@@ -47,15 +46,10 @@ module instruction_fetch
      end
      end // always @ (posedge i_clock)
 
-   assign instruction = (i_nop_reg)? 32'h0000_0000 : mem_ir ;
+   assign o_ir = (i_nop_reg)? 32'h0000_0000 : mem_ir ;
 
-   always @(posedge i_clock)
-     begin
-        if (i_reset)
-          o_ir <= {NB_INSTR{1'b0}};
-        else if (i_valid)
-          o_ir <= instruction;
-     end
+  
+   
 
    instruction_memory
      #(

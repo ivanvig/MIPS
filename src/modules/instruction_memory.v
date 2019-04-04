@@ -48,7 +48,7 @@ module instruction_memory
 
    assign o_data = data ;
 
-   always @ (negedge i_clock)
+   always @ (posedge i_clock)
      begin
         if (i_reset)
           data <= mem_bank[0];

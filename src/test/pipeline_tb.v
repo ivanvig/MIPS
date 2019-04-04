@@ -17,7 +17,7 @@ module pipeline_tb #();
    localparam NB_MEM             = 5;
    localparam NB_WB              = NB_REG_ADDR+3;
    localparam REGFILE_DEPTH      = 32;
-   localparam INSTR_FILE         = "/home/jsoriano/ArqDeComputadoras/TP_FINAL/src/output";
+   localparam INSTR_FILE         = "output.mem";
    localparam DATA_FILE          = "";
 
    wire                                 tb_valid_i ;   // Throughput control.
