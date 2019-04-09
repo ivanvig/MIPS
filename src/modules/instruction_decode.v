@@ -259,7 +259,7 @@ module instruction_decode
       if(i_rst)
         ex_reg <= {NB_EX{1'b0}};
       else
-        ex_reg <= {aluop, b_i, s_u_ex, use_shamt};
+        ex_reg <= {aluop, b_i, s_u_ex, use_shamt&use_2nd_lut};
    end
 
    // MEM logic
