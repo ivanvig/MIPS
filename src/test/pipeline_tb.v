@@ -2,7 +2,7 @@ module pipeline_tb #();
 
    localparam NB_REG             = 32;
    localparam NB_INSTR           = 32;
-   localparam N_ADDR             = 32;
+   localparam N_ADDR             = 512;
    localparam LOG2_N_INSMEM_ADDR = clogb2(N_ADDR);
    localparam NB_INM_I           = 16;
    localparam NB_INM_J           = 26;

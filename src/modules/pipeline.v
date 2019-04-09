@@ -3,7 +3,7 @@ module pipeline
     //instruction_fetch
     parameter NB_REG             = 32,
     parameter NB_INSTR           = 32,
-    parameter N_ADDR             = 32,
+    parameter N_ADDR             = 2048,
     parameter LOG2_N_INSMEM_ADDR = clogb2(N_ADDR),
     parameter NB_INM_I           = 16,
     parameter NB_INM_J           = 26,
@@ -97,7 +97,7 @@ module pipeline
       .o_pc                (if_pc_deco),
 
       .i_nop_reg           (deco_nop_reg_if),
-      .i_inm_i             (deco_inm_i_if),
+      .i_inm_i             (deco_inm_j_if[NB_INM_I-1:0]),
       .i_inm_j             (deco_inm_j_if),
       .i_rs                (deco_rs_if),
       .i_jump_inm          (deco_jump_inm_if),

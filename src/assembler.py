@@ -131,7 +131,7 @@ with open(sys.argv[1], 'r') as fp:
             elif arg == '(S)':
                 if parsed[n+1] not in reg_dict:
                     raise SyntaxError("Error: invalid register name '{}' at {}".format(parsed[n+1], ln))
-                regaddr += reg_dict[parsed[n+1]]
+                regaddr = reg_dict[parsed[n+1]]
                 argcode += regaddr << 21
 
                 if __debug__:

@@ -39,7 +39,7 @@ module instruction_fetch
           3'b000: pc <= pc+4 ;
           3'b001: pc <= (pc & 32'hF0000000) | (i_inm_j << 2); //J/JAL
           3'b010: pc <= i_rs; //JR/JALR
-          3'b100: pc <= pc+i_inm_i*4; //BEQ/BNE
+          3'b100: pc <= $signed({1'b0, pc})+($signed(i_inm_i)-1)*4; //BEQ/BNE
           default: pc <= pc;
         endcase // case
         o_pc <= pc+4; //pc to be

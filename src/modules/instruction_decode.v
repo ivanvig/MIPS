@@ -164,9 +164,8 @@ module instruction_decode
 
    // branch
    wire                     comp, branch_result;
-   reg                      nop_reg, is_branch_reg, jrs_reg, jinm_reg;
-   reg [NB_J_INM-1:0]      j_inm_addr_reg;
-   reg [NB_REG-1:0]        a_reg,b_reg;
+   reg                      nop_reg;
+   reg [NB_REG-1:0]         a_reg,b_reg;
 
 
    //OUTPUT assign
@@ -176,11 +175,11 @@ module instruction_decode
    assign o_wb_ctrl       = wb_reg;
    assign o_inm           = inm_reg;
    assign o_nop           = nop_reg;
-   assign o_branch        = is_branch_reg;
-   assign o_jump_rs       = jrs_reg;
+   assign o_branch        = is_branch;
+   assign o_jump_rs       = jrs;
    assign o_jump_rs_addr  = regfile_o1;
-   assign o_jump_inm      = jinm_reg;
-   assign o_jump_inm_addr = j_inm_addr_reg;
+   assign o_jump_inm      = jinm;
+   assign o_jump_inm_addr = j_inm_addr;
    assign o_shamt         = shamt_reg;
    assign o_a             = a_reg;
    assign o_b             = b_reg;
@@ -236,16 +235,8 @@ module instruction_decode
    always @ (posedge i_clk) begin
       if (i_rst) begin
          nop_reg <= 1'b0;
-         j_inm_addr_reg <= 'b0;
-         is_branch_reg <= 1'b0;
-         jrs_reg <= 1'b0;
-         jinm_reg <= 1'b0;
       end else begin
          nop_reg <= (jrs | jinm | (branch_result & is_branch));
-         j_inm_addr_reg <= j_inm_addr;
-         is_branch_reg <= is_branch;
-         jrs_reg <= jrs;
-         jinm_reg <= jinm;
       end
    end
 
