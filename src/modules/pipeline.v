@@ -19,10 +19,6 @@ module pipeline
     parameter NB_WB              = NB_REG_ADDR+3,
     parameter REGFILE_DEPTH      = 32,
 
-    // asd
-    localparam MSB_RT            = 20;
-    localparam MSB_RS            = 25;
-
     //Files
     parameter INSTR_FILE         = "",
     parameter DATA_FILE          = ""
@@ -40,6 +36,9 @@ module pipeline
     input wire               i_reset
     );
 
+   localparam MSB_RT            = 20;
+   localparam MSB_RS            = 25;
+   localparam MSB_OPCODE        = 31;
    //From fetch to decode
    wire [NB_INSTR-1:0]       if_ir_deco;
    wire [NB_REG-1:0]         if_pc_deco;
@@ -110,6 +109,7 @@ module pipeline
       .i_inm_i             (deco_inm_j_if[NB_INM_I-1:0]),
       .i_inm_j             (deco_inm_j_if),
       .i_rs                (deco_rs_if),
+      .i_hazard            (hazard),
       .i_jump_inm          (deco_jump_inm_if),
       .i_jump_rs           (deco_jump_rs_if),
       .i_branch            (deco_branch_if),
@@ -246,18 +246,18 @@ module pipeline
         )
    u_shortcircuit_unit
      (
-      o_data_a   (sc_dataa_ex),
-      o_data_b   (sc_datab_ex),
-      o_mux_a    (sc_muxa_ex),
-      o_mux_b    (sc_muxb_ex),
-      i_we_ex    (exec_wb_mem[2]),
-      i_we_mem   (mem_wb_wb[2]),
-      i_data_ex  (exec_alu_mem),
-      i_data_mem (wb_regfile_data_deco),
-      i_rd_ex    (exec_wb_mem[NB_WB-1-:NB_REG_ADDR]),
-      i_rd_mem   (mem_wb_wb[NB_WB-1-:NB_REG_ADDR]),
-      i_rs       (if_ir_deco[MSB_RS-:NB_REG_ADDR]),
-      i_rt       (if_ir_deco[MSB_RT-:NB_REG_ADDR])
+      .o_data_a   (sc_dataa_ex),
+      .o_data_b   (sc_datab_ex),
+      .o_mux_a    (sc_muxa_ex),
+      .o_mux_b    (sc_muxb_ex),
+      .i_we_ex    (exec_wb_mem[2]),
+      .i_we_mem   (mem_wb_wb[2]),
+      .i_data_ex  (exec_alu_mem),
+      .i_data_mem (wb_regfile_data_deco),
+      .i_rd_ex    (exec_wb_mem[NB_WB-1-:NB_REG_ADDR]),
+      .i_rd_mem   (mem_wb_wb[NB_WB-1-:NB_REG_ADDR]),
+      .i_rs       (if_ir_deco[MSB_RS-:NB_REG_ADDR]),
+      .i_rt       (if_ir_deco[MSB_RT-:NB_REG_ADDR])
       );
 
    hazard_unit
@@ -267,12 +267,12 @@ module pipeline
        )
    u_hazard_unit
      (
-      o_hazard (hazard),
-      i_op     (if_ir_deco[MSB_OPCODE-:NB_OPCODE]),
-      i_rd     (deco_wb_ctrl_exec[NB_WB-1-:NB_REG_ADDR]),
-      i_rs     (if_ir_deco[MSB_RS-:NB_REG_ADDR]),
-      i_rt     (if_ir_deco[MSB_RT-:NB_REG_ADDR]),
-      i_re     (deco_mem_ctrl_exec[NB_MEM-1])
+      .o_hazard (hazard),
+      .i_op     (if_ir_deco[MSB_OPCODE-:NB_OPCODE]),
+      .i_rd     (deco_wb_ctrl_exec[NB_WB-1-:NB_REG_ADDR]),
+      .i_rs     (if_ir_deco[MSB_RS-:NB_REG_ADDR]),
+      .i_rt     (if_ir_deco[MSB_RT-:NB_REG_ADDR]),
+      .i_re     (deco_mem_ctrl_exec[NB_MEM-1])
       );
 
 

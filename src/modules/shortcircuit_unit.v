@@ -2,9 +2,8 @@ module shortcircuit_unit
   #(
     parameter NB_REG_ADDR = 5,
     parameter NB_REG      = 32,
-    parameter NB_OPCODE   = 6,
+    parameter NB_OPCODE   = 6
 
-    localparam JBITS      = 5'b0000_1
     )
    (
     output [NB_REG-1:0]     o_data_a,
@@ -21,6 +20,11 @@ module shortcircuit_unit
     input [NB_REG_ADDR-1:0] i_rs,
     input [NB_REG_ADDR-1:0] i_rt
     ) ;
+
+   localparam JBITS      = 5'b0000_1;
+
+   wire [2-1:0]             data_source_a;
+   wire [2-1:0]             data_source_b;
 
    assign o_mux_a = |data_source_a;
    assign o_mux_b = |data_source_b;
