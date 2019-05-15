@@ -87,6 +87,7 @@ module pipeline
    wire [NB_REG-1:0] sc_datab_ex;
    wire sc_muxa_ex;
    wire sc_muxb_ex;
+   wire deco_rinst_sc;
 
    assign deco_inm_i_if = deco_inm_exec ;
 
@@ -136,32 +137,33 @@ module pipeline
        )
    u_instruction_decode
       (
-      .o_mem_ctrl          (deco_mem_ctrl_exec),
-      .o_ex_ctrl           (deco_ex_ctrl_exec),
-      .o_wb_ctrl           (deco_wb_ctrl_exec),
-      .o_pc                (deco_pc_exec),
-      .o_a                 (deco_a_exec),
-      .o_b                 (deco_b_exec),
+      .o_mem_ctrl      (deco_mem_ctrl_exec),
+      .o_ex_ctrl       (deco_ex_ctrl_exec),
+      .o_wb_ctrl       (deco_wb_ctrl_exec),
+      .o_pc            (deco_pc_exec),
+      .o_a             (deco_a_exec),
+      .o_b             (deco_b_exec),
 
-      .o_inm               (deco_inm_exec),
-      .o_shamt             (deco_shamt_exec),
-      .o_nop               (deco_nop_reg_if),
-      .o_branch            (deco_branch_if),
-      .o_jump_rs           (deco_jump_rs_if),
-      .o_jump_rs_addr      (deco_rs_if),
-      .o_jump_inm          (deco_jump_inm_if),
+      .o_inm           (deco_inm_exec),
+      .o_shamt         (deco_shamt_exec),
+      .o_nop           (deco_nop_reg_if),
+      .o_branch        (deco_branch_if),
+      .o_jump_rs       (deco_jump_rs_if),
+      .o_jump_rs_addr  (deco_rs_if),
+      .o_jump_inm      (deco_jump_inm_if),
+      .o_rinst         (deco_rinst_sc),
 
-      .o_jump_inm_addr     (deco_inm_j_if),
+      .o_jump_inm_addr (deco_inm_j_if),
 
-      .i_instruction       (if_ir_deco),
-      .i_pc                (if_pc_deco),
-      .i_regfile_addr      (wb_regfile_addr_deco),
-      .i_regfile_data      (wb_regfile_data_deco),
-      .i_regfile_we        (wb_regfile_we_deco),
+      .i_instruction   (if_ir_deco),
+      .i_pc            (if_pc_deco),
+      .i_regfile_addr  (wb_regfile_addr_deco),
+      .i_regfile_data  (wb_regfile_data_deco),
+      .i_regfile_we    (wb_regfile_we_deco),
 
-      // .i_valid          (i_valid),
-      .i_clk               (i_clock),
-      .i_rst               (i_reset)
+      // .i_valid      (i_valid),
+      .i_clk           (i_clock),
+      .i_rst           (i_reset)
       );
 
    execution
@@ -252,6 +254,8 @@ module pipeline
       .o_mux_b    (sc_muxb_ex),
       .i_we_ex    (exec_wb_mem[2]),
       .i_we_mem   (mem_wb_wb[2]),
+      .i_rinst    (deco_rinst_sc),
+      .i_jinst    (deco_jump_inm_if),
       .i_data_ex  (exec_alu_mem),
       .i_data_mem (wb_regfile_data_deco),
       .i_rd_ex    (exec_wb_mem[NB_WB-1-:NB_REG_ADDR]),

@@ -13,6 +13,8 @@ module shortcircuit_unit
 
     input                   i_we_ex,
     input                   i_we_mem,
+    input                   i_rinst,
+    input                   i_jinst,
     input [NB_REG-1:0]      i_data_ex,
     input [NB_REG-1:0]      i_data_mem,
     input [NB_REG_ADDR-1:0] i_rd_ex,
@@ -26,8 +28,8 @@ module shortcircuit_unit
    wire [2-1:0]             data_source_a;
    wire [2-1:0]             data_source_b;
 
-   assign o_mux_a = |data_source_a;
-   assign o_mux_b = |data_source_b;
+   assign o_mux_a = |data_source_a & ~i_jinst;
+   assign o_mux_b = |data_source_b & i_rinst & ~i_jinst;
 
    assign o_data_a = data_source_a[0] ? i_data_ex : i_data_mem;
    assign o_data_b = data_source_b[0] ? i_data_ex : i_data_mem;
