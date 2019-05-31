@@ -87,6 +87,7 @@ module pipeline
    wire [NB_REG-1:0] sc_datab_ex;
    wire sc_muxa_ex;
    wire sc_muxb_ex;
+   wire deco_store_sc;
    wire deco_rinst_sc;
 
    assign deco_inm_i_if = deco_inm_exec ;
@@ -136,7 +137,7 @@ module pipeline
        .NB_WB              (NB_WB)
        )
    u_instruction_decode
-      (
+     (
       .o_mem_ctrl      (deco_mem_ctrl_exec),
       .o_ex_ctrl       (deco_ex_ctrl_exec),
       .o_wb_ctrl       (deco_wb_ctrl_exec),
@@ -152,6 +153,7 @@ module pipeline
       .o_jump_rs_addr  (deco_rs_if),
       .o_jump_inm      (deco_jump_inm_if),
       .o_rinst         (deco_rinst_sc),
+      .o_store         (deco_store_sc),
 
       .o_jump_inm_addr (deco_inm_j_if),
 
@@ -255,6 +257,8 @@ module pipeline
       .i_we_ex    (exec_wb_mem[2]),
       .i_we_mem   (mem_wb_wb[2]),
       .i_rinst    (deco_rinst_sc),
+      .i_store    (deco_store_sc),
+      .i_branch   (deco_branch_if),
       .i_jinst    (deco_jump_inm_if),
       .i_data_ex  (exec_alu_mem),
       .i_data_mem (wb_regfile_data_deco),

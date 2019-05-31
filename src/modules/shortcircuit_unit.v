@@ -11,9 +11,11 @@ module shortcircuit_unit
     output reg              o_mux_a,
     output reg              o_mux_b,
 
+    input                   i_store,
     input                   i_we_ex,
     input                   i_we_mem,
     input                   i_rinst,
+    input                   i_branch,
     input                   i_jinst,
     input [NB_REG-1:0]      i_data_ex,
     input [NB_REG-1:0]      i_data_mem,
@@ -53,7 +55,7 @@ module shortcircuit_unit
    end
 
    assign mux_a = |data_source_a & ~i_jinst;
-   assign mux_b = |data_source_b & i_rinst & ~i_jinst;
+   assign mux_b = |data_source_b & (i_rinst | i_store | i_branch) & ~i_jinst;
 
    assign data_a = data_source_a[0] ? i_data_ex : i_data_mem;
    assign data_b = data_source_b[0] ? i_data_ex : i_data_mem;

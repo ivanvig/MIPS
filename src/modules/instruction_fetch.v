@@ -10,26 +10,25 @@ module instruction_fetch
     parameter INSTR_FILE         = ""
     )
    (
-    output reg [NB_INSTR-1:0] o_ir, //Output from IR or NOP depending on i_nop_reg
-    output reg [NB_REG-1:0]   o_pc,
+    output wire [NB_INSTR-1:0] o_ir, //Output from IR or NOP depending on i_nop_reg
+    output reg [NB_REG-1:0]    o_pc,
 
-    input wire                i_nop_reg, //Input from NOP_REG which indicates that there was a jump/branch
-    input wire [NB_INM_I-1:0] i_inm_i, //Branch addr in type i instructions, from instr[0-15]
-    input wire [NB_INM_J-1:0] i_inm_j, //Jump addr in type j instructions, from instr[0-25]
-    input wire [NB_REG-1:0]   i_rs, //Jump addr in type R instructions, from RS
-    input wire                i_hazard,
+    input wire                 i_nop_reg, //Input from NOP_REG which indicates that there was a jump/branch
+    input wire [NB_INM_I-1:0]  i_inm_i, //Branch addr in type i instructions, from instr[0-15]
+    input wire [NB_INM_J-1:0]  i_inm_j, //Jump addr in type j instructions, from instr[0-25]
+    input wire [NB_REG-1:0]    i_rs, //Jump addr in type R instructions, from RS
+    input wire                 i_hazard,
 
-    input wire                i_jump_inm,
-    input wire                i_jump_rs,
-    input wire                i_branch,
+    input wire                 i_jump_inm,
+    input wire                 i_jump_rs,
+    input wire                 i_branch,
 
-    input wire                i_clock,
-    input wire                i_reset,
-    input wire                i_valid
+    input wire                 i_clock,
+    input wire                 i_reset,
+    input wire                 i_valid
     ) ;
    reg [NB_REG-1:0]            pc ;
    wire [NB_INSTR-1:0]         mem_ir ; //IR register from Instr Mem
-   wire [NB_INSTR-1:0]         instruction;
 
    //Program counter logic
    always @(posedge i_clock)
@@ -42,7 +41,7 @@ module instruction_fetch
           4'b0000: pc <= pc+4 ;
           4'b0010: pc <= (pc & 32'hF0000000) | (i_inm_j << 2); //J/JAL
           4'b0100: pc <= i_rs; //JR/JALR
-          4'b1000: pc <= pc+i_inm_i*4; //BEQ/BNE
+          4'b1000: pc <= $signed({1'b0, pc})+($signed(i_inm_i)-1)*4; //BEQ/BNE
           4'b0001: pc <= pc;
           default: pc <= pc;
         endcase // case
@@ -50,15 +49,7 @@ module instruction_fetch
      end
      end // always @ (posedge i_clock)
 
-   assign instruction = (i_nop_reg || i_hazard)? 32'h0000_0000 : mem_ir ;
-
-   always @(posedge i_clock)
-     begin
-        if (i_reset)
-          o_ir <= {NB_INSTR{1'b0}};
-        else if (i_valid && !i_hazard)
-          o_ir <= instruction;
-     end
+   assign o_ir = (i_nop_reg || i_hazard)? 32'h0000_0000 : mem_ir ;
 
    instruction_memory
      #(

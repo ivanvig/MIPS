@@ -83,6 +83,7 @@ module instruction_decode
     output                  o_jump_inm,
     output [NB_J_INM-1:0]   o_jump_inm_addr,
     output                  o_rinst,
+    output                  o_store,
 
     input [NB_REG-1:0]      i_instruction,
     input [NB_REG-1:0]      i_pc,
@@ -171,6 +172,7 @@ module instruction_decode
 
    //OUTPUT assign
    assign o_rinst         = use_2nd_lut;
+   assign o_store         = wenb;
    assign o_pc            = pc;
    assign o_ex_ctrl       = ex_reg;
    assign o_mem_ctrl      = mem_reg;
