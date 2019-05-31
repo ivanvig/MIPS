@@ -219,7 +219,7 @@ module instruction_decode
          integer index;
          for (index = 0; index < REGFILE_DEPTH; index = index + 1)
            regfile[index] <= {(NB_REG){1'b0}};
-           
+
          a_reg <= {NB_REG{1'b0}};
          b_reg <= {NB_REG{1'b0}};
       end else begin: no_reset_jeje
@@ -271,7 +271,7 @@ module instruction_decode
       if(i_rst)
         wb_reg <= {NB_WB{1'b0}};
       else
-        wb_reg <= {dest, reg_we, mem_alu, data_pc};
+        wb_reg <= {dest, reg_we && dest, mem_alu, data_pc};
    end
 
    // Main LUT

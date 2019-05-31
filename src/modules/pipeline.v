@@ -261,7 +261,10 @@ module pipeline
       .i_rd_ex    (exec_wb_mem[NB_WB-1-:NB_REG_ADDR]),
       .i_rd_mem   (mem_wb_wb[NB_WB-1-:NB_REG_ADDR]),
       .i_rs       (if_ir_deco[MSB_RS-:NB_REG_ADDR]),
-      .i_rt       (if_ir_deco[MSB_RT-:NB_REG_ADDR])
+      .i_rt       (if_ir_deco[MSB_RT-:NB_REG_ADDR]),
+      .i_reset    (i_reset),
+      .i_clock    (i_clock),
+      .i_valid    (i_valid)
       );
 
    hazard_unit
