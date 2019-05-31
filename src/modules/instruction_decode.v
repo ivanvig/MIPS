@@ -91,6 +91,10 @@ module instruction_decode
     input [NB_REG-1:0]      i_regfile_data,
     input                   i_regfile_we,
 
+    input                   i_sc_muxa,
+    input                   i_sc_muxb,
+    input [NB_REG-1:0]      i_sc_dataa,
+    input [NB_REG-1:0]      i_sc_datab,
     // input               i_valid,
     input                   i_clk,
     input                   i_rst
@@ -166,6 +170,7 @@ module instruction_decode
 
    // branch
    wire                     comp, branch_result;
+   wire [NB_REG-1:0]        compvara, compvarb;
    reg                      nop_reg;
    reg [NB_REG-1:0]         a_reg,b_reg;
 
@@ -233,7 +238,10 @@ module instruction_decode
    end
 
    // Jump logic
-   assign comp = (regfile_o1 == regfile_o2);
+   assign compvara = i_sc_muxa ? i_sc_dataa : regfile_o1;
+   assign compvarb = i_sc_muxb ? i_sc_datab : regfile_o2;
+
+   assign comp = (compvara == compvarb);
    assign branch_result = beq_bne ? ~comp : comp;
 
    always @ (posedge i_clk) begin

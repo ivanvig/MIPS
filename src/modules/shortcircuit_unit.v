@@ -10,8 +10,13 @@ module shortcircuit_unit
     output reg [NB_REG-1:0] o_data_b,
     output reg              o_mux_a,
     output reg              o_mux_b,
+    output                  o_muxa_jump_rs,
+    output                  o_muxb_jump_rs,
+    output                  o_dataa_jump_rs,
+    output                  o_datab_jump_rs,
 
     input                   i_store,
+    input                   i_jump_rs,
     input                   i_we_ex,
     input                   i_we_mem,
     input                   i_rinst,
@@ -38,6 +43,13 @@ module shortcircuit_unit
    wire [NB_REG-1:0]        data_b;
    wire                     mux_a;
    wire                     mux_b;
+
+   // juan dice que el croto circuoito de jump rs
+   assign o_muxa_jump_rs  = |data_source_a & i_jump_rs & i_rinst;
+   assign o_muxb_jump_rs  = |data_source_b & i_jump_rs & i_rinst;
+   assign o_dataa_jump_rs = data_a;
+   assign o_datab_jump_rs = data_b;
+
 
    always @(posedge i_clock)
    begin
