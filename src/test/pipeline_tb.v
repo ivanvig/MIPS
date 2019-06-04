@@ -54,12 +54,12 @@ module pipeline_tb #();
       .i_valid            (tb_valid_i),
       .i_reset            (tb_reset_i)
       ) ;
-      
+
     initial begin
     #(20) tb_reset_i = 1'b1;
-    #(60) tb_reset_i = 1'b0;
+    #(120) tb_reset_i = 1'b0;
     end
-    
+
        always
          begin
             #(50) tb_clock_i = ~tb_clock_i ;

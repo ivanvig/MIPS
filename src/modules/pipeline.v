@@ -123,7 +123,7 @@ module pipeline
 
       .i_inm_i             (deco_inm_j_if[NB_INM_I-1:0]),
       .i_inm_j             (deco_inm_j_if),
-      .i_rs                (sc_muxjmp_if ? sc_datajmp_if : deco_rs_if),
+      .i_rs                (sc_muxa_deco ? sc_dataa_deco : deco_rs_if),
       .i_hazard            (hazard),
       .i_jump_inm          (deco_jump_inm_if),
       .i_jump_rs           (deco_jump_rs_if),
@@ -278,6 +278,7 @@ module pipeline
       .i_we_mem        (exec_wb_mem[2]),
       .i_rinst         (deco_rinst_sc),
       .i_store         (deco_store_sc),
+      .i_jump_rs       (deco_jump_rs_if),
       .i_branch        (deco_branch_if),
       .i_jinst         (deco_jump_inm_if),
       .i_data_ex       (exec_alu_mem),
@@ -286,7 +287,7 @@ module pipeline
       .i_rd_mem        (exec_wb_mem[NB_WB-1-:NB_REG_ADDR]),
       .i_rs            (if_ir_deco[MSB_RS-:NB_REG_ADDR]),
       .i_rt            (if_ir_deco[MSB_RT-:NB_REG_ADDR]),
- 
+
 
       .i_reset         (i_reset),
       .i_clock         (i_clock),

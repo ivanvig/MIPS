@@ -219,7 +219,7 @@ module instruction_decode
    assign regfile_o1 = regfile[rs];
    assign regfile_o2 = regfile[rt];
 
-   always @ (posedge i_clk) begin
+   always @ (negedge i_clk) begin
 
       if (i_rst) begin: reset
 
@@ -227,15 +227,23 @@ module instruction_decode
          for (index = 0; index < REGFILE_DEPTH; index = index + 1)
            regfile[index] <= {(NB_REG){1'b0}};
 
-         a_reg <= {NB_REG{1'b0}};
-         b_reg <= {NB_REG{1'b0}};
       end else begin: no_reset_jeje
-         a_reg <= regfile_o1;
-         b_reg <= regfile_o2;
          if (i_regfile_we )//& &i_regfile_addr)
            regfile[i_regfile_addr] <= i_regfile_data;
       end
-   end
+   end // always @ (negedge i_clk)
+
+   always @ (posedge i_clk)
+     begin
+        if (i_rst) begin
+           a_reg <= {NB_REG{1'b0}};
+           b_reg <= {NB_REG{1'b0}};
+        end else begin
+           a_reg <= regfile_o1;
+           b_reg <= regfile_o2;
+        end
+     end
+
 
    // Jump logic
    assign compvara = i_sc_muxa ? i_sc_dataa : regfile_o1;
