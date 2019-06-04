@@ -302,11 +302,12 @@ module pipeline
    u_hazard_unit
      (
       .o_hazard (hazard),
-      .i_op     (if_ir_deco[MSB_OPCODE-:NB_OPCODE]),
+      .i_jmp_branch (deco_branch_if|deco_jump_rs_if),
       .i_rd     (deco_wb_ctrl_exec[NB_WB-1-:NB_REG_ADDR]),
       .i_rs     (if_ir_deco[MSB_RS-:NB_REG_ADDR]),
       .i_rt     (if_ir_deco[MSB_RT-:NB_REG_ADDR]),
-      .i_re     (deco_mem_ctrl_exec[NB_MEM-1])
+      .i_re     (deco_mem_ctrl_exec[NB_MEM-1]),
+      .i_clock (i_clock)
       );
 
 

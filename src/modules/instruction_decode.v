@@ -185,7 +185,7 @@ module instruction_decode
    assign o_inm           = inm_reg;
    assign o_nop           = nop_reg;
    assign o_branch        = is_branch;
-   assign o_jump_rs       = jrs;
+   assign o_jump_rs       = jrs&use_2nd_lut;
    assign o_jump_rs_addr  = regfile_o1;
    assign o_jump_inm      = jinm;
    assign o_jump_inm_addr = j_inm_addr;
@@ -256,7 +256,7 @@ module instruction_decode
       if (i_rst) begin
          nop_reg <= 1'b0;
       end else begin
-         nop_reg <= (jrs | jinm | (branch_result & is_branch));
+         nop_reg <= ((jrs&use_2nd_lut) | jinm | (branch_result & is_branch));
       end
    end
 
