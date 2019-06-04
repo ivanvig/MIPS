@@ -7,15 +7,13 @@ module hazard_unit
    (
     output                  o_hazard,
 
-    input                   i_re,
+    input                   i_re, // es un LOAD
     input [NB_OPCODE-1:0]    i_op,
     input [NB_REG_ADDR-1:0] i_rd,
     input [NB_REG_ADDR-1:0] i_rs,
     input [NB_REG_ADDR-1:0] i_rt
     ) ;
 
-   localparam JBITS = 5'b0000_1;
-
-   assign o_hazard = (JBITS != {i_op[NB_OPCODE-1:1]}) & ((i_rd == i_rs) | (i_rd == i_rt)) & i_re;
+   assign o_hazard = ((i_rd == i_rs) | (i_rd == i_rt)) & i_re;
 
 endmodule

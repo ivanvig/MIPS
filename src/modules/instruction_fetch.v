@@ -13,7 +13,6 @@ module instruction_fetch
     output wire [NB_INSTR-1:0] o_ir, //Output from IR or NOP depending on i_nop_reg
     output reg [NB_REG-1:0]    o_pc,
 
-    input wire                 i_nop_reg, //Input from NOP_REG which indicates that there was a jump/branch
     input wire [NB_INM_I-1:0]  i_inm_i, //Branch addr in type i instructions, from instr[0-15]
     input wire [NB_INM_J-1:0]  i_inm_j, //Jump addr in type j instructions, from instr[0-25]
     input wire [NB_REG-1:0]    i_rs, //Jump addr in type R instructions, from RS
@@ -49,7 +48,7 @@ module instruction_fetch
      end
      end // always @ (posedge i_clock)
 
-   assign o_ir = (i_nop_reg || i_hazard)? 32'h0000_0000 : mem_ir ;
+   assign o_ir = mem_ir ;
 
    instruction_memory
      #(
@@ -63,7 +62,7 @@ module instruction_fetch
       .o_data              (mem_ir),
       .i_addr              (pc),
       .i_clock             (i_clock),
-      .i_enable            (1'b1),
+      .i_enable            (~i_hazard),
       .i_reset             (i_reset)
       ) ;
 

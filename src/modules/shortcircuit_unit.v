@@ -6,8 +6,8 @@ module shortcircuit_unit
 
     )
    (
-    output reg [NB_REG-1:0] o_data_a,
-    output reg [NB_REG-1:0] o_data_b,
+    output [NB_REG-1:0]     o_data_a,
+    output [NB_REG-1:0]     o_data_b,
     output reg              o_mux_a,
     output reg              o_mux_b,
     output                  o_muxa_jump_rs,
@@ -38,6 +38,8 @@ module shortcircuit_unit
 
    wire [2-1:0]             data_source_a;
    wire [2-1:0]             data_source_b;
+   reg [2-1:0]              data_source_a_reg;
+   reg [2-1:0]              data_source_b_reg;
 
    wire [NB_REG-1:0]        data_a;
    wire [NB_REG-1:0]        data_b;
@@ -54,23 +56,24 @@ module shortcircuit_unit
    always @(posedge i_clock)
    begin
       if (i_reset) begin
-        o_data_a <= {NB_REG{1'b0}};
-        o_data_b <= {NB_REG{1'b0}};
-        o_mux_a <= 1'b0;
-        o_mux_b <= 1'b0;
+         o_mux_a <= 1'b0;
+         o_mux_b <= 1'b0;
       end else if (i_valid) begin
-        o_data_a <= data_a;
-        o_data_b <= data_b;
-        o_mux_a <= mux_a;
-        o_mux_b <= mux_b;
+         o_mux_a <= mux_a;
+         o_mux_b <= mux_b;
+         data_source_a_reg <= data_source_a;
+         data_source_b_reg <= data_source_b;
       end
    end
+
+   assign o_data_a = data_a;
+   assign o_data_b = data_b;
 
    assign mux_a = |data_source_a & ~i_jinst;
    assign mux_b = |data_source_b & (i_rinst | i_store | i_branch) & ~i_jinst;
 
-   assign data_a = data_source_a[0] ? i_data_ex : i_data_mem;
-   assign data_b = data_source_b[0] ? i_data_ex : i_data_mem;
+   assign data_a = data_source_a_reg[0] ? i_data_ex : i_data_mem;
+   assign data_b = data_source_b_reg[0] ? i_data_ex : i_data_mem;
 
    assign data_source_a[0] = ((i_rs == i_rd_ex) & i_we_ex);
    assign data_source_a[1] = ((i_rs == i_rd_mem) & i_we_mem) & ~data_source_a[0];

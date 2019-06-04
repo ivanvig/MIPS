@@ -100,8 +100,11 @@ module pipeline
    wire [NB_REG-1:0] sc_dataa_deco;
    wire [NB_REG-1:0] sc_datab_deco;
 
+   wire [NB_INSTR-1:0] mux_ir_deco;
+
 
    assign deco_inm_i_if = deco_inm_exec ;
+   assign mux_ir_deco = (hazard | deco_nop_reg_if) ? 32'h0000_0000 : if_ir_deco;
 
    instruction_fetch
      #(
@@ -118,7 +121,6 @@ module pipeline
       .o_ir                (if_ir_deco),
       .o_pc                (if_pc_deco),
 
-      .i_nop_reg           (hazard | deco_nop_reg_if),
       .i_inm_i             (deco_inm_j_if[NB_INM_I-1:0]),
       .i_inm_j             (deco_inm_j_if),
       .i_rs                (sc_muxjmp_if ? sc_datajmp_if : deco_rs_if),
@@ -168,7 +170,7 @@ module pipeline
 
       .o_jump_inm_addr (deco_inm_j_if),
 
-      .i_instruction   (if_ir_deco),
+      .i_instruction   (mux_ir_deco),
       .i_pc            (if_pc_deco),
       .i_regfile_addr  (wb_regfile_addr_deco),
       .i_regfile_data  (wb_regfile_data_deco),
@@ -272,19 +274,19 @@ module pipeline
       .o_data_b        (sc_datab_ex),
       .o_mux_a         (sc_muxa_ex),
       .o_mux_b         (sc_muxb_ex),
-      .i_we_ex         (exec_wb_mem[2]),
-      .i_we_mem        (mem_wb_wb[2]),
+      .i_we_ex         (deco_wb_ctrl_exec[2]),
+      .i_we_mem        (exec_wb_mem[2]),
       .i_rinst         (deco_rinst_sc),
       .i_store         (deco_store_sc),
       .i_branch        (deco_branch_if),
       .i_jinst         (deco_jump_inm_if),
       .i_data_ex       (exec_alu_mem),
       .i_data_mem      (wb_regfile_data_deco),
-      .i_rd_ex         (exec_wb_mem[NB_WB-1-:NB_REG_ADDR]),
-      .i_rd_mem        (mem_wb_wb[NB_WB-1-:NB_REG_ADDR]),
+      .i_rd_ex         (deco_wb_ctrl_exec[NB_WB-1-:NB_REG_ADDR]),
+      .i_rd_mem        (exec_wb_mem[NB_WB-1-:NB_REG_ADDR]),
       .i_rs            (if_ir_deco[MSB_RS-:NB_REG_ADDR]),
       .i_rt            (if_ir_deco[MSB_RT-:NB_REG_ADDR]),
-
+ 
 
       .i_reset         (i_reset),
       .i_clock         (i_clock),
