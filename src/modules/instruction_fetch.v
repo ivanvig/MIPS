@@ -37,11 +37,11 @@ module instruction_fetch
         o_pc <= {NB_REG{1'b0}};
      end else if (i_valid) begin
         case ({i_branch, i_jump_rs, i_jump_inm, i_hazard})
-          4'b0000: pc <= pc+4 ;
-          4'b0010: pc <= (pc & 32'hF0000000) | (i_inm_j << 2); //J/JAL
-          4'b0100: pc <= i_rs; //JR/JALR
           4'b1000: pc <= $signed({1'b0, pc})+($signed(i_inm_i)-1)*4; //BEQ/BNE
+          4'b0100: pc <= i_rs; //JR/JALR
+          4'b0010: pc <= (pc & 32'hF0000000) | (i_inm_j << 2); //J/JAL
           4'b0001: pc <= pc;
+          4'b0000: pc <= pc+4 ;
           default: pc <= pc;
         endcase // case
         o_pc <= pc+4; //pc to be
@@ -62,7 +62,7 @@ module instruction_fetch
       .o_data              (mem_ir),
       .i_addr              (pc),
       .i_clock             (i_clock),
-      .i_enable            (~i_hazard),
+      .i_enable            (~i_hazard & i_valid),
       .i_reset             (i_reset)
       ) ;
 

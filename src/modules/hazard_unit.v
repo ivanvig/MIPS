@@ -13,7 +13,9 @@ module hazard_unit
     input [NB_REG_ADDR-1:0] i_rs,
     input [NB_REG_ADDR-1:0] i_rt,
 
-    input                   i_clock
+    input                   i_clock,
+    input                   i_reset,
+    input                   i_valid
     ) ;
 
    reg                      jump_branch_reg;
@@ -22,9 +24,11 @@ module hazard_unit
 
    always @ (negedge i_clock)
      begin
-        jump_branch_reg <= i_jmp_branch;
-        rs_reg <= i_rs;
-        rt_reg <= i_rt;
+        if (i_valid) begin
+           jump_branch_reg <= i_jmp_branch;
+           rs_reg <= i_rs;
+           rt_reg <= i_rt;
+        end
      end
 
    assign o_hazard = ((i_rd == rs_reg) | (i_rd == rt_reg)) & (i_re | jump_branch_reg);

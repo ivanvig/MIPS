@@ -34,6 +34,7 @@ module instruction_decode
     localparam BNE  	= 6'b0001_01,
     localparam J	  	= 6'b0000_10,
     localparam JAL  	= 6'b0000_11,
+    localparam HLT    = 6'b1111_11,
 
     //Func code
     localparam FUNC_SLL  = 6'b00_0000,
@@ -51,7 +52,6 @@ module instruction_decode
     localparam FUNC_SLT  = 6'b10_1010,
     localparam FUNC_JR   = 6'b00_1000,
     localparam FUNC_JALR = 6'b00_1001,
-
 
     //ALU code
     localparam ADD    = 4'b0000,
@@ -85,6 +85,7 @@ module instruction_decode
     output [NB_J_INM-1:0]   o_jump_inm_addr,
     output                  o_rinst,
     output                  o_store,
+    output                  o_halt,
 
     input [NB_REG-1:0]      i_instruction,
     input [NB_REG-1:0]      i_pc,
@@ -96,10 +97,10 @@ module instruction_decode
     input                   i_sc_muxb,
     input [NB_REG-1:0]      i_sc_dataa,
     input [NB_REG-1:0]      i_sc_datab,
-    // input               i_valid,
-    input                   i_clk,
-    input                   i_rst
 
+    input                   i_clk,
+    input                   i_rst,
+    input                   i_valid
     );
    //
    ///////////////////////////////////////////
@@ -175,6 +176,7 @@ module instruction_decode
    reg                      nop_reg;
    reg [NB_REG-1:0]         a_reg,b_reg;
 
+   wire                     valid;
 
    //OUTPUT assign
    assign o_rinst         = use_2nd_lut;
@@ -194,7 +196,7 @@ module instruction_decode
    assign o_shamt         = shamt_reg;
    assign o_a             = a_reg;
    assign o_b             = b_reg;
-
+   assign o_halt          = valid;
 
    //Instruction values
    assign opcode     = i_instruction[MSB_OPCODE-:NB_OPCODE];
@@ -208,6 +210,8 @@ module instruction_decode
    assign shamt      = i_instruction[MSB_SHAMT-:NB_SHAMT];
    assign j_inm_addr = i_instruction[MSB_J_INM-:NB_J_INM];
 
+   //Halt and debug unit logic
+   assign valid = i_valid & ~(opcode==HLT);
 
    //PC
    always @ (posedge i_clk) begin
@@ -230,8 +234,9 @@ module instruction_decode
            regfile[index] <= {(NB_REG){1'b0}};
 
       end else begin: no_reset_jeje
-         if (i_regfile_we )//& &i_regfile_addr)
-           regfile[i_regfile_addr] <= i_regfile_data;
+         if (valid)
+           if (i_regfile_we )//& &i_regfile_addr)
+             regfile[i_regfile_addr] <= i_regfile_data;
       end
    end // always @ (negedge i_clk)
 
@@ -240,7 +245,7 @@ module instruction_decode
         if (i_rst) begin
            a_reg <= {NB_REG{1'b0}};
            b_reg <= {NB_REG{1'b0}};
-        end else begin
+        end else if (valid) begin
            a_reg <= regfile_o1;
            b_reg <= regfile_o2;
         end
@@ -257,7 +262,7 @@ module instruction_decode
    always @ (posedge i_clk) begin
       if (i_rst) begin
          nop_reg <= 1'b0;
-      end else begin
+      end else if (valid)begin
          nop_reg <= ((jrs&use_2nd_lut) | jinm | (branch_result & is_branch));
       end
    end
@@ -271,7 +276,7 @@ module instruction_decode
 
       if(i_rst)
         ex_reg <= {NB_EX{1'b0}};
-      else
+      else if (valid)
         ex_reg <= {aluop, b_i, s_u_ex, use_shamt&use_2nd_lut};
    end
 
@@ -279,7 +284,7 @@ module instruction_decode
    always @ (posedge i_clk) begin
       if(i_rst)
         mem_reg <= {NB_MEM{1'b0}};
-      else
+      else if (valid)
         mem_reg <= {renb, wenb, s_u_mem, dsize};
    end
 
@@ -290,7 +295,7 @@ module instruction_decode
    always @ (posedge i_clk) begin
       if(i_rst)
         wb_reg <= {NB_WB{1'b0}};
-      else
+      else if (valid)
         wb_reg <= {dest, reg_we && dest, mem_alu, data_pc};
    end
 

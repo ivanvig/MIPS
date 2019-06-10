@@ -132,7 +132,7 @@ module pipeline
 
       .i_clock             (i_clock),
       .i_reset             (i_reset),
-      .i_valid             (i_valid)
+      .i_valid             (deco_halt)
       );
 
    instruction_decode
@@ -172,6 +172,8 @@ module pipeline
 
       .o_jump_inm_addr (deco_inm_j_if),
 
+      .o_halt          (deco_halt),
+
       .i_instruction   (mux_ir_deco),
       .i_pc            (if_pc_deco),
       .i_regfile_addr  (wb_regfile_addr_deco),
@@ -181,7 +183,7 @@ module pipeline
       .i_sc_muxb       (sc_muxb_deco),
       .i_sc_dataa      (sc_dataa_deco),
       .i_sc_datab      (sc_datab_deco),
-      // .i_valid      (i_valid),
+      .i_valid         (i_valid),
       .i_clk           (i_clock),
       .i_rst           (i_reset)
       );
@@ -214,7 +216,7 @@ module pipeline
 
        .i_reset             (i_reset),
        .i_clock             (i_clock),
-       .i_valid             (i_valid)
+       .i_valid             (deco_halt)
       );
 
    memory_access
@@ -239,7 +241,7 @@ module pipeline
 
       .i_reset             (i_reset),
       .i_clock             (i_clock),
-      .i_valid             (i_valid)
+      .i_valid             (deco_halt)
       );
 
    write_back
@@ -293,7 +295,7 @@ module pipeline
 
       .i_reset         (i_reset),
       .i_clock         (i_clock),
-      .i_valid         (i_valid)
+      .i_valid         (deco_halt)
       );
 
    hazard_unit
@@ -309,7 +311,8 @@ module pipeline
       .i_rs     (if_ir_deco[MSB_RS-:NB_REG_ADDR]),
       .i_rt     (if_ir_deco[MSB_RT-:NB_REG_ADDR]),
       .i_re     (deco_mem_ctrl_exec[NB_MEM-1]),
-      .i_clock (i_clock)
+      .i_clock (i_clock),
+      .i_valid (deco_halt)
       );
 
 
