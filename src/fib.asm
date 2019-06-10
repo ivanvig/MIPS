@@ -3,6 +3,7 @@
   ORI   $t0, $0, 8 # podes comentar aca si te pinta tambien
 #OR    $t1, $0, $0
   ORI   $t2, $0, 1
+  ORI   $t6, $0, 256
 
   OR    $t4, $0, $0
   OR    $t3, $0, $0
@@ -23,6 +24,7 @@
 	OR    $0, $0, $0
 	OR    $0, $0, $0
 	OR    $0, $0, $0
+  JR    $t6
 LOOP:
-  ORI   $t5, $0, 16 # que onda
+  ORI   $t5, $0, 20 # que onda
   JR    $t5

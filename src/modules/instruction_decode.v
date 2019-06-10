@@ -78,6 +78,7 @@ module instruction_decode
     output [NB_SHAMT-1:0]   o_shamt,
     output                  o_nop,
     output                  o_branch,
+    output                  o_branch_result,
     output                  o_jump_rs,
     output [NB_REG-1:0]     o_jump_rs_addr,
     output                  o_jump_inm,
@@ -185,6 +186,7 @@ module instruction_decode
    assign o_inm           = inm_reg;
    assign o_nop           = nop_reg;
    assign o_branch        = is_branch;
+   assign o_branch_result = is_branch & branch_result;
    assign o_jump_rs       = jrs&use_2nd_lut;
    assign o_jump_rs_addr  = regfile_o1;
    assign o_jump_inm      = jinm;

@@ -102,6 +102,7 @@ module pipeline
 
    wire [NB_INSTR-1:0] mux_ir_deco;
 
+   wire                deco_isbrancho_sc;
 
    assign deco_inm_i_if = deco_inm_exec ;
    assign mux_ir_deco = (hazard | deco_nop_reg_if) ? 32'h0000_0000 : if_ir_deco;
@@ -161,7 +162,8 @@ module pipeline
       .o_inm           (deco_inm_exec),
       .o_shamt         (deco_shamt_exec),
       .o_nop           (deco_nop_reg_if),
-      .o_branch        (deco_branch_if),
+      .o_branch        (deco_isbrancho_sc),
+      .o_branch_result (deco_branch_if),
       .o_jump_rs       (deco_jump_rs_if),
       .o_jump_rs_addr  (deco_rs_if),
       .o_jump_inm      (deco_jump_inm_if),
@@ -279,7 +281,7 @@ module pipeline
       .i_rinst         (deco_rinst_sc),
       .i_store         (deco_store_sc),
       .i_jump_rs       (deco_jump_rs_if),
-      .i_branch        (deco_branch_if),
+      .i_branch        (deco_isbrancho_sc),
       .i_jinst         (deco_jump_inm_if),
       .i_data_ex       (exec_alu_mem),
       .i_data_mem      (wb_regfile_data_deco),
@@ -302,7 +304,7 @@ module pipeline
    u_hazard_unit
      (
       .o_hazard (hazard),
-      .i_jmp_branch (deco_branch_if|deco_jump_rs_if),
+      .i_jmp_branch (deco_isbrancho_sc|deco_jump_rs_if),
       .i_rd     (deco_wb_ctrl_exec[NB_WB-1-:NB_REG_ADDR]),
       .i_rs     (if_ir_deco[MSB_RS-:NB_REG_ADDR]),
       .i_rt     (if_ir_deco[MSB_RT-:NB_REG_ADDR]),
