@@ -21,6 +21,7 @@ module microblaze_mips_interface
 
     input wire [NB_CONTROL_FRAME-1:0] i_frame_from_blaze,
     input wire [NB_CONTROL_FRAME-1:0] i_frame_from_mips,
+    input wire                        i_eod,
 
     input wire                        i_clock,
     input wire                        i_reset
