@@ -7,7 +7,7 @@ module debug_control_memory
     )
    (
     output wire [NB_CONTROL_FRAME-1:0] o_frame_to_interface,
-    output wire [5-1:0]                o_reg_addr,
+    output wire                        o_mem_re,
     output wire                        o_writing,
 
     input wire [6-1:0]                 i_request_select,
@@ -29,6 +29,7 @@ module debug_control_memory
    u_debug_control
      (
       .o_frame_to_interface (o_frame_to_interface ),
+      .o_mem_re             (o_mem_re             ),
       .o_writing            (o_writing            ),
       .i_request_select     (i_request_select     ),
       .i_data_from_mips     (i_data_from_mips     ),
@@ -38,8 +39,6 @@ module debug_control_memory
   */
 
    localparam NB_TIMER = 5;
-   localparam NB_PADDING = NB_LATCH-(NB_INPUT_SIZE%NB_LATCH);
-   localparam NB_PADDED_DATA = NB_INPUT_SIZE + NB_PADDING;
 
    reg                                 timer_enable;
    reg [NB_TIMER-1:0]                  timer;
@@ -51,13 +50,11 @@ module debug_control_memory
 
    wire [NB_PADDED_DATA-1:0]           padded_data_from_mips;
 
-   assign o_frame_to_interface = padded_data_from_mips[NB_PADDED_DATA-(timer*NB_LATCH)-1-:NB_LATCH];
-   assign o_reg_addr = i_request_select[5-1:0];
+   assign o_frame_to_interface = i_data_from_mips;
+   assign o_mem_re = request_match_pos;
    assign o_writing = timer_enable;
 
-   assign padded_data_from_mips = {i_data_from_mips, {NB_PADDING{1'b0}}};
-   //Solo el regfile tiene en 0 el MSB
-   assign request_match = i_request_select[5] === 1'b0;
+   assign request_match = i_request_select === CONTROLLER_ID;
    assign data_done = (NB_INPUT_SIZE/NB_LATCH) + (NB_INPUT_SIZE%NB_LATCH>0) == timer+1;
 
    always @(posedge i_clock)

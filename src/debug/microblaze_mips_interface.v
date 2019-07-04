@@ -2,6 +2,8 @@
 Las tiras son de tamaño fijo igual al tamaño de la mayor tira, cuando termina se manda un EoD
  */
 
+
+
 module microblaze_mips_interface
   #(
     parameter NB_CONTROL_FRAME = 32,
@@ -17,11 +19,12 @@ module microblaze_mips_interface
     output reg [4-1:0]                o_instr_mem_we,
     output reg                        o_read_request,
     output wire [NB_ADDR_DATA-1:0]    o_mem_addr,
-    output reg [6-1:0]                o_request_select, //Select latch group/reg/PC/
+    output wire [6-1:0]               o_request_select, //Select latch group/reg/PC/
 
     input wire [NB_CONTROL_FRAME-1:0] i_frame_from_blaze,
     input wire [NB_CONTROL_FRAME-1:0] i_frame_from_mips,
     input wire                        i_eod,
+    input wire                        i_eop,
 
     input wire                        i_clock,
     input wire                        i_reset
@@ -71,7 +74,11 @@ module microblaze_mips_interface
 
    wire                                pos_instr_valid;
 
+   reg [6-1:0]                         request_select;
+
    //Interface to blaze
+   //cuando llega EOD, cambiar request_select a algo que no matchee con ningun ID para no dejar el match de los
+   //comparadores con el ID en alto
 
 
    //Interface to mips
@@ -207,19 +214,19 @@ module microblaze_mips_interface
         if (pos_instr_valid) begin
            if (use_type_lut)
              casez (address_type[NB_INSTR_ADDR-1:0])
-               REQ_MEM_DATA: o_request_select = 6'b1000_00 ;
-               REQ_MEM_INSTR: o_request_select = 6'b1000_01 ;
-               REQ_REG: o_request_select = {1'b0,instruction_data[5-1:0]}; //Last 5 bits in instruction data have the request REG
-               REQ_REG_PC: o_request_select = 6'b1000_10 ;
-               REQ_LATCH_FETCH_DATA: o_request_select = 6'b1001_00 ;
-               REQ_LATCH_FETCH_CTRL: o_request_select = 6'b1001_01 ;
-               REQ_LATCH_DECO_DATA: o_request_select = 6'b1001_10 ;
-               REQ_LATCH_DECO_CTRL: o_request_select = 6'b1001_11 ;
-               REQ_LATCH_EXEC_DATA: o_request_select = 6'b1010_00 ;
-               REQ_LATCH_EXEC_CTRL: o_request_select = 6'b1010_01 ;
-               REQ_LATCH_MEM_DATA: o_request_select = 6'b1010_10 ;
-               REQ_LATCH_MEM_CTRL: o_request_select = 6'b1010_11 ;
-               default: o_request_select = 6'b0000_00;
+               REQ_MEM_DATA: request_select = 6'b1000_00 ;
+               REQ_MEM_INSTR: request_select = 6'b1000_01 ;
+               REQ_REG: request_select = {1'b0,instruction_data[5-1:0]}; //Last 5 bits in instruction data have the request REG
+               REQ_REG_PC: request_select = 6'b1000_10 ;
+               REQ_LATCH_FETCH_DATA: request_select = 6'b1001_00 ;
+               REQ_LATCH_FETCH_CTRL: request_select = 6'b1001_01 ;
+               REQ_LATCH_DECO_DATA: request_select = 6'b1001_10 ;
+               REQ_LATCH_DECO_CTRL: request_select = 6'b1001_11 ;
+               REQ_LATCH_EXEC_DATA: request_select = 6'b1010_00 ;
+               REQ_LATCH_EXEC_CTRL: request_select = 6'b1010_01 ;
+               REQ_LATCH_MEM_DATA: request_select = 6'b1010_10 ;
+               REQ_LATCH_MEM_CTRL: request_select = 6'b1010_11 ;
+               default: request_select = 6'b0000_00;
              endcase // casez (address_type)
         end // if (pos_instr_valid)
      end
