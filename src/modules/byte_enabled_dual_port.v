@@ -5,31 +5,59 @@
 
 module byte_enabled_dual_port
   #(
-  parameter NB_COL = 4;                       // Specify number of columns (number of bytes)
-  parameter COL_WIDTH = 8;                  // Specify column width (byte width, typically 8 or 9)
-  parameter RAM_DEPTH = 2048;                  // Specify RAM depth (number of entries)
-  parameter RAM_PERFORMANCE = "HIGH_PERFORMANCE"; // Select "HIGH_PERFORMANCE" or "LOW_LATENCY"
-  parameter INIT_FILE = "";                       // Specify name/location of RAM initialization file if using one (leave blank if not)
+    parameter NB_COL = 4,                       // Specify number of columns (number of bytes)
+    parameter COL_WIDTH = 8,                  // Specify column width (byte width, typically 8 or 9)
+    parameter RAM_DEPTH = 2048,                  // Specify RAM depth (number of entries)
+    parameter RAM_PERFORMANCE = "HIGH_PERFORMANCE", // Select "HIGH_PERFORMANCE" or "LOW_LATENCY"
+    parameter INIT_FILE = ""                       // Specify name/location of RAM initialization file if using one (leave blank if not)
     )
    (
-    output wire [(NB_COL*COL_WIDTH)-1:0] o_data_a; // Port A RAM output data
-    output wire [(NB_COL*COL_WIDTH)-1:0] o_data_b; // Port B RAM output data
+    output wire [(NB_COL*COL_WIDTH)-1:0] o_data_a, // Port A RAM output data
+    output wire [(NB_COL*COL_WIDTH)-1:0] o_data_b, // Port B RAM output data
 
-    input wire [clogb2(RAM_DEPTH-1)-1:0] i_addr_a; // Port A address bus, width determined from RAM_DEPTH
-    input wire [clogb2(RAM_DEPTH-1)-1:0] i_addr_b; // Port B address bus, width determined from RAM_DEPTH
-    input wire [(NB_COL*COL_WIDTH)-1:0]  i_data_a; // Port A RAM input data
-    input wire [(NB_COL*COL_WIDTH)-1:0]  i_data_b; // Port B RAM input data
-    input wire                           i_clock; // Clock
-    input wire [NB_COL-1:0]              wea; // Port A write enable
-    input wire [NB_COL-1:0]              web; // Port B write enable
-    input wire                           ena; // Port A RAM Enable, for additional power savings, disable BRAM when not in use
-    input wire                           enb; // Port B RAM Enable, for additional power savings, disable BRAM when not in use
-    input wire                           i_reset_a; // Port A output reset (does not affect memory contents)
-    input wire                           i_reset_b; // Port B output reset (does not affect memory contents)
-    input wire                           i_rea; // Port A output register enable
-    input wire                           i_reb;                         // Port B output register enable
+    input wire [clogb2(RAM_DEPTH-1)-1:0] i_addr_a, // Port A address bus, width determined from RAM_DEPTH
+    input wire [clogb2(RAM_DEPTH-1)-1:0] i_addr_b, // Port B address bus, width determined from RAM_DEPTH
+    input wire [(NB_COL*COL_WIDTH)-1:0]  i_data_a, // Port A RAM input data
+    input wire [(NB_COL*COL_WIDTH)-1:0]  i_data_b, // Port B RAM input data
+    input wire                           i_clock, // Clock
+    input wire [NB_COL-1:0]              wea, // Port A write enable
+    input wire [NB_COL-1:0]              web, // Port B write enable
+    input wire                           ena, // Port A RAM Enable, for additional power savings, disable BRAM when not in use
+    input wire                           enb, // Port B RAM Enable, for additional power savings, disable BRAM when not in use
+    input wire                           i_reset_a, // Port A output reset (does not affect memory contents)
+    input wire                           i_reset_b, // Port B output reset (does not affect memory contents)
+    input wire                           i_rea, // Port A output register enable
+    input wire                           i_reb // Port B output register enable
     );
 
+   /*
+   byte_enabled_dual_port
+     #(
+       .NB_COL          (NB_COL          ),
+       .COL_WIDTH       (COL_WIDTH       ),
+       .RAM_DEPTH       (RAM_DEPTH       ),
+       .RAM_PERFORMANCE (RAM_PERFORMANCE ),
+       .INIT_FILE       (INIT_FILE       )
+       )
+   u_byte_enabled_dual_port
+     (
+      .o_data_a         (o_data_a        ),
+      .o_data_b         (o_data_b        ),
+      .i_addr_a         (i_addr_a        ),
+      .i_addr_b         (i_addr_b        ),
+      .i_data_a         (i_data_a        ),
+      .i_data_b         (i_data_b        ),
+      .i_clock          (i_clock         ),
+      .wea              (wea             ),
+      .web              (web             ),
+      .ena              (ena             ),
+      .enb              (enb             ),
+      .i_reset_a        (i_reset_a       ),
+      .i_reset_b        (i_reset_b       ),
+      .i_rea            (i_rea           ),
+      .i_reb            (i_reb           )
+      );
+    */
 
   reg [(NB_COL*COL_WIDTH)-1:0] BRAM [RAM_DEPTH-1:0];
   reg [(NB_COL*COL_WIDTH)-1:0] ram_data_a = {(NB_COL*COL_WIDTH){1'b0}};
@@ -66,7 +94,7 @@ module byte_enabled_dual_port
              BRAM[i_addr_b][(i+1)*COL_WIDTH-1:i*COL_WIDTH] <= i_data_b[(i+1)*COL_WIDTH-1:i*COL_WIDTH];
              ram_data_b[(i+1)*COL_WIDTH-1:i*COL_WIDTH] <= i_data_b[(i+1)*COL_WIDTH-1:i*COL_WIDTH];
            end else begin
-             ram_data_b[(i+1)*COL_WIDTH-1:i*COL_WIDTH] <= BRAM[addrb][(i+1)*COL_WIDTH-1:i*COL_WIDTH];
+             ram_data_b[(i+1)*COL_WIDTH-1:i*COL_WIDTH] <= BRAM[i_addr_b][(i+1)*COL_WIDTH-1:i*COL_WIDTH];
            end
      end
   endgenerate
@@ -109,4 +137,6 @@ module byte_enabled_dual_port
     input integer depth;
       for (clogb2=0; depth>0; clogb2=clogb2+1)
         depth = depth >> 1;
-  endfunction
+  endfunction // clogb2
+
+endmodule

@@ -1,4 +1,3 @@
-
 module instruction_fetch
   #(
     parameter NB_REG             = 32,
@@ -14,7 +13,7 @@ module instruction_fetch
     output reg [NB_REG-1:0]    o_pc,
 
     //System PC and DATA for debugging
-    output reg [NB_REG-1:0]    o_debug_instrmem_data,
+    output wire [NB_REG-1:0]   o_debug_instrmem_data,
     output wire [NB_REG-1:0]   o_debug_system_pc,
 
     input wire [NB_INM_I-1:0]  i_inm_i, //Branch addr in type i instructions, from instr[0-15]
@@ -61,6 +60,34 @@ module instruction_fetch
 
    assign o_ir = mem_ir ;
 
+   byte_enabled_dual_port
+     #(
+       .NB_COL          (4                ),
+       .COL_WIDTH       (8                ),
+       .RAM_DEPTH       (N_ADDR           ),
+       .RAM_PERFORMANCE ("RAM_PERFORMANCE"),
+       .INIT_FILE       (INSTR_FILE       )
+       )
+   u_instruction_memory
+     (
+      .o_data_a         (mem_ir                 ),
+      .o_data_b         (o_debug_instrmem_data  ), //For debugging
+      .i_addr_a         (pc                     ),
+      .i_addr_b         (i_debug_instrmem_addr  ),
+      .i_data_a         (/*  NOT CONNECTED   */ ),
+      .i_data_b         (i_debug_instrmem_data  ),
+      .i_clock          (i_clock                ),
+      .wea              (1'b0                   ),
+      .web              (i_debug_instrmem_we    ),
+      .ena              (1'b1                   ),
+      .enb              (1'b1                   ),
+      .i_reset_a        (i_reset                ),
+      .i_reset_b        (i_reset                ),
+      .i_rea            (~i_hazard & i_valid    ),
+      .i_reb            (i_debug_instrmem_re    )
+      );
+
+   /*
    instruction_memory
      #(
        .NB_DATA            (NB_REG),
@@ -75,7 +102,7 @@ module instruction_fetch
       .i_clock             (i_clock),
       .i_enable            (~i_hazard & i_valid),
       .i_reset             (i_reset)
-      ) ;
+      ) ;*/
 
    function integer clogb2;
       input integer                   depth;

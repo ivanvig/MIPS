@@ -330,6 +330,7 @@ module pipeline
        .NB_REG             (NB_REG),
        .NB_MEM             (NB_MEM),
        .NB_WB              (NB_WB),
+       .N_ADDR             (N_ADDR),
        .DATA_FILE          (DATA_FILE)
        )
    u_memory_access

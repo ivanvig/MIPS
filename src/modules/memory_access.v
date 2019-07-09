@@ -3,6 +3,7 @@ module memory_access
     parameter NB_REG = 32,
     parameter NB_MEM = 5,
     parameter NB_WB = 8,
+    parameter N_ADDR = 2048,
     parameter DATA_FILE = ""
     )
    (
@@ -99,7 +100,34 @@ module memory_access
      end
      end // always @ (posedge i_clock)
 
+   byte_enabled_dual_port
+     #(
+       .NB_COL          (4                ),
+       .COL_WIDTH       (8                ),
+       .RAM_DEPTH       (N_ADDR           ),
+       .RAM_PERFORMANCE ("RAM_PERFORMANCE"),
+       .INIT_FILE       (DATA_FILE        )
+       )
+   u_instruction_memory
+     (
+      .o_data_a         (mem_o                  ),
+      .o_data_b         (o_debug_datamem_data   ), //For debugging
+      .i_addr_a         (i_alu_o                ),
+      .i_addr_b         (i_debug_datamem_addr   ),
+      .i_data_a         (i_b_o                  ),
+      .i_data_b         (/*   NOT CONNECTED   */),
+      .i_clock          (i_clock                ),
+      .wea              (extended_we            ),
+      .web              (1'b0                   ),
+      .ena              (1'b1                   ),
+      .enb              (1'b1                   ),
+      .i_reset_a        (i_reset                ),
+      .i_reset_b        (i_reset                ),
+      .i_rea            (re                     ),
+      .i_reb            (i_debug_datamem_re     )
+      );
 
+/*
   byte_enabled_ram #(
     .NB_COL(NB_REG/8),                           // Specify number of columns (number of bytes)
     .COL_WIDTH(8),                        // Specify column width (byte width, typically 8 or 9)
@@ -114,6 +142,6 @@ module memory_access
     .clka(i_clock),       // Clock
     .wea(extended_we),         // Byte-write enable, width determined from NB_COL
     .ena(re)         // RAM Enable, for additional power savings, disable port when not in use
-  );
+  );*/
 
 endmodule
