@@ -13,6 +13,10 @@ module instruction_fetch
     output wire [NB_INSTR-1:0] o_ir, //Output from IR or NOP depending on i_nop_reg
     output reg [NB_REG-1:0]    o_pc,
 
+    //System PC and DATA for debugging
+    output reg [NB_REG-1:0]    o_debug_instrmem_data,
+    output wire [NB_REG-1:0]   o_debug_system_pc,
+
     input wire [NB_INM_I-1:0]  i_inm_i, //Branch addr in type i instructions, from instr[0-15]
     input wire [NB_INM_J-1:0]  i_inm_j, //Jump addr in type j instructions, from instr[0-25]
     input wire [NB_REG-1:0]    i_rs, //Jump addr in type R instructions, from RS
@@ -22,6 +26,12 @@ module instruction_fetch
     input wire                 i_jump_rs,
     input wire                 i_branch,
 
+    //Loading instructions and debugging
+    input wire [16-1:0]        i_debug_instrmem_addr,
+    input wire [16-1:0]        i_debug_instrmem_data,
+    input wire [4-1:0]         i_debug_instrmem_we,
+    input wire                 i_debug_instrmem_re,
+
     input wire                 i_clock,
     input wire                 i_reset,
     input wire                 i_valid
@@ -29,6 +39,7 @@ module instruction_fetch
    reg [NB_REG-1:0]            pc ;
    wire [NB_INSTR-1:0]         mem_ir ; //IR register from Instr Mem
 
+   assign o_debug_system_pc = pc;
    //Program counter logic
    always @(posedge i_clock)
      begin

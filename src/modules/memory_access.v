@@ -7,15 +7,22 @@ module memory_access
     )
    (
     output reg [NB_REG-1:0]  o_reg_wb,
-    output reg  [NB_REG-1:0] o_ext_mem_o,
+    output reg [NB_REG-1:0]  o_ext_mem_o,
     output reg [NB_WB-1:0]   o_wb,
     output reg [NB_REG-1:0]  o_pc,
+
+    //For debugging
+    output wire [NB_REG-1:0] o_debug_datamem_data,
 
     input wire [NB_REG-1:0]  i_alu_o,
     input wire [NB_REG-1:0]  i_b_o,
     input wire [NB_MEM-1:0]  i_mem,
     input wire [NB_WB-1:0]   i_wb,
     input wire [NB_REG-1:0]  i_pc,
+
+    //For debugging
+    input wire [16-1:0]      i_debug_datamem_addr,
+    input wire               i_debug_datamem_re,
 
     input wire               i_reset,
     input wire               i_clock,

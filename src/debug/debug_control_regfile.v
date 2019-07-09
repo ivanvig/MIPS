@@ -19,16 +19,17 @@ module debug_control_regfile
 
    //Quick instance
    /*
-   debug_control
+   debug_control_regfile
      #(
        .NB_LATCH            (NB_LATCH             ),
        .NB_INPUT_SIZE       (NB_INPUT_SIZE        ),
        .NB_CONTROL_FRAME    (NB_CONTROL_FRAME     ),
        .CONTROLLER_ID       (CONTROLLER_ID        )
        )
-   u_debug_control
+   u_debug_control_regfile
      (
       .o_frame_to_interface (o_frame_to_interface ),
+      .o_reg_addr           (o_reg_addr           ),
       .o_writing            (o_writing            ),
       .i_request_select     (i_request_select     ),
       .i_data_from_mips     (i_data_from_mips     ),

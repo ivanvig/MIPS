@@ -87,6 +87,9 @@ module instruction_decode
     output                  o_store,
     output                  o_halt,
 
+    //For debug
+    output [NB_REG-1:0]     o_debug_regfile_data,
+
     input [NB_REG-1:0]      i_instruction,
     input [NB_REG-1:0]      i_pc,
     input [NB_REG_ADDR-1:0] i_regfile_addr,
@@ -97,6 +100,9 @@ module instruction_decode
     input                   i_sc_muxb,
     input [NB_REG-1:0]      i_sc_dataa,
     input [NB_REG-1:0]      i_sc_datab,
+
+    //For debug
+    input [5-1:0]           i_debug_regfile_addr,
 
     input                   i_clk,
     input                   i_rst,

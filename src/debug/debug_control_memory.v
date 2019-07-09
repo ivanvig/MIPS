@@ -19,14 +19,14 @@ module debug_control_memory
 
    //Quick instance
    /*
-   debug_control
+   debug_control_memory
      #(
        .NB_LATCH            (NB_LATCH             ),
        .NB_INPUT_SIZE       (NB_INPUT_SIZE        ),
        .NB_CONTROL_FRAME    (NB_CONTROL_FRAME     ),
        .CONTROLLER_ID       (CONTROLLER_ID        )
        )
-   u_debug_control
+   u_debug_control_memory
      (
       .o_frame_to_interface (o_frame_to_interface ),
       .o_mem_re             (o_mem_re             ),
@@ -37,7 +37,6 @@ module debug_control_memory
       .i_reset              (i_reset              )
       ) ;
   */
-
    localparam NB_TIMER = 5;
 
    reg                                 timer_enable;
@@ -47,8 +46,6 @@ module debug_control_memory
    wire                                request_match_pos;
    wire                                data_done;
    reg                                 tx_finished;
-
-   wire [NB_PADDED_DATA-1:0]           padded_data_from_mips;
 
    assign o_frame_to_interface = i_data_from_mips;
    assign o_mem_re = request_match_pos;
