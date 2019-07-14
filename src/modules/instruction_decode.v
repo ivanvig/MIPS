@@ -309,464 +309,464 @@ module instruction_decode
    always @ (*) begin
       case(opcode)
         R_INST: begin
-           assign use_2nd_lut = 1'b1;
+           use_2nd_lut = 1'b1;
 
-           assign to_ra_reg   = 1'b0;
-           assign is_branch   = 1'b0;
-           assign beq_bne     = 1'b0;
-           assign jinm        = 1'b0;
+           to_ra_reg   = 1'b0;
+           is_branch   = 1'b0;
+           beq_bne     = 1'b0;
+           jinm        = 1'b0;
 
-           assign aluop1      = 4'b0000; //use aluop2
-           assign b_i         = 1'b0;
-           assign s_u_ex      = 1'b0;
+           aluop1      = 4'b0000; //use aluop2
+           b_i         = 1'b0;
+           s_u_ex      = 1'b0;
 
-           assign renb        = 1'b0;
-           assign wenb        = 1'b0;
-           assign s_u_mem     = 1'b0;
-           assign dsize       = 2'b00;
+           renb        = 1'b0;
+           wenb        = 1'b0;
+           s_u_mem     = 1'b0;
+           dsize       = 2'b00;
 
-           assign reg_we      = 1'b1;
-           assign mem_alu     = 1'b1;
-           assign data_pc1    = 1'b0; // use data_pc2
+           reg_we      = 1'b1;
+           mem_alu     = 1'b1;
+           data_pc1    = 1'b0; // use data_pc2
         end
 
         LB: begin
-           assign use_2nd_lut = 1'b0;
+           use_2nd_lut = 1'b0;
 
-           assign to_ra_reg   = 1'b0;
-           assign is_branch   = 1'b0;
-           assign beq_bne     = 1'b0;
-           assign jinm        = 1'b0;
+           to_ra_reg   = 1'b0;
+           is_branch   = 1'b0;
+           beq_bne     = 1'b0;
+           jinm        = 1'b0;
 
-           assign aluop1      = 4'b0000;
-           assign b_i         = 1'b1;
-           assign s_u_ex      = 1'b0;
+           aluop1      = 4'b0000;
+           b_i         = 1'b1;
+           s_u_ex      = 1'b0;
 
-           assign renb        = 1'b1;
-           assign wenb        = 1'b0;
-           assign s_u_mem     = 1'b0;
-           assign dsize       = 2'b00;
+           renb        = 1'b1;
+           wenb        = 1'b0;
+           s_u_mem     = 1'b0;
+           dsize       = 2'b00;
 
-           assign reg_we      = 1'b1;
-           assign mem_alu     = 1'b0;
-           assign data_pc1    = 1'b0;
+           reg_we      = 1'b1;
+           mem_alu     = 1'b0;
+           data_pc1    = 1'b0;
         end
 
         LH: begin
-           assign use_2nd_lut = 1'b0;
+           use_2nd_lut = 1'b0;
 
-           assign to_ra_reg   = 1'b0;
-           assign is_branch   = 1'b0;
-           assign beq_bne     = 1'b0;
-           assign jinm        = 1'b0;
+           to_ra_reg   = 1'b0;
+           is_branch   = 1'b0;
+           beq_bne     = 1'b0;
+           jinm        = 1'b0;
 
-           assign aluop1      = 4'b0000;
-           assign b_i         = 1'b1;
-           assign s_u_ex      = 1'b0;
+           aluop1      = 4'b0000;
+           b_i         = 1'b1;
+           s_u_ex      = 1'b0;
 
-           assign renb        = 1'b1;
-           assign wenb        = 1'b0;
-           assign s_u_mem     = 1'b0;
-           assign dsize       = 2'b01;
+           renb        = 1'b1;
+           wenb        = 1'b0;
+           s_u_mem     = 1'b0;
+           dsize       = 2'b01;
 
-           assign reg_we      = 1'b1;
-           assign mem_alu     = 1'b0;
-           assign data_pc1    = 1'b0;
+           reg_we      = 1'b1;
+           mem_alu     = 1'b0;
+           data_pc1    = 1'b0;
         end
 
         LW: begin
-           assign use_2nd_lut = 1'b0;
+           use_2nd_lut = 1'b0;
 
-           assign to_ra_reg   = 1'b0;
-           assign is_branch   = 1'b0;
-           assign beq_bne     = 1'b0;
-           assign jinm        = 1'b0;
+           to_ra_reg   = 1'b0;
+           is_branch   = 1'b0;
+           beq_bne     = 1'b0;
+           jinm        = 1'b0;
 
-           assign aluop1      = 4'b0000;
-           assign b_i         = 1'b1;
-           assign s_u_ex      = 1'b0;
+           aluop1      = 4'b0000;
+           b_i         = 1'b1;
+           s_u_ex      = 1'b0;
 
-           assign renb        = 1'b1;
-           assign wenb        = 1'b0;
-           assign s_u_mem     = 1'b0;
-           assign dsize       = 2'b10;
+           renb        = 1'b1;
+           wenb        = 1'b0;
+           s_u_mem     = 1'b0;
+           dsize       = 2'b10;
 
-           assign reg_we      = 1'b1;
-           assign mem_alu     = 1'b0;
-           assign data_pc1    = 1'b0;
+           reg_we      = 1'b1;
+           mem_alu     = 1'b0;
+           data_pc1    = 1'b0;
         end
 
         LBU: begin
-           assign use_2nd_lut = 1'b0;
+           use_2nd_lut = 1'b0;
 
-           assign to_ra_reg   = 1'b0;
-           assign is_branch   = 1'b0;
-           assign beq_bne     = 1'b0;
-           assign jinm        = 1'b0;
+           to_ra_reg   = 1'b0;
+           is_branch   = 1'b0;
+           beq_bne     = 1'b0;
+           jinm        = 1'b0;
 
-           assign aluop1      = 4'b0000;
-           assign b_i         = 1'b1;
-           assign s_u_ex      = 1'b0;
+           aluop1      = 4'b0000;
+           b_i         = 1'b1;
+           s_u_ex      = 1'b0;
 
-           assign renb        = 1'b1;
-           assign wenb        = 1'b0;
-           assign s_u_mem     = 1'b1;
-           assign dsize       = 2'b00;
+           renb        = 1'b1;
+           wenb        = 1'b0;
+           s_u_mem     = 1'b1;
+           dsize       = 2'b00;
 
-           assign reg_we      = 1'b1;
-           assign mem_alu     = 1'b0;
-           assign data_pc1    = 1'b0;
+           reg_we      = 1'b1;
+           mem_alu     = 1'b0;
+           data_pc1    = 1'b0;
         end
 
         LHU: begin
-           assign use_2nd_lut = 1'b0;
+           use_2nd_lut = 1'b0;
 
-           assign to_ra_reg   = 1'b0;
-           assign is_branch   = 1'b0;
-           assign beq_bne     = 1'b0;
-           assign jinm        = 1'b0;
+           to_ra_reg   = 1'b0;
+           is_branch   = 1'b0;
+           beq_bne     = 1'b0;
+           jinm        = 1'b0;
 
-           assign aluop1      = 4'b0000;
-           assign b_i         = 1'b1;
-           assign s_u_ex      = 1'b0;
+           aluop1      = 4'b0000;
+           b_i         = 1'b1;
+           s_u_ex      = 1'b0;
 
-           assign renb        = 1'b1;
-           assign wenb        = 1'b0;
-           assign s_u_mem     = 1'b1;
-           assign dsize       = 2'b01;
+           renb        = 1'b1;
+           wenb        = 1'b0;
+           s_u_mem     = 1'b1;
+           dsize       = 2'b01;
 
-           assign reg_we      = 1'b1;
-           assign mem_alu     = 1'b0;
-           assign data_pc1    = 1'b0;
+           reg_we      = 1'b1;
+           mem_alu     = 1'b0;
+           data_pc1    = 1'b0;
         end
 
         LWU: begin
-           assign use_2nd_lut = 1'b0;
+           use_2nd_lut = 1'b0;
 
-           assign to_ra_reg   = 1'b0;
-           assign is_branch   = 1'b0;
-           assign beq_bne     = 1'b0;
-           assign jinm        = 1'b0;
+           to_ra_reg   = 1'b0;
+           is_branch   = 1'b0;
+           beq_bne     = 1'b0;
+           jinm        = 1'b0;
 
-           assign aluop1      = 4'b0000;
-           assign b_i         = 1'b1;
-           assign s_u_ex      = 1'b0;
+           aluop1      = 4'b0000;
+           b_i         = 1'b1;
+           s_u_ex      = 1'b0;
 
-           assign renb        = 1'b1;
-           assign wenb        = 1'b0;
-           assign s_u_mem     = 1'b1;
-           assign dsize       = 2'b10;
+           renb        = 1'b1;
+           wenb        = 1'b0;
+           s_u_mem     = 1'b1;
+           dsize       = 2'b10;
 
-           assign reg_we      = 1'b1;
-           assign mem_alu     = 1'b0;
-           assign data_pc1    = 1'b0;
+           reg_we      = 1'b1;
+           mem_alu     = 1'b0;
+           data_pc1    = 1'b0;
         end
 
         SB: begin
-           assign use_2nd_lut = 1'b0;
+           use_2nd_lut = 1'b0;
 
-           assign to_ra_reg   = 1'b0;
-           assign is_branch   = 1'b0;
-           assign beq_bne     = 1'b0;
-           assign jinm        = 1'b0;
+           to_ra_reg   = 1'b0;
+           is_branch   = 1'b0;
+           beq_bne     = 1'b0;
+           jinm        = 1'b0;
 
-           assign aluop1      = 4'b0000;
-           assign b_i         = 1'b1;
-           assign s_u_ex      = 1'b0;
+           aluop1      = 4'b0000;
+           b_i         = 1'b1;
+           s_u_ex      = 1'b0;
 
-           assign renb        = 1'b0;
-           assign wenb        = 1'b1;
-           assign s_u_mem     = 1'b0;
-           assign dsize       = 2'b00;
+           renb        = 1'b0;
+           wenb        = 1'b1;
+           s_u_mem     = 1'b0;
+           dsize       = 2'b00;
 
-           assign reg_we      = 1'b0;
-           assign mem_alu     = 1'b0;
-           assign data_pc1    = 1'b0;
+           reg_we      = 1'b0;
+           mem_alu     = 1'b0;
+           data_pc1    = 1'b0;
         end
 
         SH: begin
-           assign use_2nd_lut = 1'b0;
+           use_2nd_lut = 1'b0;
 
-           assign to_ra_reg   = 1'b0;
-           assign is_branch   = 1'b0;
-           assign beq_bne     = 1'b0;
-           assign jinm        = 1'b0;
+           to_ra_reg   = 1'b0;
+           is_branch   = 1'b0;
+           beq_bne     = 1'b0;
+           jinm        = 1'b0;
 
-           assign aluop1      = 4'b0000;
-           assign b_i         = 1'b1;
-           assign s_u_ex      = 1'b0;
+           aluop1      = 4'b0000;
+           b_i         = 1'b1;
+           s_u_ex      = 1'b0;
 
-           assign renb        = 1'b0;
-           assign wenb        = 1'b1;
-           assign s_u_mem     = 1'b0;
-           assign dsize       = 2'b01;
+           renb        = 1'b0;
+           wenb        = 1'b1;
+           s_u_mem     = 1'b0;
+           dsize       = 2'b01;
 
-           assign reg_we      = 1'b0;
-           assign mem_alu     = 1'b0;
-           assign data_pc1    = 1'b0;
+           reg_we      = 1'b0;
+           mem_alu     = 1'b0;
+           data_pc1    = 1'b0;
         end
 
         SW: begin
-           assign use_2nd_lut = 1'b0;
+           use_2nd_lut = 1'b0;
 
-           assign to_ra_reg   = 1'b0;
-           assign is_branch   = 1'b0;
-           assign beq_bne     = 1'b0;
-           assign jinm        = 1'b0;
+           to_ra_reg   = 1'b0;
+           is_branch   = 1'b0;
+           beq_bne     = 1'b0;
+           jinm        = 1'b0;
 
-           assign aluop1      = 4'b0000;
-           assign b_i         = 1'b1;
-           assign s_u_ex      = 1'b0;
+           aluop1      = 4'b0000;
+           b_i         = 1'b1;
+           s_u_ex      = 1'b0;
 
-           assign renb        = 1'b0;
-           assign wenb        = 1'b1;
-           assign s_u_mem     = 1'b0;
-           assign dsize       = 2'b10;
+           renb        = 1'b0;
+           wenb        = 1'b1;
+           s_u_mem     = 1'b0;
+           dsize       = 2'b10;
 
-           assign reg_we      = 1'b0;
-           assign mem_alu     = 1'b0;
-           assign data_pc1    = 1'b0;
+           reg_we      = 1'b0;
+           mem_alu     = 1'b0;
+           data_pc1    = 1'b0;
         end
 
         ADDI: begin
-           assign use_2nd_lut = 1'b0;
+           use_2nd_lut = 1'b0;
 
-           assign to_ra_reg   = 1'b0;
-           assign is_branch   = 1'b0;
-           assign beq_bne     = 1'b0;
-           assign jinm        = 1'b0;
+           to_ra_reg   = 1'b0;
+           is_branch   = 1'b0;
+           beq_bne     = 1'b0;
+           jinm        = 1'b0;
 
-           assign aluop1      = ADD;
-           assign b_i         = 1'b1;
-           assign s_u_ex      = 1'b0;
+           aluop1      = ADD;
+           b_i         = 1'b1;
+           s_u_ex      = 1'b0;
 
-           assign renb        = 1'b0;
-           assign wenb        = 1'b0;
-           assign s_u_mem     = 1'b0;
-           assign dsize       = 2'b00;
+           renb        = 1'b0;
+           wenb        = 1'b0;
+           s_u_mem     = 1'b0;
+           dsize       = 2'b00;
 
-           assign reg_we      = 1'b1;
-           assign mem_alu     = 1'b1;
-           assign data_pc1    = 1'b0;
+           reg_we      = 1'b1;
+           mem_alu     = 1'b1;
+           data_pc1    = 1'b0;
         end
 
         ANDI: begin
-           assign use_2nd_lut = 1'b0;
+           use_2nd_lut = 1'b0;
 
-           assign to_ra_reg   = 1'b0;
-           assign is_branch   = 1'b0;
-           assign beq_bne     = 1'b0;
-           assign jinm        = 1'b0;
+           to_ra_reg   = 1'b0;
+           is_branch   = 1'b0;
+           beq_bne     = 1'b0;
+           jinm        = 1'b0;
 
-           assign aluop1      = AND;
-           assign b_i         = 1'b1;
-           assign s_u_ex      = 1'b1;
+           aluop1      = AND;
+           b_i         = 1'b1;
+           s_u_ex      = 1'b1;
 
-           assign renb        = 1'b0;
-           assign wenb        = 1'b0;
-           assign s_u_mem     = 1'b0;
-           assign dsize       = 2'b00;
+           renb        = 1'b0;
+           wenb        = 1'b0;
+           s_u_mem     = 1'b0;
+           dsize       = 2'b00;
 
-           assign reg_we      = 1'b1;
-           assign mem_alu     = 1'b1;
-           assign data_pc1    = 1'b0;
+           reg_we      = 1'b1;
+           mem_alu     = 1'b1;
+           data_pc1    = 1'b0;
         end
 
         ORI: begin
-           assign use_2nd_lut = 1'b0;
+           use_2nd_lut = 1'b0;
 
-           assign to_ra_reg   = 1'b0;
-           assign is_branch   = 1'b0;
-           assign beq_bne     = 1'b0;
-           assign jinm        = 1'b0;
+           to_ra_reg   = 1'b0;
+           is_branch   = 1'b0;
+           beq_bne     = 1'b0;
+           jinm        = 1'b0;
 
-           assign aluop1      = OR;
-           assign b_i         = 1'b1;
-           assign s_u_ex      = 1'b1;
+           aluop1      = OR;
+           b_i         = 1'b1;
+           s_u_ex      = 1'b1;
 
-           assign renb        = 1'b0;
-           assign wenb        = 1'b0;
-           assign s_u_mem     = 1'b0;
-           assign dsize       = 2'b00;
+           renb        = 1'b0;
+           wenb        = 1'b0;
+           s_u_mem     = 1'b0;
+           dsize       = 2'b00;
 
-           assign reg_we      = 1'b1;
-           assign mem_alu     = 1'b1;
-           assign data_pc1    = 1'b0;
+           reg_we      = 1'b1;
+           mem_alu     = 1'b1;
+           data_pc1    = 1'b0;
         end
 
         XORI: begin
-           assign use_2nd_lut = 1'b0;
+           use_2nd_lut = 1'b0;
 
-           assign to_ra_reg   = 1'b0;
-           assign is_branch   = 1'b0;
-           assign beq_bne     = 1'b0;
-           assign jinm        = 1'b0;
+           to_ra_reg   = 1'b0;
+           is_branch   = 1'b0;
+           beq_bne     = 1'b0;
+           jinm        = 1'b0;
 
-           assign aluop1      = XOR;
-           assign b_i         = 1'b1;
-           assign s_u_ex      = 1'b1;
+           aluop1      = XOR;
+           b_i         = 1'b1;
+           s_u_ex      = 1'b1;
 
-           assign renb        = 1'b0;
-           assign wenb        = 1'b0;
-           assign s_u_mem     = 1'b0;
-           assign dsize       = 2'b00;
+           renb        = 1'b0;
+           wenb        = 1'b0;
+           s_u_mem     = 1'b0;
+           dsize       = 2'b00;
 
-           assign reg_we      = 1'b1;
-           assign mem_alu     = 1'b1;
-           assign data_pc1    = 1'b0;
+           reg_we      = 1'b1;
+           mem_alu     = 1'b1;
+           data_pc1    = 1'b0;
         end
 
         LUI: begin
-           assign use_2nd_lut = 1'b0;
+           use_2nd_lut = 1'b0;
 
-           assign to_ra_reg   = 1'b0;
-           assign is_branch   = 1'b0;
-           assign beq_bne     = 1'b0;
-           assign jinm        = 1'b0;
+           to_ra_reg   = 1'b0;
+           is_branch   = 1'b0;
+           beq_bne     = 1'b0;
+           jinm        = 1'b0;
 
-           assign aluop1      = LUI_OP;
-           assign b_i         = 1'b1;
-           assign s_u_ex      = 1'b1;
+           aluop1      = LUI_OP;
+           b_i         = 1'b1;
+           s_u_ex      = 1'b1;
 
-           assign renb        = 1'b0;
-           assign wenb        = 1'b0;
-           assign s_u_mem     = 1'b0;
-           assign dsize       = 2'b00;
+           renb        = 1'b0;
+           wenb        = 1'b0;
+           s_u_mem     = 1'b0;
+           dsize       = 2'b00;
 
-           assign reg_we      = 1'b1;
-           assign mem_alu     = 1'b1;
-           assign data_pc1    = 1'b0;
+           reg_we      = 1'b1;
+           mem_alu     = 1'b1;
+           data_pc1    = 1'b0;
         end
 
         SLTI: begin
-           assign use_2nd_lut = 1'b0;
+           use_2nd_lut = 1'b0;
 
-           assign to_ra_reg   = 1'b0;
-           assign is_branch   = 1'b0;
-           assign beq_bne     = 1'b0;
-           assign jinm        = 1'b0;
+           to_ra_reg   = 1'b0;
+           is_branch   = 1'b0;
+           beq_bne     = 1'b0;
+           jinm        = 1'b0;
 
-           assign aluop1      = SLT;
-           assign b_i         = 1'b1;
-           assign s_u_ex      = 1'b0;
+           aluop1      = SLT;
+           b_i         = 1'b1;
+           s_u_ex      = 1'b0;
 
-           assign renb        = 1'b0;
-           assign wenb        = 1'b0;
-           assign s_u_mem     = 1'b0;
-           assign dsize       = 2'b00;
+           renb        = 1'b0;
+           wenb        = 1'b0;
+           s_u_mem     = 1'b0;
+           dsize       = 2'b00;
 
-           assign reg_we      = 1'b1;
-           assign mem_alu     = 1'b1;
-           assign data_pc1    = 1'b0;
+           reg_we      = 1'b1;
+           mem_alu     = 1'b1;
+           data_pc1    = 1'b0;
         end
 
         BEQ: begin
-           assign use_2nd_lut = 1'b0;
+           use_2nd_lut = 1'b0;
 
-           assign to_ra_reg   = 1'b0;
-           assign is_branch   = 1'b1;
-           assign beq_bne     = 1'b0;
-           assign jinm        = 1'b0;
+           to_ra_reg   = 1'b0;
+           is_branch   = 1'b1;
+           beq_bne     = 1'b0;
+           jinm        = 1'b0;
 
-           assign aluop1      = 4'b0000;
-           assign b_i         = 1'b1;
-           assign s_u_ex      = 1'b0;
+           aluop1      = 4'b0000;
+           b_i         = 1'b1;
+           s_u_ex      = 1'b0;
 
-           assign renb        = 1'b0;
-           assign wenb        = 1'b0;
-           assign s_u_mem     = 1'b0;
-           assign dsize       = 2'b00;
+           renb        = 1'b0;
+           wenb        = 1'b0;
+           s_u_mem     = 1'b0;
+           dsize       = 2'b00;
 
-           assign reg_we      = 1'b0;
-           assign mem_alu     = 1'b0;
-           assign data_pc1    = 1'b0;
+           reg_we      = 1'b0;
+           mem_alu     = 1'b0;
+           data_pc1    = 1'b0;
         end
 
         BNE: begin
-           assign use_2nd_lut = 1'b0;
+           use_2nd_lut = 1'b0;
 
-           assign to_ra_reg   = 1'b0;
-           assign is_branch   = 1'b1;
-           assign beq_bne     = 1'b1;
-           assign jinm        = 1'b0;
+           to_ra_reg   = 1'b0;
+           is_branch   = 1'b1;
+           beq_bne     = 1'b1;
+           jinm        = 1'b0;
 
-           assign aluop1      = 4'b0000;
-           assign b_i         = 1'b1;
-           assign s_u_ex      = 1'b0;
+           aluop1      = 4'b0000;
+           b_i         = 1'b1;
+           s_u_ex      = 1'b0;
 
-           assign renb        = 1'b0;
-           assign wenb        = 1'b0;
-           assign s_u_mem     = 1'b0;
-           assign dsize       = 2'b00;
+           renb        = 1'b0;
+           wenb        = 1'b0;
+           s_u_mem     = 1'b0;
+           dsize       = 2'b00;
 
-           assign reg_we      = 1'b0;
-           assign mem_alu     = 1'b0;
-           assign data_pc1    = 1'b0;
+           reg_we      = 1'b0;
+           mem_alu     = 1'b0;
+           data_pc1    = 1'b0;
         end
 
         J: begin
-           assign use_2nd_lut = 1'b0;
+           use_2nd_lut = 1'b0;
 
-           assign to_ra_reg   = 1'b0;
-           assign is_branch   = 1'b0;
-           assign beq_bne     = 1'b0;
-           assign jinm        = 1'b1;
+           to_ra_reg   = 1'b0;
+           is_branch   = 1'b0;
+           beq_bne     = 1'b0;
+           jinm        = 1'b1;
 
-           assign aluop1      = 4'b0000;
-           assign b_i         = 1'b0;
-           assign s_u_ex      = 1'b0;
+           aluop1      = 4'b0000;
+           b_i         = 1'b0;
+           s_u_ex      = 1'b0;
 
-           assign renb        = 1'b0;
-           assign wenb        = 1'b0;
-           assign s_u_mem     = 1'b0;
-           assign dsize       = 2'b00;
+           renb        = 1'b0;
+           wenb        = 1'b0;
+           s_u_mem     = 1'b0;
+           dsize       = 2'b00;
 
-           assign reg_we      = 1'b0;
-           assign mem_alu     = 1'b0;
-           assign data_pc1    = 1'b0;
+           reg_we      = 1'b0;
+           mem_alu     = 1'b0;
+           data_pc1    = 1'b0;
         end
 
         JAL: begin
-           assign use_2nd_lut = 1'b0;
+           use_2nd_lut = 1'b0;
 
-           assign to_ra_reg   = 1'b1;
-           assign is_branch   = 1'b0;
-           assign beq_bne     = 1'b0;
-           assign jinm        = 1'b1;
+           to_ra_reg   = 1'b1;
+           is_branch   = 1'b0;
+           beq_bne     = 1'b0;
+           jinm        = 1'b1;
 
-           assign aluop1      = 4'b0000;
-           assign b_i         = 1'b0;
-           assign s_u_ex      = 1'b0;
+           aluop1      = 4'b0000;
+           b_i         = 1'b0;
+           s_u_ex      = 1'b0;
 
-           assign renb        = 1'b0;
-           assign wenb        = 1'b0;
-           assign s_u_mem     = 1'b0;
-           assign dsize       = 2'b00;
+           renb        = 1'b0;
+           wenb        = 1'b0;
+           s_u_mem     = 1'b0;
+           dsize       = 2'b00;
 
-           assign reg_we      = 1'b1;
-           assign mem_alu     = 1'b0;
-           assign data_pc1    = 1'b1;
+           reg_we      = 1'b1;
+           mem_alu     = 1'b0;
+           data_pc1    = 1'b1;
         end
         default: begin
-           assign use_2nd_lut = 1'b0;
+           use_2nd_lut = 1'b0;
 
-           assign to_ra_reg   = 1'b0;
-           assign is_branch   = 1'b0;
-           assign beq_bne     = 1'b0;
-           assign jinm        = 1'b0;
+           to_ra_reg   = 1'b0;
+           is_branch   = 1'b0;
+           beq_bne     = 1'b0;
+           jinm        = 1'b0;
 
-           assign aluop1      = 4'b0000;
-           assign b_i         = 1'b0;
-           assign s_u_ex      = 1'b0;
+           aluop1      = 4'b0000;
+           b_i         = 1'b0;
+           s_u_ex      = 1'b0;
 
-           assign renb        = 1'b0;
-           assign wenb        = 1'b0;
-           assign s_u_mem     = 1'b0;
-           assign dsize       = 2'b00;
+           renb        = 1'b0;
+           wenb        = 1'b0;
+           s_u_mem     = 1'b0;
+           dsize       = 2'b00;
 
-           assign reg_we      = 1'b0;
-           assign mem_alu     = 1'b0;
-           assign data_pc1    = 1'b0;
+           reg_we      = 1'b0;
+           mem_alu     = 1'b0;
+           data_pc1    = 1'b0;
         end
       endcase
    end
@@ -775,115 +775,115 @@ module instruction_decode
    always @ (*) begin
       case(func)
         FUNC_SLL: begin
-           assign use_shamt = 1'b1;
-           assign aluop2    = SLL;
-           assign data_pc2  = 1'b0;
-           assign jrs       = 1'b0;
+           use_shamt = 1'b1;
+           aluop2    = SLL;
+           data_pc2  = 1'b0;
+           jrs       = 1'b0;
         end
 
         FUNC_SRL: begin
-           assign use_shamt = 1'b1;
-           assign aluop2    = SRL;
-           assign data_pc2  = 1'b0;
-           assign jrs       = 1'b0;
+           use_shamt = 1'b1;
+           aluop2    = SRL;
+           data_pc2  = 1'b0;
+           jrs       = 1'b0;
         end
 
         FUNC_SRA: begin
-           assign use_shamt = 1'b1;
-           assign aluop2    = SRA;
-           assign data_pc2  = 1'b0;
-           assign jrs       = 1'b0;
+           use_shamt = 1'b1;
+           aluop2    = SRA;
+           data_pc2  = 1'b0;
+           jrs       = 1'b0;
         end
 
         FUNC_SLLV: begin
-           assign use_shamt = 1'b0;
-           assign aluop2    = SLL;
-           assign data_pc2  = 1'b0;
-           assign jrs       = 1'b0;
+           use_shamt = 1'b0;
+           aluop2    = SLL;
+           data_pc2  = 1'b0;
+           jrs       = 1'b0;
         end
 
         FUNC_SRLV: begin
-           assign use_shamt = 1'b0;
-           assign aluop2    = SRL;
-           assign data_pc2  = 1'b0;
-           assign jrs       = 1'b0;
+           use_shamt = 1'b0;
+           aluop2    = SRL;
+           data_pc2  = 1'b0;
+           jrs       = 1'b0;
         end
 
         FUNC_SRAV: begin
-           assign use_shamt = 1'b0;
-           assign aluop2    = SRA;
-           assign data_pc2  = 1'b0;
-           assign jrs       = 1'b0;
+           use_shamt = 1'b0;
+           aluop2    = SRA;
+           data_pc2  = 1'b0;
+           jrs       = 1'b0;
         end
 
         FUNC_ADDU: begin
-           assign use_shamt = 1'b0;
-           assign aluop2    = ADD;
-           assign data_pc2  = 1'b0;
-           assign jrs       = 1'b0;
+           use_shamt = 1'b0;
+           aluop2    = ADD;
+           data_pc2  = 1'b0;
+           jrs       = 1'b0;
         end
 
         FUNC_SUBU: begin
-           assign use_shamt = 1'b0;
-           assign aluop2    = SUB;
-           assign data_pc2  = 1'b0;
-           assign jrs       = 1'b0;
+           use_shamt = 1'b0;
+           aluop2    = SUB;
+           data_pc2  = 1'b0;
+           jrs       = 1'b0;
         end
 
         FUNC_AND: begin
-           assign use_shamt = 1'b0;
-           assign aluop2    = AND;
-           assign data_pc2  = 1'b0;
-           assign jrs       = 1'b0;
+           use_shamt = 1'b0;
+           aluop2    = AND;
+           data_pc2  = 1'b0;
+           jrs       = 1'b0;
         end
 
         FUNC_OR: begin
-           assign use_shamt = 1'b0;
-           assign aluop2    = OR;
-           assign data_pc2  = 1'b0;
-           assign jrs       = 1'b0;
+           use_shamt = 1'b0;
+           aluop2    = OR;
+           data_pc2  = 1'b0;
+           jrs       = 1'b0;
         end
 
         FUNC_XOR: begin
-           assign use_shamt = 1'b0;
-           assign aluop2    = XOR;
-           assign data_pc2  = 1'b0;
-           assign jrs       = 1'b0;
+           use_shamt = 1'b0;
+           aluop2    = XOR;
+           data_pc2  = 1'b0;
+           jrs       = 1'b0;
         end
 
         FUNC_NOR: begin
-           assign use_shamt = 1'b0;
-           assign aluop2    = NOR;
-           assign data_pc2  = 1'b0;
-           assign jrs       = 1'b0;
+           use_shamt = 1'b0;
+           aluop2    = NOR;
+           data_pc2  = 1'b0;
+           jrs       = 1'b0;
         end
 
         FUNC_SLT: begin
-           assign use_shamt = 1'b0;
-           assign aluop2    = SLT;
-           assign data_pc2  = 1'b0;
-           assign jrs       = 1'b0;
+           use_shamt = 1'b0;
+           aluop2    = SLT;
+           data_pc2  = 1'b0;
+           jrs       = 1'b0;
         end
 
         FUNC_JR: begin
-           assign use_shamt = 1'b0;
-           assign aluop2    = 4'b000;
-           assign data_pc2  = 1'b0;
-           assign jrs       = 1'b1;
+           use_shamt = 1'b0;
+           aluop2    = 4'b000;
+           data_pc2  = 1'b0;
+           jrs       = 1'b1;
         end
 
         FUNC_JALR: begin
-           assign use_shamt = 1'b0;
-           assign aluop2    = 4'b000;
-           assign data_pc2  = 1'b1;
-           assign jrs       = 1'b1;
+           use_shamt = 1'b0;
+           aluop2    = 4'b000;
+           data_pc2  = 1'b1;
+           jrs       = 1'b1;
         end
 
         default: begin
-           assign use_shamt = 1'b0;
-           assign aluop2    = 4'b000;
-           assign data_pc2  = 1'b0;
-           assign jrs       = 1'b0;
+           use_shamt = 1'b0;
+           aluop2    = 4'b000;
+           data_pc2  = 1'b0;
+           jrs       = 1'b0;
         end
       endcase
    end

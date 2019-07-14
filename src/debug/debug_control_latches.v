@@ -54,7 +54,7 @@ module debug_control_latches
    assign o_writing = timer_enable;
 
    assign padded_data_from_mips = {i_data_from_mips, {NB_PADDING{1'b0}}};
-   assign request_match = i_request_select === CONTROLLER_ID;
+   assign request_match = i_request_select == CONTROLLER_ID;
    assign data_done = (NB_INPUT_SIZE/NB_LATCH) + (NB_INPUT_SIZE%NB_LATCH>0) == timer+1;
 
    always @(posedge i_clock)

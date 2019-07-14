@@ -17,7 +17,7 @@ module microblaze_mips_interface
     output wire [NB_ADDR_DATA-1:0]    o_instr_data,
     output wire [NB_INSTR_ADDR-1:0]   o_instr_addr,
     output reg [4-1:0]                o_instr_mem_we,
-    output reg                        o_read_request,
+    //output reg                        //o_read_request,
     output wire [NB_ADDR_DATA-1:0]    o_mem_addr,
     output wire [6-1:0]               o_request_select, //Select latch group/reg/PC/
 
@@ -122,7 +122,7 @@ module microblaze_mips_interface
      begin
         o_reset = 1'b0;
         o_instr_mem_we = 4'b0000;
-        o_read_request = 1'b0;
+        //o_read_request = 1'b0;
         use_type_lut = 1'b0;
         return_mode = 1'b0;
         if (pos_instr_valid) begin
@@ -131,7 +131,7 @@ module microblaze_mips_interface
                 valid = 1'b1;
                 o_reset = 1'b0;
                 o_instr_mem_we = 4'b0000;
-                o_read_request = 1'b0;
+                //o_read_request = 1'b0;
                 use_type_lut = 1'b0;
                 return_mode = 1'b0;
              end
@@ -139,35 +139,35 @@ module microblaze_mips_interface
                 valid = 1'b0;
                 o_reset = 1'b1;
                 o_instr_mem_we = 4'b0000;
-                o_read_request = 1'b0;
+                //o_read_request = 1'b0;
                 use_type_lut = 1'b0;
                 return_mode = 1'b0;
              end
              LOAD_INSTR_LSB: begin
                 o_reset = 1'b0;
                 o_instr_mem_we = 4'b0011;
-                o_read_request = 1'b0;
+                //o_read_request = 1'b0;
                 use_type_lut = 1'b0;
                 return_mode = 1'b0;
              end
              LOAD_INSTR_MSB: begin
                 o_reset = 1'b0;
                 o_instr_mem_we = 4'b1100;
-                o_read_request = 1'b0;
+                //o_read_request = 1'b0;
                 use_type_lut = 1'b0;
                 return_mode = 1'b0;
              end
              REQ_DATA: begin
                 o_reset = 1'b0;
                 o_instr_mem_we = 4'b0000;
-                o_read_request = 1'b1;
+                //o_read_request = 1'b1;
                 use_type_lut = 1'b1;
                 return_mode = 1'b0;
              end
              MODE_GET: begin
                 o_reset = 1'b0;
                 o_instr_mem_we = 4'b0000;
-                o_read_request = 1'b0;
+                //o_read_request = 1'b0;
                 use_type_lut = 1'b0;
                 return_mode = 1'b1;
              end
@@ -176,7 +176,7 @@ module microblaze_mips_interface
 
                 o_reset = 1'b0;
                 o_instr_mem_we = 4'b0000;
-                o_read_request = 1'b0;
+                //o_read_request = 1'b0;
                 use_type_lut = 1'b0;
                 return_mode = 1'b0;
              end
@@ -185,7 +185,7 @@ module microblaze_mips_interface
 
                 o_reset = 1'b0;
                 o_instr_mem_we = 4'b0000;
-                o_read_request = 1'b0;
+                //o_read_request = 1'b0;
                 use_type_lut = 1'b0;
                 return_mode = 1'b0;
              end
@@ -194,14 +194,14 @@ module microblaze_mips_interface
 
                 o_reset = 1'b0;
                 o_instr_mem_we = 4'b0000;
-                o_read_request = 1'b0;
+                //o_read_request = 1'b0;
                 use_type_lut = 1'b0;
                 return_mode = 1'b0;
              end
              default: begin
                 o_reset = 1'b0;
                 o_instr_mem_we = 4'b0000;
-                o_read_request = 1'b0;
+                //o_read_request = 1'b0;
                 use_type_lut = 1'b0;
                 return_mode = 1'b0;
              end

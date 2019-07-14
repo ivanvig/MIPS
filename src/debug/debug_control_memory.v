@@ -51,7 +51,7 @@ module debug_control_memory
    assign o_mem_re = request_match_pos;
    assign o_writing = timer_enable;
 
-   assign request_match = i_request_select === CONTROLLER_ID;
+   assign request_match = i_request_select == CONTROLLER_ID;
    assign data_done = (NB_INPUT_SIZE/NB_LATCH) + (NB_INPUT_SIZE%NB_LATCH>0) == timer;
 
    always @(posedge i_clock)

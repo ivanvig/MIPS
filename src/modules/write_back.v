@@ -24,7 +24,6 @@ module write_back
           2'b00: o_wb_data = i_ext_mem_o ;
           2'b10: o_wb_data = i_reg_wb ;
           2'b?1: o_wb_data = i_pc;
-          default: o_wb_data = o_wb_data ;
         endcase
      end
 endmodule

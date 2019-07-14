@@ -58,7 +58,7 @@ module debug_control_regfile
 
    assign padded_data_from_mips = {i_data_from_mips, {NB_PADDING{1'b0}}};
    //Solo el regfile tiene en 0 el MSB
-   assign request_match = i_request_select[5] === 1'b0;
+   assign request_match = i_request_select[5] == 1'b0;
    assign data_done = (NB_INPUT_SIZE/NB_LATCH) + (NB_INPUT_SIZE%NB_LATCH>0) == timer+1;
 
    always @(posedge i_clock)
