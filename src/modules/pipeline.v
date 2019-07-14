@@ -3,7 +3,6 @@ module pipeline
     parameter NB_REG                       = 32,
     parameter NB_INSTR                     = 32,
     parameter N_ADDR                       = 2048,
-    parameter LOG2_N_INSMEM_ADDR           = clogb2(N_ADDR),
     parameter NB_INM_I                     = 16,
     parameter NB_INM_J                     = 26,
     parameter NB_OPCODE                    = 6,
@@ -206,7 +205,6 @@ module pipeline
        .NB_REG             (NB_REG),
        .NB_INSTR           (NB_INSTR),
        .N_ADDR             (N_ADDR),
-       .LOG2_N_INSMEM_ADDR (LOG2_N_INSMEM_ADDR),
        .NB_INM_I           (NB_INM_I),
        .NB_INM_J           (NB_INM_J),
        .INSTR_FILE         (INSTR_FILE)

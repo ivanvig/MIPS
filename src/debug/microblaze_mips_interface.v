@@ -85,8 +85,9 @@ module microblaze_mips_interface
 
    //assign o_frame_to_blaze = i_frame_from_mips;
    assign o_instr_data = instruction_data;
-   assign o_instr_addr = address_type[NB_INSTR_ADDR-1:0];
+   assign o_instr_addr = (instruction_code == REQ_DATA) ? instruction_data : address_type[NB_INSTR_ADDR:0];
    assign o_mem_addr = instruction_data;
+   assign o_request_select = request_select;
 
    assign {instruction_code, address_type, instruction_data} = i_frame_from_blaze;
 

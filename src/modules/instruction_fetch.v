@@ -3,7 +3,6 @@ module instruction_fetch
     parameter NB_REG             = 32,
     parameter NB_INSTR           = 32,
     parameter N_ADDR             = 2048,
-    parameter LOG2_N_INSMEM_ADDR = clogb2(N_ADDR),
     parameter NB_INM_I           = 16,
     parameter NB_INM_J           = 26,
     parameter INSTR_FILE         = ""
@@ -35,6 +34,8 @@ module instruction_fetch
     input wire                 i_reset,
     input wire                 i_valid
     ) ;
+   localparam LOG2_N_INSMEM_ADDR = clogb2(N_ADDR-1);
+
    reg [NB_REG-1:0]            pc ;
    wire [NB_INSTR-1:0]         mem_ir ; //IR register from Instr Mem
 
@@ -44,18 +45,18 @@ module instruction_fetch
      begin
         if (i_reset) begin
            pc <= {NB_REG{1'b0}};
-        o_pc <= {NB_REG{1'b0}};
-     end else if (i_valid) begin
-        case ({i_branch, i_jump_rs, i_jump_inm, i_hazard})
-          4'b1000: pc <= $signed({1'b0, pc})+($signed(i_inm_i)-1)*4; //BEQ/BNE
-          4'b0100: pc <= i_rs; //JR/JALR
-          4'b0010: pc <= (pc & 32'hF0000000) | (i_inm_j << 2); //J/JAL
-          4'b0001: pc <= pc;
-          4'b0000: pc <= pc+4 ;
-          default: pc <= pc;
-        endcase // case
-        o_pc <= pc+4; //pc to be
-     end
+           o_pc <= {NB_REG{1'b0}};
+        end else if (i_valid) begin
+           case ({i_branch, i_jump_rs, i_jump_inm, i_hazard})
+             4'b1000: pc <= $signed({1'b0, pc})+($signed(i_inm_i)-1)*4; //BEQ/BNE
+             4'b0100: pc <= i_rs; //JR/JALR
+             4'b0010: pc <= (pc & 32'hF0000000) | (i_inm_j << 2); //J/JAL
+             4'b0001: pc <= pc;
+             4'b0000: pc <= pc+4 ;
+             default: pc <= pc;
+           endcase // case
+           o_pc <= pc+4; //pc to be
+        end
      end // always @ (posedge i_clock)
 
    assign o_ir = mem_ir ;
@@ -65,26 +66,26 @@ module instruction_fetch
        .NB_COL          (4                ),
        .COL_WIDTH       (8                ),
        .RAM_DEPTH       (N_ADDR           ),
-       .RAM_PERFORMANCE ("RAM_PERFORMANCE"),
+       .RAM_PERFORMANCE ("LOW_LATENCY"),
        .INIT_FILE       (INSTR_FILE       )
        )
    u_instruction_memory
      (
-      .o_data_a         (mem_ir                 ),
-      .o_data_b         (o_debug_instrmem_data  ), //For debugging
-      .i_addr_a         (pc                     ),
-      .i_addr_b         (i_debug_instrmem_addr  ),
-      .i_data_a         (/*  NOT CONNECTED   */ ),
-      .i_data_b         (i_debug_instrmem_data  ),
-      .i_clock          (i_clock                ),
-      .wea              (1'b0                   ),
-      .web              (i_debug_instrmem_we    ),
-      .ena              (1'b1                   ),
-      .enb              (1'b1                   ),
-      .i_reset_a        (i_reset                ),
-      .i_reset_b        (i_reset                ),
-      .i_rea            (~i_hazard & i_valid    ),
-      .i_reb            (i_debug_instrmem_re    )
+      .o_data_a         (mem_ir                     ),
+      .o_data_b         (o_debug_instrmem_data      ), //For debugging
+      .i_addr_a         (pc[LOG2_N_INSMEM_ADDR+2-1-:LOG2_N_INSMEM_ADDR] ),
+      .i_addr_b         (i_debug_instrmem_addr      ),
+      .i_data_a         (/*  NOT CONNECTED   */     ),
+      .i_data_b         (i_debug_instrmem_data      ),
+      .i_clock          (i_clock                    ),
+      .wea              (1'b0                       ),
+      .web              (i_debug_instrmem_we        ),
+      .ena              (~i_hazard & i_valid        ),
+      .enb              (1'b1                       ),
+      .i_reset_a        (i_reset                    ),
+      .i_reset_b        (i_reset                    ),
+      .i_rea            (/*~i_hazard & i_valid*/    ),
+      .i_reb            (i_debug_instrmem_re        )
       );
 
    /*

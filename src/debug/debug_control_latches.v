@@ -37,7 +37,7 @@ module debug_control_latches
   */
 
    localparam NB_TIMER = 5;
-   localparam NB_PADDING = NB_LATCH-(NB_INPUT_SIZE%NB_LATCH);
+   localparam NB_PADDING = (NB_INPUT_SIZE%NB_LATCH==0) ? 0 : NB_LATCH-(NB_INPUT_SIZE%NB_LATCH);
    localparam NB_PADDED_DATA = NB_INPUT_SIZE + NB_PADDING;
 
    reg                                 timer_enable;

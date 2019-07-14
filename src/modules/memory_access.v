@@ -105,7 +105,7 @@ module memory_access
        .NB_COL          (4                ),
        .COL_WIDTH       (8                ),
        .RAM_DEPTH       (N_ADDR           ),
-       .RAM_PERFORMANCE ("RAM_PERFORMANCE"),
+       .RAM_PERFORMANCE ("LOW_LATENCY"    ),
        .INIT_FILE       (DATA_FILE        )
        )
    u_instruction_memory

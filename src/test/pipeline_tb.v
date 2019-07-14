@@ -1,9 +1,7 @@
 module pipeline_tb ();
-
    localparam NB_REG             = 32;
    localparam NB_INSTR           = 32;
    localparam N_ADDR             = 512;
-   localparam LOG2_N_INSMEM_ADDR = clogb2(N_ADDR);
    localparam NB_INM_I           = 16;
    localparam NB_INM_J           = 26;
    localparam NB_OPCODE          = 6;
@@ -52,6 +50,32 @@ module pipeline_tb ();
    localparam INSTR_FILE         = "output.mem";
    localparam DATA_FILE          = "";
 
+   //INSTRUCTION CODES
+   localparam START                = 6'b0000_01;
+   localparam RESET                = 6'b0000_10;
+   localparam LOAD_INSTR_LSB       = 6'b0001_00;
+   localparam LOAD_INSTR_MSB       = 6'b0001_01;
+   localparam REQ_DATA             = 6'b0000_11;
+   localparam MODE_GET             = 6'b0010_00;
+   localparam MODE_SET_CONT        = 6'b0010_01;
+   localparam MODE_SET_STEP        = 6'b0010_10;
+   localparam STEP                 = 6'b1000_00;
+
+   //INSTRUCTION TYPE
+   localparam REQ_MEM_DATA         = 9'b000_0000_01;
+   localparam REQ_MEM_INSTR        = 9'b000_0000_10;
+   localparam REQ_REG              = 9'b000_0001_00;
+   localparam REQ_REG_PC           = 9'b000_0001_01;
+   localparam REQ_LATCH_FETCH_DATA = 9'b000_0010_00;
+   localparam REQ_LATCH_FETCH_CTRL = 9'b000_0010_01;
+   localparam REQ_LATCH_DECO_DATA  = 9'b000_0100_00;
+   localparam REQ_LATCH_DECO_CTRL  = 9'b000_0100_01;
+   localparam REQ_LATCH_EXEC_DATA  = 9'b000_1000_00;
+   localparam REQ_LATCH_EXEC_CTRL  = 9'b000_1000_01;
+   localparam REQ_LATCH_MEM_DATA   = 9'b001_0000_00;
+   localparam REQ_LATCH_MEM_CTRL   = 9'b001_0000_01;
+
+
    wire                                 tb_valid_i ;   // Throughput control.
 
    wire [NB_CONTROL_FRAME-1:0]          frame_to_blaze;
@@ -61,28 +85,32 @@ module pipeline_tb ();
    reg                                  tb_clock_i = 1'b0 ;
    integer                              tb_timer = 0 ;
 
+   reg [6-1:0]                          instruction_code;
+   reg                                  instruction_valid;
+   reg [9-1:0]                          addr_type;
+   reg [16-1:0]                         address;
+
    pipeline
      #(
-      .NB_REG             (NB_REG ),
-      .NB_INSTR           (NB_INSTR ),
-      .N_ADDR             (N_ADDR ),
-      .LOG2_N_INSMEM_ADDR (LOG2_N_INSMEM_ADDR ),
-      .NB_INM_I           (NB_INM_I ),
-      .NB_INM_J           (NB_INM_J ),
-      .NB_OPCODE          (NB_OPCODE ),
-      .NB_FUNCCODE        (NB_FUNCCODE ),
-      .NB_INM             (NB_INM ),
-      .NB_SHAMT           (NB_SHAMT ),
-      .NB_REG_ADDR        (NB_REG_ADDR ),
-      .NB_J_INM           (NB_J_INM ),
-      .NB_ALUOP           (NB_ALUOP ),
-      .NB_EX              (NB_EX ),
-      .NB_MEM             (NB_MEM ),
-      .NB_WB              (NB_WB ),
-      .REGFILE_DEPTH      (REGFILE_DEPTH ),
-      .INSTR_FILE         (INSTR_FILE),
-      .DATA_FILE          (DATA_FILE)
-      )
+       .NB_REG             (NB_REG ),
+       .NB_INSTR           (NB_INSTR ),
+       .N_ADDR             (N_ADDR ),
+       .NB_INM_I           (NB_INM_I ),
+       .NB_INM_J           (NB_INM_J ),
+       .NB_OPCODE          (NB_OPCODE ),
+       .NB_FUNCCODE        (NB_FUNCCODE ),
+       .NB_INM             (NB_INM ),
+       .NB_SHAMT           (NB_SHAMT ),
+       .NB_REG_ADDR        (NB_REG_ADDR ),
+       .NB_J_INM           (NB_J_INM ),
+       .NB_ALUOP           (NB_ALUOP ),
+       .NB_EX              (NB_EX ),
+       .NB_MEM             (NB_MEM ),
+       .NB_WB              (NB_WB ),
+       .REGFILE_DEPTH      (REGFILE_DEPTH ),
+       .INSTR_FILE         (INSTR_FILE),
+       .DATA_FILE          (DATA_FILE)
+       )
    u_pipeline
      (
       .o_frame_to_blaze   (frame_to_blaze),
@@ -92,15 +120,15 @@ module pipeline_tb ();
       .i_reset            (tb_reset_i)
       ) ;
 
-    initial begin
-    #(20) tb_reset_i = 1'b1;
-    #(120) tb_reset_i = 1'b0;
-    end
+   initial begin
+      #(20) tb_reset_i = 1'b1;
+      #(120) tb_reset_i = 1'b0;
+   end
 
-       always
-         begin
-            #(50) tb_clock_i = ~tb_clock_i ;
-         end
+   always
+     begin
+        #(50) tb_clock_i = ~tb_clock_i ;
+     end
 
    always @ ( posedge tb_clock_i )
      begin
@@ -108,6 +136,81 @@ module pipeline_tb ();
      end
 
    assign tb_valid_i = 1'b1 ;
+
+   assign frame_from_blaze = {instruction_code,instruction_valid,addr_type,address};
+
+   always @ (*)
+     begin
+        case(tb_timer)
+          4: begin
+             instruction_code = 6'b0010_10; //NADA2
+             instruction_valid = 1'b0;
+             addr_type = 9'b0000_0000_0;
+             address= 16'b0000_0000_0000;
+          end
+          5: begin
+             instruction_code = 6'b0000_10; //RESET
+             instruction_valid = 1'b1;
+             addr_type = 9'b0000_0000_0;
+             address= 16'b0000_0000_0000;
+          end
+          6: begin
+             instruction_code = 6'b0010_10; //NADA2
+             instruction_valid = 1'b0;
+             addr_type = 9'b0000_0000_0;
+             address= 16'b0000_0000_0000;
+          end
+          7: begin
+             instruction_code = 6'b0010_01; //SET MODE CONT
+             instruction_valid = 1'b1;
+             addr_type = 9'b0000_0000_0;
+             address= 16'b0000_0000_0000;
+          end
+          8: begin
+             instruction_code = 6'b0010_10; //NADA2
+             instruction_valid = 1'b0;
+             addr_type = 9'b0000_0000_0;
+             address= 16'b0000_0000_0000;
+          end
+          9: begin
+             instruction_code = 6'b0000_01; //START
+             instruction_valid = 1'b1;
+             addr_type = 9'b0000_0000_0;
+             address= 16'b0000_0000_0000;
+          end
+          10: begin
+             instruction_code = 6'b0010_10; //NADA2
+             instruction_valid = 1'b0;
+             addr_type = 9'b0000_0000_0;
+             address= 16'b0000_0000_0000;
+          end
+          20: begin
+             instruction_code = REQ_DATA; //REQ_INSTR_DATA
+             instruction_valid = 1'b1;
+             addr_type = REQ_MEM_INSTR;
+             address= 16'b0000_0000_0001;
+          end
+          22: begin
+             instruction_code = REQ_DATA; //REQ_INSTR_DATA
+             instruction_valid = 1'b1;
+             addr_type = REQ_LATCH_DECO_DATA;
+             address= 16'b0000_0000_0001;
+          end
+          30: begin
+             instruction_code = REQ_DATA; //REQ_INSTR_DATA
+             instruction_valid = 1'b1;
+             addr_type = REQ_LATCH_MEM_DATA;
+             address= 16'b0000_0000_0001;
+          end
+          default: begin
+             instruction_code = 6'b0010_10; //NADA2
+             instruction_valid = 1'b0;
+             addr_type = 9'b0000_0000_0;
+             address= 16'b0000_0000_0000;
+          end
+        endcase
+     end
+
    function integer clogb2;
       input integer                   depth;
       for (clogb2=0; depth>0; clogb2=clogb2+1)
