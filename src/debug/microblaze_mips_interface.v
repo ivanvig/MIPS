@@ -71,7 +71,7 @@ module microblaze_mips_interface
    localparam MODE_CONT              = {MODE_SET_CONT,{26{1'b0}}};
    localparam MODE_STEP              = {MODE_SET_STEP,{26{1'b0}}};
 
-   localparam NB_COUNTER             = 3;
+   localparam NB_COUNTER             = 2;
    localparam NB_TIMER               = NB_COUNTER;
 
    wire [NB_INSTR_CODE_FIELD-1:0]      instruction_code;
@@ -104,11 +104,11 @@ module microblaze_mips_interface
    //comparadores con el ID en alto
    always @(*)
      begin
-        case ({return_ok, return_nok, return_data, return_mode, i_eop})
-          5'b10000: o_frame_to_blaze = OK;
-          5'b01000: o_frame_to_blaze = NOK;
-          5'b00100: o_frame_to_blaze = data_to_blaze[NB_BUFFER-(buffer_p*NB_CONTROL_FRAME)-1-:NB_CONTROL_FRAME];
-          5'b00010: o_frame_to_blaze = (execution_mode) ? MODE_STEP : MODE_CONT;
+        casez ({return_ok, return_nok, return_data, return_mode, i_eop})
+          5'b1000?: o_frame_to_blaze = OK;
+          5'b0100?: o_frame_to_blaze = NOK;
+          5'b0010?: o_frame_to_blaze = data_to_blaze[NB_BUFFER-(buffer_p*NB_CONTROL_FRAME)-1-:NB_CONTROL_FRAME];
+          5'b0001?: o_frame_to_blaze = (execution_mode) ? MODE_STEP : MODE_CONT;
           5'b00001: o_frame_to_blaze = EOP;
           default: o_frame_to_blaze = NOK;
         endcase // case ({return_ok, return_nok, return_data, return_mode, i_eop})
@@ -119,14 +119,14 @@ module microblaze_mips_interface
    assign return_data = (instruction_code==GIB_DATA & buffer_p<timer);
 
    always @(posedge i_clock) begin
-      if (i_reset | (buffer_p==timer))
+      if (i_reset | (buffer_p==timer & buffer_p!=0))
         timer <= {NB_TIMER{1'b0}};
-      else if (enable_data_capture)
+      else if (enable_data_capture & ~i_eod)
         timer <= timer + 1'b1;
    end
 
    always @(posedge i_clock) begin
-      if (i_reset)
+      if (i_reset | (instruction_code==REQ_DATA))
         buffer_p <= {NB_COUNTER{1'b0}};
       else if (pos_instr_valid & instruction_code==GIB_DATA)
         buffer_p <= buffer_p + 1'b1;
@@ -143,16 +143,15 @@ module microblaze_mips_interface
      if (i_reset)
         data_to_blaze <= {NB_BUFFER{1'b0}};
      else if (enable_data_capture)
-       data_to_blaze[NB_BUFFER-(timer*NB_REG)-1+:NB_CONTROL_FRAME] <= i_frame_from_mips;
+       data_to_blaze[NB_BUFFER-(timer*NB_REG)-1-:NB_REG] <= i_frame_from_mips;
   end
 
    //Interface to mips
 
-   //assign o_frame_to_blaze = i_frame_from_mips;
    assign o_instr_data = (instruction_code == LOAD_INSTR_MSB) ? {instruction_data,{NB_ADDR_DATA{1'b0}}} : {{NB_ADDR_DATA{1'b0}},instruction_data};
    assign o_instr_addr = (instruction_code == REQ_DATA) ? instruction_data : address_type[NB_INSTR_ADDR:0];
    assign o_mem_addr = instruction_data;
-   assign o_request_select = (pos_instr_valid) ? request_select : {6{1'b0}};
+   assign o_request_select = (pos_instr_valid) ? request_select : {6{1'b1}};
 
    assign {instruction_code, address_type, instruction_data} = i_frame_from_blaze;
 
@@ -191,6 +190,8 @@ module microblaze_mips_interface
         use_type_lut = 1'b0;
         return_mode = 1'b0;
         set_capture = 1'b0;
+
+        request_select = 6'b1111_11;
         if (pos_instr_valid) begin
            casez (instruction_code)
              START: begin
@@ -295,7 +296,7 @@ module microblaze_mips_interface
                REQ_LATCH_EXEC_CTRL: request_select = 6'b1010_01 ;
                REQ_LATCH_MEM_DATA: request_select = 6'b1010_10 ;
                REQ_LATCH_MEM_CTRL: request_select = 6'b1010_11 ;
-               default: request_select = 6'b0000_00;
+               default: request_select = 6'b1111_11;
              endcase // casez (address_type)
         end // if (pos_instr_valid)
      end

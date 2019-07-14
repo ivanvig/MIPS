@@ -39,8 +39,6 @@ module debug_control_regfile
   */
 
    localparam NB_TIMER = 5;
-   localparam NB_PADDING = NB_LATCH-(NB_INPUT_SIZE%NB_LATCH);
-   localparam NB_PADDED_DATA = NB_INPUT_SIZE + NB_PADDING;
 
    reg                                 timer_enable;
    reg [NB_TIMER-1:0]                  timer;
@@ -50,16 +48,12 @@ module debug_control_regfile
    wire                                data_done;
    reg                                 tx_finished;
 
-   wire [NB_PADDED_DATA-1:0]           padded_data_from_mips;
-
-   assign o_frame_to_interface = padded_data_from_mips[NB_PADDED_DATA-(timer*NB_LATCH)-1-:NB_LATCH];
+   assign o_frame_to_interface = i_data_from_mips;
    assign o_reg_addr = i_request_select[5-1:0];
    assign o_writing = timer_enable;
 
-   assign padded_data_from_mips = {i_data_from_mips, {NB_PADDING{1'b0}}};
-   //Solo el regfile tiene en 0 el MSB
    assign request_match = i_request_select[5] == 1'b0;
-   assign data_done = (NB_INPUT_SIZE/NB_LATCH) + (NB_INPUT_SIZE%NB_LATCH>0) == timer+1;
+   assign data_done = (NB_INPUT_SIZE/NB_LATCH) + (NB_INPUT_SIZE%NB_LATCH>0) == timer;
 
    always @(posedge i_clock)
      if (i_reset)
@@ -83,10 +77,9 @@ module debug_control_regfile
 
    always @(posedge i_clock)
      begin
-        if (i_reset | data_done)
+        if (i_reset | tx_finished)
           timer <= {NB_TIMER{1'b0}};
-        else if (timer_enable)
+        else if (request_match & ~(data_done | tx_finished))
           timer <= timer + 1'b1;
      end
-
 endmodule

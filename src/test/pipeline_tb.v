@@ -60,6 +60,8 @@ module pipeline_tb ();
    localparam MODE_SET_CONT        = 6'b0010_01;
    localparam MODE_SET_STEP        = 6'b0010_10;
    localparam STEP                 = 6'b1000_00;
+   localparam GOT_DATA             = 6'b1001_00;
+   localparam GIB_DATA             = 6'b1001_01;
 
    //INSTRUCTION TYPE
    localparam REQ_MEM_DATA         = 9'b000_0000_01;
@@ -184,35 +186,23 @@ module pipeline_tb ();
              addr_type = 9'b0000_0000_0;
              address= 16'b0000_0000_0000;
           end
-          20: begin
-             instruction_code = REQ_DATA; //REQ_INSTR_DATA
-             instruction_valid = 1'b1;
-             addr_type = REQ_MEM_INSTR;
-             address= 16'b0000_0000_0001;
-          end
           22: begin
-             instruction_code = REQ_DATA; //REQ_INSTR_DATA
+             instruction_code = REQ_DATA; //REQ DECO DATA
+             instruction_valid = 1'b1;
+             addr_type = REQ_REG;
+             address= 16'b0000_0000_1000;
+          end
+          30: begin
+             instruction_code = GOT_DATA;
              instruction_valid = 1'b1;
              addr_type = REQ_LATCH_DECO_DATA;
              address= 16'b0000_0000_0001;
           end
-          30: begin
-             instruction_code = REQ_DATA; //REQ_INSTR_DATA
-             instruction_valid = 1'b1;
-             addr_type = REQ_LATCH_MEM_DATA;
-             address= 16'b0000_0000_0001;
-          end
           32: begin
-             instruction_code = LOAD_INSTR_LSB;
+             instruction_code = GIB_DATA;
              instruction_valid = 1'b1;
-             addr_type = 9'h0;
-             address= 16'b0000_1111_0000;
-          end
-          34: begin
-             instruction_code = LOAD_INSTR_MSB;
-             instruction_valid = 1'b1;
-             addr_type = 9'h0;
-             address= 16'b1111_1111_1111;
+             addr_type = REQ_LATCH_DECO_DATA;
+             address= 16'b0000_0000_0001;
           end
           default: begin
              instruction_code = 6'b0010_10; //NADA2
