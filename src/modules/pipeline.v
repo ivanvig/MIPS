@@ -21,6 +21,7 @@ module pipeline
     parameter NB_CONTROL_FRAME             = 32,
     parameter NB_ADDR_DATA                 = 16,
     parameter NB_INSTR_ADDR                = 9,
+    parameter NB_BUFFER                    = 96,
 
     //debug controllers
     parameter NB_LATCH                     = 32,
@@ -135,7 +136,7 @@ module pipeline
    //Interface
    wire                        interface_valid;
    wire                        interface_reset;
-   wire [NB_ADDR_DATA-1:0]     interface_instrmem_data;
+   wire [NB_REG-1:0]           interface_instrmem_data;
    wire [NB_ADDR_DATA-1:0]     interface_instrmem_addr;
    wire [4-1:0]                interface_instrmem_we;
    wire [NB_ADDR_DATA-1:0]     interface_datamem_addr;
@@ -466,8 +467,10 @@ module pipeline
    microblaze_mips_interface
      #(
        .NB_CONTROL_FRAME    (NB_CONTROL_FRAME),
+       .NB_REG              (NB_REG          ),
        .NB_ADDR_DATA        (NB_ADDR_DATA    ),
-       .NB_INSTR_ADDR       (NB_INSTR_ADDR   )
+       .NB_INSTR_ADDR       (NB_INSTR_ADDR   ),
+       .NB_FIFO             (NB_BUFFER       )
      )
    u_microblaze_mips_interface
      (

@@ -202,6 +202,18 @@ module pipeline_tb ();
              addr_type = REQ_LATCH_MEM_DATA;
              address= 16'b0000_0000_0001;
           end
+          32: begin
+             instruction_code = LOAD_INSTR_LSB;
+             instruction_valid = 1'b1;
+             addr_type = 9'h0;
+             address= 16'b0000_1111_0000;
+          end
+          34: begin
+             instruction_code = LOAD_INSTR_MSB;
+             instruction_valid = 1'b1;
+             addr_type = 9'h0;
+             address= 16'b1111_1111_1111;
+          end
           default: begin
              instruction_code = 6'b0010_10; //NADA2
              instruction_valid = 1'b0;

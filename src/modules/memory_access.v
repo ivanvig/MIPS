@@ -119,12 +119,12 @@ module memory_access
       .i_clock          (i_clock                ),
       .wea              (extended_we            ),
       .web              (1'b0                   ),
-      .ena              (1'b1                   ),
-      .enb              (1'b1                   ),
+      .ena              (re                     ),
+      .enb              (i_debug_datamem_re     ),
       .i_reset_a        (i_reset                ),
       .i_reset_b        (i_reset                ),
-      .i_rea            (re                     ),
-      .i_reb            (i_debug_datamem_re     )
+      .i_rea            (1'b1                   ),
+      .i_reb            (1'b1                   )
       );
 
 /*
