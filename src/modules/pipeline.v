@@ -142,7 +142,6 @@ module pipeline
    wire [NB_ADDR_DATA-1:0]     interface_datamem_addr;
    wire [6-1:0]                interface_read_request_to_controllers;
    wire                        debug_endofdata_interface;
-   wire                        debug_endofprogram_interface;
    reg [NB_CONTROL_FRAME-1:0]  debugmux_interface;
 
    wire                                    debug_instr_mem_re;
@@ -485,7 +484,7 @@ module pipeline
       .i_frame_from_blaze   (i_frame_from_blaze),
       .i_frame_from_mips    (debugmux_interface),
       .i_eod                (debug_endofdata_interface),
-      .i_eop                (debug_endofprogram_interface),
+      .i_eop                (deco_halt^interface_valid),
 
       .i_clock              (i_clock),
       .i_reset              (reset)
