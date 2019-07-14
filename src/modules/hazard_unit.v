@@ -24,11 +24,16 @@ module hazard_unit
 
    always @ (negedge i_clock)
      begin
-        if (i_valid) begin
-           jump_branch_reg <= i_jmp_branch;
-           rs_reg <= i_rs;
-           rt_reg <= i_rt;
-        end
+        if (i_reset) begin
+           jump_branch_reg <= 1'b0;
+           rs_reg <= {NB_REG_ADDR{1'b0}};
+           rt_reg <= {NB_REG_ADDR{1'b0}};
+        end else
+          if (i_valid) begin
+             jump_branch_reg <= i_jmp_branch;
+             rs_reg <= i_rs;
+             rt_reg <= i_rt;
+          end
      end
 
    assign o_hazard = ((i_rd == rs_reg) | (i_rd == rt_reg)) & (i_re | jump_branch_reg);

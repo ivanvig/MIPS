@@ -469,7 +469,7 @@ module pipeline
        .NB_REG              (NB_REG          ),
        .NB_ADDR_DATA        (NB_ADDR_DATA    ),
        .NB_INSTR_ADDR       (NB_INSTR_ADDR   ),
-       .NB_FIFO             (NB_BUFFER       )
+       .NB_BUFFER             (NB_BUFFER       )
      )
    u_microblaze_mips_interface
      (

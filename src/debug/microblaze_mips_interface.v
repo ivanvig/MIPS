@@ -191,7 +191,6 @@ module microblaze_mips_interface
         return_mode = 1'b0;
         set_capture = 1'b0;
 
-        request_select = 6'b1111_11;
         if (pos_instr_valid) begin
            casez (instruction_code)
              START: begin
@@ -299,6 +298,8 @@ module microblaze_mips_interface
                default: request_select = 6'b1111_11;
              endcase // casez (address_type)
         end // if (pos_instr_valid)
+        else
+          request_select = 6'b1111_11;
      end
 
 
