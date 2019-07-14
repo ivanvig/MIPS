@@ -88,7 +88,7 @@ module instruction_decode
     output                  o_halt,
 
     //For debug
-    output [NB_REG-1:0]     o_debug_regfile_data,
+    output reg [NB_REG-1:0] o_debug_regfile_data,
 
     input [NB_REG-1:0]      i_instruction,
     input [NB_REG-1:0]      i_pc,
@@ -102,7 +102,7 @@ module instruction_decode
     input [NB_REG-1:0]      i_sc_datab,
 
     //For debug
-    input [5-1:0]           i_debug_regfile_addr,
+    input [NB_REG_ADDR-1:0] i_debug_regfile_addr,
 
     input                   i_clk,
     input                   i_rst,
@@ -183,6 +183,9 @@ module instruction_decode
    reg [NB_REG-1:0]         a_reg,b_reg;
 
    wire                     valid;
+
+   //DEBUG
+   always@(posedge i_clk) o_debug_regfile_data <= regfile[i_debug_regfile_addr];
 
    //OUTPUT assign
    assign o_rinst         = use_2nd_lut;
