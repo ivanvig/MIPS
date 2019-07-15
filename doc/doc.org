@@ -228,8 +228,8 @@
   | MODE_SET_CONT | 0010_01 | VXXX | XXXX |
   | MODE_SET_STEP | 0010_10 | VXXX | XXXX |
   | STEP          | 1000_00 | VXXX | XXXX |
-  | GOT_DATA      | 0001_00 | VXXX | XXXX |
-  | GIB_DATA      | 0001_01 | VXXX | XXXX |
+  | GOT_DATA      | 1001_00 | VXXX | XXXX |
+  | GIB_DATA      | 1001_01 | VXXX | XXXX |
                     
 **** Tipo LOAD
      
@@ -240,20 +240,20 @@
 
 **** Tipo REQ
 
-  | NAME                 | 31      | 25          | 15   |
-  |----------------------+---------+-------------+------|
-  | REQ_MEM_DATA         | 0000_11 | V00_0000_01 | AAAA |
-  | REQ_MEM_INSTR        | 0000_11 | V00_0000_10 | AAAA |
-  | REQ_REG              | 0000_11 | V00_0001_00 | AAAA |
-  | REQ_REG_PC           | 0000_11 | V00_0001_01 | XXXX |
-  | REQ_LATCH_FETCH_DATA | 0000_11 | V00_0010_00 | XXXX |
-  | REQ_LATCH_FETCH_CTRL | 0000_11 | V00_0010_01 | XXXX |
-  | REQ_LATCH_DECO_DATA  | 0000_11 | V00_0100_00 | XXXX |
-  | REQ_LATCH_DECO_CTRL  | 0000_11 | V00_0100_01 | XXXX |
-  | REQ_LATCH_EXEC_DATA  | 0000_11 | V00_1000_00 | XXXX |
-  | REQ_LATCH_EXEC_CTRL  | 0000_11 | V00_1000_01 | XXXX |
-  | REQ_LATCH_MEM_DATA   | 0000_11 | V01_0000_00 | XXXX |
-  | REQ_LATCH_MEM_CTRL   | 0000_11 | V01_0000_01 | XXXX |
+  | NAME                 | 31      | 25           | 15   |
+  |----------------------+---------+--------------+------|
+  | REQ_MEM_DATA         | 0000_11 | V0_0000_0001 | AAAA |
+  | REQ_MEM_INSTR        | 0000_11 | V0_0000_0010 | AAAA |
+  | REQ_REG              | 0000_11 | V0_0000_0100 | AAAA |
+  | REQ_REG_PC           | 0000_11 | V0_0000_0101 | XXXX |
+  | REQ_LATCH_FETCH_DATA | 0000_11 | V0_0000_1000 | XXXX |
+  | REQ_LATCH_FETCH_CTRL | 0000_11 | V0_0000_1001 | XXXX |
+  | REQ_LATCH_DECO_DATA  | 0000_11 | V0_0001_0000 | XXXX |
+  | REQ_LATCH_DECO_CTRL  | 0000_11 | V0_0001_0001 | XXXX |
+  | REQ_LATCH_EXEC_DATA  | 0000_11 | V0_0010_0000 | XXXX |
+  | REQ_LATCH_EXEC_CTRL  | 0000_11 | V0_0010_0001 | XXXX |
+  | REQ_LATCH_MEM_DATA   | 0000_11 | V0_0100_0000 | XXXX |
+  | REQ_LATCH_MEM_CTRL   | 0000_11 | V0_0100_0001 | XXXX |
 
   
 *** Interfaz -> MicroBlaze
