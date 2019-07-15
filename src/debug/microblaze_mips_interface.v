@@ -95,6 +95,7 @@ module microblaze_mips_interface
    reg [NB_COUNTER-1:0]                timer;
    reg [NB_COUNTER-1:0]                buffer_p;
    reg [NB_BUFFER-1:0]                 data_to_blaze;
+   reg [NB_CONTROL_FRAME-1:0]          frame_to_blaze;
 
    wire                                return_ok ;
    wire                                return_nok;
@@ -102,15 +103,23 @@ module microblaze_mips_interface
    //Interface to blaze
    //cuando llega EOD, cambiar request_select a algo que no matchee con ningun ID para no dejar el match de los
    //comparadores con el ID en alto
+
+   always @(posedge i_clock) begin
+      if (i_reset)
+        o_frame_to_blaze <= {NB_CONTROL_FRAME{1'b0}};
+      else if (pos_instr_valid)
+        o_frame_to_blaze <= frame_to_blaze;
+   end
+
    always @(*)
      begin
         casez ({return_ok, return_nok, return_data, return_mode, i_eop})
-          5'b1000?: o_frame_to_blaze = OK;
-          5'b0100?: o_frame_to_blaze = NOK;
-          5'b0010?: o_frame_to_blaze = data_to_blaze[NB_BUFFER-(buffer_p*NB_CONTROL_FRAME)-1-:NB_CONTROL_FRAME];
-          5'b0001?: o_frame_to_blaze = (execution_mode) ? MODE_STEP : MODE_CONT;
-          5'b00001: o_frame_to_blaze = EOP;
-          default: o_frame_to_blaze = NOK;
+          5'b1000?: frame_to_blaze = OK;
+          5'b0100?: frame_to_blaze = NOK;
+          5'b0010?: frame_to_blaze = data_to_blaze[NB_BUFFER-(buffer_p*NB_CONTROL_FRAME)-1-:NB_CONTROL_FRAME];
+          5'b0001?: frame_to_blaze = (execution_mode) ? MODE_STEP : MODE_CONT;
+          5'b00001: frame_to_blaze = EOP;
+          default: frame_to_blaze = NOK;
         endcase // case ({return_ok, return_nok, return_data, return_mode, i_eop})
      end
 
@@ -188,7 +197,7 @@ module microblaze_mips_interface
         o_instr_mem_we = 4'b0000;
         //o_read_request = 1'b0;
         use_type_lut = 1'b0;
-        return_mode = 1'b0;
+        // return_mode = 1'b0;
         set_capture = 1'b0;
 
         if (pos_instr_valid) begin
