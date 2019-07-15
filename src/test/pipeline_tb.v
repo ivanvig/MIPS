@@ -186,7 +186,19 @@ module pipeline_tb ();
              addr_type = 9'b0000_0000_0;
              address= 16'b0000_0000_0000;
           end
+          21: begin
+             instruction_code = REQ_DATA; //REQ DECO DATA
+             instruction_valid = 1'b1;
+             addr_type = REQ_REG;
+             address= 16'b0000_0000_1000;
+          end
           22: begin
+             instruction_code = REQ_DATA; //REQ DECO DATA
+             instruction_valid = 1'b1;
+             addr_type = REQ_REG;
+             address= 16'b0000_0000_1000;
+          end
+          23: begin
              instruction_code = REQ_DATA; //REQ DECO DATA
              instruction_valid = 1'b1;
              addr_type = REQ_REG;
@@ -198,7 +210,25 @@ module pipeline_tb ();
              addr_type = REQ_LATCH_DECO_DATA;
              address= 16'b0000_0000_0001;
           end
-          32: begin
+          31: begin
+             instruction_code = GOT_DATA;
+             instruction_valid = 1'b1;
+             addr_type = REQ_LATCH_DECO_DATA;
+             address= 16'b0000_0000_0001;
+          end
+          35: begin
+             instruction_code = GIB_DATA;
+             instruction_valid = 1'b1;
+             addr_type = REQ_LATCH_DECO_DATA;
+             address= 16'b0000_0000_0001;
+          end
+          36: begin
+             instruction_code = GIB_DATA;
+             instruction_valid = 1'b1;
+             addr_type = REQ_LATCH_DECO_DATA;
+             address= 16'b0000_0000_0001;
+          end
+          37: begin
              instruction_code = GIB_DATA;
              instruction_valid = 1'b1;
              addr_type = REQ_LATCH_DECO_DATA;
