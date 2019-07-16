@@ -157,20 +157,14 @@ module pipeline_tb ();
              address= 16'b0000_0000_0000;
           end
           6: begin
-             instruction_code = 6'b0010_10; //NADA2
-             instruction_valid = 1'b0;
-             addr_type = 9'b0000_0000_0;
-             address= 16'b0000_0000_0000;
-          end
-          7: begin
-             instruction_code = 6'b0010_01; //SET MODE CONT
+             instruction_code = 6'b0000_10;
              instruction_valid = 1'b1;
              addr_type = 9'b0000_0000_0;
              address= 16'b0000_0000_0000;
           end
-          8: begin
-             instruction_code = 6'b0010_10; //NADA2
-             instruction_valid = 1'b0;
+          7: begin
+             instruction_code = 6'b0000_10;
+             instruction_valid = 1'b1;
              addr_type = 9'b0000_0000_0;
              address= 16'b0000_0000_0000;
           end
@@ -181,31 +175,49 @@ module pipeline_tb ();
              address= 16'b0000_0000_0000;
           end
           10: begin
-             instruction_code = 6'b0010_10; //NADA2
-             instruction_valid = 1'b0;
+             instruction_code = 6'b0000_01;
+             instruction_valid = 1'b1;
              addr_type = 9'b0000_0000_0;
              address= 16'b0000_0000_0000;
           end
-          21: begin
-             instruction_code = REQ_DATA; //REQ DECO DATA
+          13: begin
+             instruction_code = MODE_GET; //MODE_GET
              instruction_valid = 1'b1;
-             addr_type = REQ_REG;
-             address= 16'b0000_0000_1000;
+             addr_type = REQ_MEM_INSTR;
+             address= 16'b0000_0000_0000;
+          end
+          14: begin
+             instruction_code = MODE_GET;
+             instruction_valid = 1'b1;
+             addr_type = REQ_MEM_INSTR;
+             address= 16'b0000_0000_0000;
+          end
+          15: begin
+             instruction_code = MODE_GET;
+             instruction_valid = 1'b1;
+             addr_type = REQ_MEM_INSTR;
+             address= 16'b0000_0000_0000;
           end
           22: begin
-             instruction_code = REQ_DATA; //REQ DECO DATA
+             instruction_code = REQ_DATA; //REQ_MEM_INSTR
              instruction_valid = 1'b1;
-             addr_type = REQ_REG;
-             address= 16'b0000_0000_1000;
+             addr_type = REQ_MEM_INSTR;
+             address= 16'b0000_0000_0000;
           end
           23: begin
-             instruction_code = REQ_DATA; //REQ DECO DATA
+             instruction_code = REQ_DATA;
              instruction_valid = 1'b1;
-             addr_type = REQ_REG;
-             address= 16'b0000_0000_1000;
+             addr_type = REQ_MEM_INSTR;
+             address= 16'b0000_0000_0000;
+          end
+          24: begin
+             instruction_code = REQ_DATA;
+             instruction_valid = 1'b1;
+             addr_type = REQ_MEM_INSTR;
+             address= 16'b0000_0000_0000;
           end
           30: begin
-             instruction_code = GOT_DATA;
+             instruction_code = GOT_DATA; //GOT_DATA
              instruction_valid = 1'b1;
              addr_type = REQ_LATCH_DECO_DATA;
              address= 16'b0000_0000_0001;
@@ -216,8 +228,14 @@ module pipeline_tb ();
              addr_type = REQ_LATCH_DECO_DATA;
              address= 16'b0000_0000_0001;
           end
+          32: begin
+             instruction_code = GOT_DATA;
+             instruction_valid = 1'b1;
+             addr_type = REQ_LATCH_DECO_DATA;
+             address= 16'b0000_0000_0001;
+          end
           35: begin
-             instruction_code = GIB_DATA;
+             instruction_code = GIB_DATA; //GIB_DATA
              instruction_valid = 1'b1;
              addr_type = REQ_LATCH_DECO_DATA;
              address= 16'b0000_0000_0001;

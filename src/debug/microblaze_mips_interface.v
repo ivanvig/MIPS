@@ -175,7 +175,7 @@ module microblaze_mips_interface
      begin
         if (i_reset)
           execution_mode <= 1'b0;
-        else
+        else if ((instruction_code == MODE_SET_CONT) || (instruction_code == MODE_SET_STEP))
           execution_mode <= set_mode;
      end
 
@@ -199,7 +199,7 @@ module microblaze_mips_interface
         use_type_lut = 1'b0;
         // return_mode = 1'b0;
         set_capture = 1'b0;
-
+        set_mode = 1'b0;
         if (pos_instr_valid) begin
            casez (instruction_code)
              START: begin
