@@ -6,7 +6,6 @@
   OR    $t4, $0, $0
   OR    $t3, $0, $0
   ADDU  $t1, $t2, $t4
-  		HLT
   OR    $t4, $0, $t2
   OR    $t2, $0, $t1
   SW    $t1, 0($t3)
