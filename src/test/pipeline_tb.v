@@ -252,12 +252,6 @@ module pipeline_tb ();
              addr_type = REQ_LATCH_DECO_DATA;
              address= 16'b0000_0000_0001;
           end
-          // 38: begin
-          //    instruction_code = GOT_DATA; //Second got data
-          //    instruction_valid = 1'b1;
-          //    addr_type = REQ_LATCH_DECO_DATA;
-          //    address= 16'b0000_0000_0001;
-          // end
           40: begin
              instruction_code = REQ_DATA; //REQ_MEM_INSTR
              instruction_valid = 1'b1;
@@ -307,6 +301,126 @@ module pipeline_tb ();
              address= 16'b0000_0000_0001;
           end
           52: begin
+             instruction_code = GIB_DATA;
+             instruction_valid = 1'b1;
+             addr_type = REQ_LATCH_DECO_DATA;
+             address= 16'b0000_0000_0001;
+          end
+          55: begin
+             instruction_code = REQ_DATA; //REQ_LATCH_FETCH_DATA
+             instruction_valid = 1'b1;
+             addr_type = REQ_LATCH_FETCH_CTRL;
+             address= 16'b0000_0000_0001;
+          end
+          56: begin
+             instruction_code = REQ_DATA;
+             instruction_valid = 1'b1;
+             addr_type = REQ_LATCH_FETCH_CTRL;
+             address= 16'b0000_0000_0001;
+          end
+          58: begin
+             instruction_code = GOT_DATA; //GOT_DATA
+             instruction_valid = 1'b1;
+             addr_type = REQ_LATCH_DECO_DATA;
+             address= 16'b0000_0000_0001;
+          end
+          59: begin
+             instruction_code = GOT_DATA;
+             instruction_valid = 1'b1;
+             addr_type = REQ_LATCH_DECO_DATA;
+             address= 16'b0000_0000_0001;
+          end
+          61: begin
+             instruction_code = GIB_DATA; //GIB_DATA
+             instruction_valid = 1'b1;
+             addr_type = REQ_LATCH_DECO_DATA;
+             address= 16'b0000_0000_0001;
+          end
+          62: begin
+             instruction_code = GIB_DATA;
+             instruction_valid = 1'b1;
+             addr_type = REQ_LATCH_DECO_DATA;
+             address= 16'b0000_0000_0001;
+          end
+          64: begin
+             instruction_code = GOT_DATA; //GOT_DATA
+             instruction_valid = 1'b1;
+             addr_type = REQ_LATCH_DECO_DATA;
+             address= 16'b0000_0000_0001;
+          end
+          65: begin
+             instruction_code = GOT_DATA;
+             instruction_valid = 1'b1;
+             addr_type = REQ_LATCH_DECO_DATA;
+             address= 16'b0000_0000_0001;
+          end
+          67: begin
+             instruction_code = GIB_DATA; //GIB_DATA
+             instruction_valid = 1'b1;
+             addr_type = REQ_LATCH_DECO_DATA;
+             address= 16'b0000_0000_0001;
+          end
+          68: begin
+             instruction_code = GIB_DATA;
+             instruction_valid = 1'b1;
+             addr_type = REQ_LATCH_DECO_DATA;
+             address= 16'b0000_0000_0001;
+          end
+          70: begin
+             instruction_code = REQ_DATA; //REQ_LATCH_FETCH_DATA
+             instruction_valid = 1'b1;
+             addr_type = REQ_LATCH_FETCH_CTRL;
+             address= 16'b0000_0000_0001;
+          end
+          71: begin
+             instruction_code = REQ_DATA;
+             instruction_valid = 1'b1;
+             addr_type = REQ_LATCH_FETCH_CTRL;
+             address= 16'b0000_0000_0001;
+          end
+          74: begin
+             instruction_code = GOT_DATA; //GOT_DATA
+             instruction_valid = 1'b1;
+             addr_type = REQ_LATCH_DECO_DATA;
+             address= 16'b0000_0000_0001;
+          end
+          75: begin
+             instruction_code = GOT_DATA;
+             instruction_valid = 1'b1;
+             addr_type = REQ_LATCH_DECO_DATA;
+             address= 16'b0000_0000_0001;
+          end
+          77: begin
+             instruction_code = GIB_DATA; //GIB_DATA
+             instruction_valid = 1'b1;
+             addr_type = REQ_LATCH_DECO_DATA;
+             address= 16'b0000_0000_0001;
+          end
+          78: begin
+             instruction_code = GIB_DATA;
+             instruction_valid = 1'b1;
+             addr_type = REQ_LATCH_DECO_DATA;
+             address= 16'b0000_0000_0001;
+          end
+          80: begin
+             instruction_code = GOT_DATA; //GOT_DATA
+             instruction_valid = 1'b1;
+             addr_type = REQ_LATCH_DECO_DATA;
+             address= 16'b0000_0000_0001;
+          end
+          81: begin
+             instruction_code = GOT_DATA;
+             instruction_valid = 1'b1;
+             addr_type = REQ_LATCH_DECO_DATA;
+             address= 16'b0000_0000_0001;
+          end
+          83: begin
+             instruction_code = GIB_DATA; //GIB_DATA
+             instruction_valid = 1'b1;
+             addr_type = REQ_LATCH_DECO_DATA;
+             address= 16'b0000_0000_0001;
+          end
+          84: begin
              instruction_code = GIB_DATA;
              instruction_valid = 1'b1;
              addr_type = REQ_LATCH_DECO_DATA;

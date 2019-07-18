@@ -40,49 +40,45 @@ module debug_control_latches
    localparam NB_PADDING = (NB_INPUT_SIZE%NB_LATCH==0) ? 0 : NB_LATCH-(NB_INPUT_SIZE%NB_LATCH);
    localparam NB_PADDED_DATA = NB_INPUT_SIZE + NB_PADDING;
 
-   reg                                 timer_enable;
    reg [NB_TIMER-1:0]                  timer;
    wire                                request_match;
    reg                                 request_match_reg;
    wire                                request_match_pos;
+   reg                                 processing_reg;
    wire                                data_done;
-   reg                                 tx_finished;
+   reg                                 data_done_reg;
 
    wire [NB_PADDED_DATA-1:0]           padded_data_from_mips;
 
    assign o_frame_to_interface = padded_data_from_mips[NB_PADDED_DATA-(timer*NB_LATCH)-1-:NB_LATCH];
-   assign o_writing = timer_enable;
+   assign o_writing = processing_reg & ~data_done_reg;
 
    assign padded_data_from_mips = {i_data_from_mips, {NB_PADDING{1'b0}}};
    assign request_match = i_request_select == CONTROLLER_ID;
    assign data_done = (NB_INPUT_SIZE/NB_LATCH) + (NB_INPUT_SIZE%NB_LATCH>0) == timer+1;
 
    always @(posedge i_clock)
-     if (i_reset)
+     if (i_reset) begin
        request_match_reg <= 1'b0;
-     else
+        data_done_reg <= 1'b0;
+     end else begin
        request_match_reg <= request_match;
+        data_done_reg <= data_done;
+     end
+
+   always @(posedge i_clock)
+     if (i_reset | data_done)
+       processing_reg <= 1'b0;
+     else if (request_match_pos)
+       processing_reg <= 1'b1;
 
    assign request_match_pos = request_match & ~request_match_reg;
-
-   always @(posedge i_clock)
-     if (i_reset | request_match_pos)
-       tx_finished <= 1'b0;
-     else if (data_done == 1'b1)
-       tx_finished <= 1'b1;
-
-   always @(posedge i_clock)
-     if ((data_done | tx_finished) | i_reset)
-       timer_enable <= 1'b0;
-     else if (request_match)
-       timer_enable <= 1'b1;
 
    always @(posedge i_clock)
      begin
         if (i_reset | data_done)
           timer <= {NB_TIMER{1'b0}};
-        else if (timer_enable)
+        else if (processing_reg & ~data_done)
           timer <= timer + 1'b1;
      end
-
 endmodule
