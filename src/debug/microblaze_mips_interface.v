@@ -176,7 +176,7 @@ module microblaze_mips_interface
      begin
         if (i_reset)
           execution_mode <= 1'b0;
-                 else if ((instruction_code == MODE_SET_CONT) || (instruction_code == MODE_SET_STEP) & pos_instr_valid)
+        else if (((instruction_code == MODE_SET_CONT) || (instruction_code == MODE_SET_STEP)) & pos_instr_valid)
           execution_mode <= set_mode;
      end
 
