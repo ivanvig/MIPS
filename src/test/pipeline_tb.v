@@ -144,58 +144,64 @@ module pipeline_tb ();
    always @ (*)
      begin
         case(tb_timer)
-          4: begin
-             instruction_code = 6'b0010_10; //NADA2
-             instruction_valid = 1'b0;
-             addr_type = 9'b0000_0000_0;
-             address= 16'b0000_0000_0000;
-          end
-          5: begin
+          2: begin
              instruction_code = 6'b0000_10; //RESET
              instruction_valid = 1'b1;
              addr_type = 9'b0000_0000_0;
              address= 16'b0000_0000_0000;
           end
-          6: begin
+          3: begin
              instruction_code = 6'b0000_10;
              instruction_valid = 1'b1;
              addr_type = 9'b0000_0000_0;
              address= 16'b0000_0000_0000;
           end
-          7: begin
-             instruction_code = 6'b0000_10;
-             instruction_valid = 1'b1;
-             addr_type = 9'b0000_0000_0;
-             address= 16'b0000_0000_0000;
-          end
-          9: begin
-             instruction_code = 6'b0000_01; //START
-             instruction_valid = 1'b1;
-             addr_type = 9'b0000_0000_0;
-             address= 16'b0000_0000_0000;
-          end
-          10: begin
-             instruction_code = 6'b0000_01;
-             instruction_valid = 1'b1;
-             addr_type = 9'b0000_0000_0;
-             address= 16'b0000_0000_0000;
-          end
-          13: begin
+          5: begin
              instruction_code = MODE_GET; //MODE_GET
              instruction_valid = 1'b1;
              addr_type = REQ_MEM_INSTR;
              address= 16'b0000_0000_0000;
           end
-          14: begin
+          6: begin
+             instruction_code = MODE_GET;
+             instruction_valid = 1'b1;
+             addr_type = REQ_MEM_INSTR;
+             address= 16'b0000_0000_0000;
+          end
+          8: begin
+             instruction_code = MODE_SET_STEP;
+             instruction_valid = 1'b1;
+             addr_type = REQ_MEM_INSTR;
+             address= 16'b0000_0000_0000;
+          end
+          9: begin
+             instruction_code = MODE_SET_STEP;
+             instruction_valid = 1'b1;
+             addr_type = REQ_MEM_INSTR;
+             address= 16'b0000_0000_0000;
+          end
+          11: begin
+             instruction_code = MODE_GET; //MODE_GET
+             instruction_valid = 1'b1;
+             addr_type = REQ_MEM_INSTR;
+             address= 16'b0000_0000_0000;
+          end
+          12: begin
              instruction_code = MODE_GET;
              instruction_valid = 1'b1;
              addr_type = REQ_MEM_INSTR;
              address= 16'b0000_0000_0000;
           end
           15: begin
-             instruction_code = MODE_GET;
+             instruction_code = 6'b0000_01; //START
              instruction_valid = 1'b1;
-             addr_type = REQ_MEM_INSTR;
+             addr_type = 9'b0000_0000_0;
+             address= 16'b0000_0000_0000;
+          end
+          16: begin
+             instruction_code = 6'b0000_01;
+             instruction_valid = 1'b1;
+             addr_type = 9'b0000_0000_0;
              address= 16'b0000_0000_0000;
           end
           22: begin
