@@ -138,7 +138,7 @@ module microblaze_mips_interface
    always @(posedge i_clock) begin
       if (i_reset | (instruction_code==REQ_DATA))
         buffer_p <= {NB_COUNTER{1'b0}};
-      else if (pos_instr_valid & instruction_code==GIB_DATA & pos_instr_valid)
+      else if (pos_instr_valid & instruction_code==GIB_DATA)
         buffer_p <= buffer_p + 1'b1;
    end
 
@@ -176,7 +176,7 @@ module microblaze_mips_interface
      begin
         if (i_reset)
           execution_mode <= 1'b0;
-        else if ((instruction_code == MODE_SET_CONT) || (instruction_code == MODE_SET_STEP))
+                 else if ((instruction_code == MODE_SET_CONT) || (instruction_code == MODE_SET_STEP) & pos_instr_valid)
           execution_mode <= set_mode;
      end
 
