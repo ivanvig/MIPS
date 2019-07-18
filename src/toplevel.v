@@ -2,10 +2,11 @@
 
 module top_level
   (
-   output        uart_rxd_out,
-   input         ck_rst,
-   input         CLK100MHZ,
-   input         uart_txd_in
+   output       uart_rxd_out,
+   output [3:0] led,
+   input        ck_rst,
+   input        CLK100MHZ,
+   input        uart_txd_in
    );
 
    localparam INSTR_FILE         = "output.mem";
@@ -65,6 +66,8 @@ module top_level
    u_pipeline
      (
       .o_frame_to_blaze   (gpio_rtl_tri_i),
+      .o_iface_valid      (led[0]),
+      .o_deco_valid       (led[1]),
       .i_frame_from_blaze (gpio_rtl_0_tri_o),
       .i_clock            (CLK100MHZ),
       .i_valid            (1'b1),

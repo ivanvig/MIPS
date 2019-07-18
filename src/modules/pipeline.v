@@ -56,6 +56,8 @@ module pipeline
 
    (
     output wire [NB_CONTROL_FRAME-1:0] o_frame_to_blaze,
+    output wire                        o_iface_valid,
+    output wire                        o_deco_valid,
     input wire [NB_CONTROL_FRAME-1:0 ] i_frame_from_blaze,
 
     input wire                         i_clock,
@@ -187,6 +189,8 @@ module pipeline
    wire                                    reset;
 
    assign reset = i_reset | interface_reset;
+   assign o_iface_valid = interface_valid;
+   assign o_deco_valid = deco_halt;
 
    assign deco_inm_i_if = deco_inm_exec ;
    assign mux_ir_deco = (hazard | deco_nop_reg_if) ? 32'h0000_0000 : if_ir_deco;
