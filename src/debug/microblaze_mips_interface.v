@@ -68,6 +68,7 @@ module microblaze_mips_interface
    localparam OK                     = {6'b0000_11,{26{1'b0}}};
    localparam NOK                    = {6'b0000_10,{26{1'b0}}};
    localparam EOP                    = {6'b0001_00,{26{1'b0}}};
+   localparam IDLE                   = {32{1'b1}};
    localparam MODE_CONT              = {MODE_SET_CONT,{26{1'b0}}};
    localparam MODE_STEP              = {MODE_SET_STEP,{26{1'b0}}};
 
@@ -119,7 +120,7 @@ module microblaze_mips_interface
           5'b0010?: frame_to_blaze = data_to_blaze[NB_BUFFER-(buffer_p*NB_CONTROL_FRAME)-1-:NB_CONTROL_FRAME];
           5'b0001?: frame_to_blaze = (execution_mode) ? MODE_STEP : MODE_CONT;
           5'b00001: frame_to_blaze = EOP;
-          default: frame_to_blaze = NOK;
+          default: frame_to_blaze = IDLE;
         endcase // case ({return_ok, return_nok, return_data, return_mode, i_eop})
      end
 
