@@ -1,5 +1,6 @@
 # Fibonacci Casero papa
 # Mira como estan esos comentarios
+  SLL   $0, $0, 0
   ORI   $t0, $0, 10 # podes comentar aca si te pinta tambien
 #OR    $t1, $0, $0
   ORI   $t2, $0, 1
@@ -11,7 +12,6 @@
   SW    $t1, 0($t3)
   ADDI  $t3, $t3, 1
   BNE   $t0, $t3, LOOP #lo comento porke me pinta
-  J     22
   OR    $0, $0, $0
   OR    $0, $0, $0
   OR    $0, $0, $0
