@@ -81,7 +81,7 @@ module instruction_fetch
       .wea              (1'b0                                           ),
       .web              (i_debug_instrmem_we                            ),
       .ena              (~i_hazard & i_valid                            ),
-      .enb              (i_debug_instrmem_re | i_debug_instrmem_we      ),
+      .enb              (i_debug_instrmem_re | |i_debug_instrmem_we     ),
       .i_reset_a        (i_reset                                        ),
       .i_reset_b        (i_reset                                        ),
       .i_rea            (1'b1                                           ),
