@@ -17,7 +17,7 @@ module microblaze_mips_interface
     output wire                       o_valid,
     output reg                        o_reset,
     output wire [NB_REG-1:0]          o_instr_data,
-    output wire [NB_INSTR_ADDR-1:0]   o_instr_addr,
+    output wire [NB_ADDR_DATA-1:0]    o_instr_addr,
     output reg [4-1:0]                o_instr_mem_we,
     //output reg                        //o_read_request,
     output wire [NB_ADDR_DATA-1:0]    o_mem_addr,
@@ -79,10 +79,10 @@ module microblaze_mips_interface
    wire [NB_ADDR_TYPE_FIELD-1:0]       address_type;
    wire [NB_INSTR_ADDRESS_FIELD-1:0]   instruction_data;
 
-   reg                                 valid;
    reg                                 set_mode;
    reg                                 return_mode;
    reg                                 use_type_lut;
+   reg                                 run;
 
    reg                                 execution_mode;
    reg                                 instr_valid_d;
@@ -157,9 +157,8 @@ module microblaze_mips_interface
   end
 
    //Interface to mips
-
    assign o_instr_data = (instruction_code == LOAD_INSTR_MSB) ? {instruction_data,{NB_ADDR_DATA{1'b0}}} : {{NB_ADDR_DATA{1'b0}},instruction_data};
-   assign o_instr_addr = (instruction_code == REQ_DATA) ? instruction_data : address_type[NB_INSTR_ADDR:0];
+   assign o_instr_addr = (instruction_code == REQ_DATA) ? instruction_data : {{(NB_ADDR_DATA-NB_INSTR_ADDR){1'b0}}, address_type[NB_INSTR_ADDR-1:0]};
    assign o_mem_addr = instruction_data;
    assign o_request_select = (pos_instr_valid) ? request_select : {6{1'b1}};
 
@@ -180,17 +179,15 @@ module microblaze_mips_interface
           execution_mode <= set_mode;
      end
 
-   //Activate valid according to mode set
-   // always @(posedge i_clock) begin
-   //   if (i_reset)
-   //     o_valid <= 1'b0;
-   //   else if (execution_mode) //Step mode
-   //     o_valid <= valid & pos_instr_valid;
-   //   else //Continuous mode
-   //     o_valid <= valid;
-   // end
-   assign o_valid = (execution_mode) ? valid & pos_instr_valid : valid;
+   always @(posedge i_clock)
+     begin
+        if (i_reset)
+          run <= 1'b0;
+        else if (instruction_code == START)
+          run <= 1'b1;
+     end
 
+   assign o_valid = (execution_mode) ? instruction_code == STEP & pos_instr_valid & run : run;
 
    always @(*)
      begin
@@ -204,7 +201,6 @@ module microblaze_mips_interface
         if (pos_instr_valid) begin
            casez (instruction_code)
              START: begin
-                valid = 1'b1;
                 o_reset = 1'b0;
                 o_instr_mem_we = 4'b0000;
                 //o_read_request = 1'b0;
@@ -212,7 +208,6 @@ module microblaze_mips_interface
                 return_mode = 1'b0;
              end
              RESET: begin
-                valid = 1'b0;
                 o_reset = 1'b1;
                 o_instr_mem_we = 4'b0000;
                 //o_read_request = 1'b0;
@@ -267,8 +262,6 @@ module microblaze_mips_interface
                 return_mode = 1'b0;
              end
              STEP: begin
-                valid = 1'b1;
-
                 o_reset = 1'b0;
                 o_instr_mem_we = 4'b0000;
                 //o_read_request = 1'b0;
@@ -311,7 +304,4 @@ module microblaze_mips_interface
         else
           request_select = 6'b1111_11;
      end
-
-
-
 endmodule

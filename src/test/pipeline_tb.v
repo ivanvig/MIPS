@@ -432,6 +432,18 @@ module pipeline_tb ();
              addr_type = REQ_LATCH_DECO_DATA;
              address= 16'b0000_0000_0001;
           end
+          86: begin
+             instruction_code = STEP;
+             instruction_valid = 1'b1;
+             addr_type = REQ_LATCH_DECO_DATA;
+             address= 16'b0000_0000_0001;
+          end
+          87: begin
+             instruction_code = STEP;
+             instruction_valid = 1'b1;
+             addr_type = REQ_LATCH_DECO_DATA;
+             address= 16'b0000_0000_0001;
+          end
           default: begin
              instruction_code = 6'b0010_10; //NADA2
              instruction_valid = 1'b0;
