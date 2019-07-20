@@ -168,18 +168,18 @@ module pipeline_tb ();
              addr_type = REQ_MEM_INSTR;
              address= 16'b0000_0000_0000;
           end
-          8: begin
-             instruction_code = MODE_SET_STEP;
-             instruction_valid = 1'b1;
-             addr_type = REQ_MEM_INSTR;
-             address= 16'b0000_0000_0000;
-          end
-          9: begin
-             instruction_code = MODE_SET_STEP;
-             instruction_valid = 1'b1;
-             addr_type = REQ_MEM_INSTR;
-             address= 16'b0000_0000_0000;
-          end
+          // 8: begin
+          //    instruction_code = MODE_SET_STEP;
+          //    instruction_valid = 1'b1;
+          //    addr_type = REQ_MEM_INSTR;
+          //    address= 16'b0000_0000_0000;
+          // end
+          // 9: begin
+          //    instruction_code = MODE_SET_STEP;
+          //    instruction_valid = 1'b1;
+          //    addr_type = REQ_MEM_INSTR;
+          //    address= 16'b0000_0000_0000;
+          // end
           11: begin
              instruction_code = MODE_GET; //MODE_GET
              instruction_valid = 1'b1;
@@ -433,13 +433,73 @@ module pipeline_tb ();
              address= 16'b0000_0000_0001;
           end
           86: begin
-             instruction_code = STEP;
+             instruction_code = REQ_DATA; //REQ_DATA_MEM
+             instruction_valid = 1'b1;
+             addr_type = REQ_MEM_DATA;
+             address= 16'b0000_0000_0000;
+          end
+          87: begin
+             instruction_code = REQ_DATA;
+             instruction_valid = 1'b1;
+             addr_type = REQ_MEM_DATA;
+             address= 16'b0000_0000_0000;
+          end
+          89: begin
+             instruction_code = GOT_DATA; //GOT_DATA
              instruction_valid = 1'b1;
              addr_type = REQ_LATCH_DECO_DATA;
              address= 16'b0000_0000_0001;
           end
-          87: begin
-             instruction_code = STEP;
+          90: begin
+             instruction_code = GOT_DATA;
+             instruction_valid = 1'b1;
+             addr_type = REQ_LATCH_DECO_DATA;
+             address= 16'b0000_0000_0001;
+          end
+          92: begin
+             instruction_code = GIB_DATA; //GIB_DATA
+             instruction_valid = 1'b1;
+             addr_type = REQ_LATCH_DECO_DATA;
+             address= 16'b0000_0000_0001;
+          end
+          93: begin
+             instruction_code = GIB_DATA;
+             instruction_valid = 1'b1;
+             addr_type = REQ_LATCH_DECO_DATA;
+             address= 16'b0000_0000_0001;
+          end
+          95: begin
+             instruction_code = REQ_DATA; //REQ_DATA_MEM
+             instruction_valid = 1'b1;
+             addr_type = REQ_MEM_DATA;
+             address= 16'b0000_0000_0010;
+          end
+          96: begin
+             instruction_code = REQ_DATA;
+             instruction_valid = 1'b1;
+             addr_type = REQ_MEM_DATA;
+             address= 16'b0000_0000_0010;
+          end
+          98: begin
+             instruction_code = GOT_DATA; //GOT_DATA
+             instruction_valid = 1'b1;
+             addr_type = REQ_LATCH_DECO_DATA;
+             address= 16'b0000_0000_0001;
+          end
+          99: begin
+             instruction_code = GOT_DATA;
+             instruction_valid = 1'b1;
+             addr_type = REQ_LATCH_DECO_DATA;
+             address= 16'b0000_0000_0001;
+          end
+          101: begin
+             instruction_code = GIB_DATA; //GIB_DATA
+             instruction_valid = 1'b1;
+             addr_type = REQ_LATCH_DECO_DATA;
+             address= 16'b0000_0000_0001;
+          end
+          102: begin
+             instruction_code = GIB_DATA;
              instruction_valid = 1'b1;
              addr_type = REQ_LATCH_DECO_DATA;
              address= 16'b0000_0000_0001;
