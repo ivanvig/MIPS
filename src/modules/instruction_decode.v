@@ -226,7 +226,7 @@ module instruction_decode
    always @ (posedge i_clk) begin
       if (i_rst)
         pc <= {NB_REG{1'b0}};
-      else
+      else if (valid)
         pc <= i_pc;
    end
 
@@ -280,13 +280,13 @@ module instruction_decode
    assign aluop = use_2nd_lut ? aluop2 : aluop1;
 
    always @ (posedge i_clk) begin
-      inm_reg <= inm;
-      shamt_reg <= shamt;
-
       if(i_rst)
         ex_reg <= {NB_EX{1'b0}};
-      else if (valid)
-        ex_reg <= {aluop, b_i, s_u_ex, use_shamt&use_2nd_lut};
+      else if (valid) begin
+         ex_reg <= {aluop, b_i, s_u_ex, use_shamt&use_2nd_lut};
+         inm_reg <= inm;
+         shamt_reg <= shamt;
+      end
    end
 
    // MEM logic
