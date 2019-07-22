@@ -491,7 +491,7 @@ module pipeline
       .i_eop                (deco_halt^interface_valid),
 
       .i_clock              (i_clock),
-      .i_reset              (reset)
+      .i_reset              (i_reset)
       );
 
    //Fetch
