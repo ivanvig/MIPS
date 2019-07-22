@@ -167,8 +167,12 @@ module microblaze_mips_interface
    //address_type[9] use as instruction valid in microblaze
    always @(posedge i_clock)
      begin
-        instr_valid_d <= address_type[9];
+        if (i_reset)
+          instr_valid_d <= 1'b0;
+        else
+          instr_valid_d <= address_type[9];
      end
+
    assign pos_instr_valid = address_type[9] & ~instr_valid_d;
 
    always @(posedge i_clock)
