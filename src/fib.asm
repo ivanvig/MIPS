@@ -1,8 +1,8 @@
 # Fibonacci Casero papa
 # Mira como estan esos comentarios
-  SLL   $0, $0, 0
-  ORI   $t0, $0, 10 # podes comentar aca si te pinta tambien
-#OR    $t1, $0, $0
+
+  ORI   $t0, $0, 13 # podes comentar aca si te pinta tambien
+  #OR    $t1, $0, $0
   ORI   $t2, $0, 1
   OR    $t4, $0, $0
   OR    $t3, $0, $0

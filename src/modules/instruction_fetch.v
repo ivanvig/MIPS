@@ -80,7 +80,7 @@ module instruction_fetch
       .i_clock          (i_clock                                        ),
       .wea              (1'b0                                           ),
       .web              (i_debug_instrmem_we                            ),
-      .ena              (~i_hazard & i_valid                            ),
+      .ena              ((~i_hazard & i_valid) | i_reset                ),
       .enb              (i_debug_instrmem_re | |i_debug_instrmem_we     ),
       .i_reset_a        (i_reset                                        ),
       .i_reset_b        (i_reset                                        ),
