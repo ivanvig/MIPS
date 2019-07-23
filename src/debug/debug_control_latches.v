@@ -39,6 +39,8 @@ module debug_control_latches
    localparam NB_TIMER = 5;
    localparam NB_PADDING = (NB_INPUT_SIZE%NB_LATCH==0) ? 0 : NB_LATCH-(NB_INPUT_SIZE%NB_LATCH);
    localparam NB_PADDED_DATA = NB_INPUT_SIZE + NB_PADDING;
+   localparam TIMER_MAX =(NB_INPUT_SIZE/NB_LATCH) + (NB_INPUT_SIZE%NB_LATCH>0);
+
 
    reg [NB_TIMER-1:0]                  timer;
    wire                                request_match;
@@ -49,13 +51,15 @@ module debug_control_latches
    reg                                 data_done_reg;
 
    wire [NB_PADDED_DATA-1:0]           padded_data_from_mips;
+   wire [NB_TIMER-1:0]                 data_pointer;
 
-   assign o_frame_to_interface = padded_data_from_mips[NB_PADDED_DATA-(timer*NB_LATCH)-1-:NB_LATCH];
-   assign o_writing = processing_reg & ~data_done_reg;
+   assign o_frame_to_interface = padded_data_from_mips[NB_PADDED_DATA-(data_pointer*NB_LATCH)-1-:NB_LATCH];
+   assign o_writing = processing_reg & ~data_done;
 
    assign padded_data_from_mips = {i_data_from_mips, {NB_PADDING{1'b0}}};
    assign request_match = i_request_select == CONTROLLER_ID;
-   assign data_done = (NB_INPUT_SIZE/NB_LATCH) + (NB_INPUT_SIZE%NB_LATCH>0) == timer+1;
+   assign data_done = TIMER_MAX == timer;
+   assign data_pointer = timer & ~{NB_TIMER{data_done}};
 
    always @(posedge i_clock)
      if (i_reset) begin
@@ -78,7 +82,7 @@ module debug_control_latches
      begin
         if (i_reset | data_done)
           timer <= {NB_TIMER{1'b0}};
-        else if (processing_reg & ~data_done)
+        else if (processing_reg & timer<TIMER_MAX)
           timer <= timer + 1'b1;
      end
 endmodule
