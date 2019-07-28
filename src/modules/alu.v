@@ -30,7 +30,7 @@ module alu
    localparam SLA          = 4'b1001;
    localparam SLT          = 4'b1010;
    localparam LUI          = 4'b1011;
-   
+
    integer                        i;
 
    always @(*)
@@ -49,32 +49,36 @@ module alu
           NOR: // NOR
             o_result = ~ (i_data_a & i_data_b);
           SRL: begin// SRL (Logical: fills with zero)
-             o_result = 'b0;
-             for(i = 0; i<2**NB_DATA; i=i+1) begin
-                if(i_data_b == i)
-                  o_result = i_data_a >> i;
-             end
+             // o_result = 'b0;
+             // for(i = 0; i<2**NB_DATA; i=i+1) begin
+             //    if(i_data_b == i)
+             //      o_result = i_data_a >> i;
+             // end
+             o_result = i_data_b >> i_data_a;
           end
           SLL: begin// SLL (Logical: fills with zero)
-             o_result = 'b0;
-             for(i = 0; i<2**NB_DATA; i=i+1) begin
-                if(i_data_b == i)
-                  o_result = i_data_a << i;
-             end
+             // o_result = 'b0;
+             // for(i = 0; i<2**NB_DATA; i=i+1) begin
+             //    if(i_data_b == i)
+             //      o_result = i_data_a << i;
+             // end
+             o_result = i_data_b << i_data_a;
           end
           SRA: begin// SRA (Arithmetic: keep sign)
-             o_result = 'b0;
-             for(i = 0; i<2**NB_DATA; i=i+1) begin
-                if(i_data_b == i)
-                  o_result = $signed(i_data_a) >>> i;
-             end
+             // o_result = 'b0;
+             // for(i = 0; i<2**NB_DATA; i=i+1) begin
+             //    if(i_data_b == i)
+             //      o_result = $signed(i_data_a) >>> i;
+             // end
+             o_result = $signed(i_data_b) >>> i_data_a;
           end
           SLA: begin// SLA (Arithmetic: keep sign)
-             o_result = 'b0;
-             for(i = 0; i<2**NB_DATA; i=i+1) begin
-                if(i_data_b == i)
-                  o_result = $signed(i_data_a) <<< i;
-             end
+             // o_result = 'b0;
+             // for(i = 0; i<2**NB_DATA; i=i+1) begin
+             //    if(i_data_b == i)
+             //      o_result = $signed(i_data_a) <<< i;
+             // end
+             o_result = $signed(i_data_b) <<< i_data_a;
           end
           SLT:
             o_result = (i_data_a < i_data_b) ? {{NB_DATA-1{1'b0}}, 1'b1} : {NB_DATA{1'b0}};
