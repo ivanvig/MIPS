@@ -166,6 +166,13 @@ with open(sys.argv[1], 'r') as fp:
                 raise SystemError("We shouldn't even be here mate, wtf happened. >:v")
 
 
+        if op.upper() == 'HLT':
+            code_list.append(0)
+            code_list.append(0)
+            code_list.append(0)
+            code_list.append(0)
+            code_list.append(0)
+
         code_list.append((opcode << 26) + argcode + opdata['func'])
         if __debug__:
             print("\t\tfunc\t->\t{:06b}".format(opdata['func']))
@@ -176,9 +183,10 @@ with open(sys.argv[1], 'r') as fp:
         raise EOFError("WHERE'S THE LABEL LEBOWSKI?")
 
 if len(sys.argv) > 2:
-    with open(sys.argv[2], 'w') as fo:
-        loquetepinte = ''
+    with open(sys.argv[2], 'wb') as fo:
+        # loquetepinte = ''
+        # for code in code_list:
+        #     loquetepinte += '{:032b} '.format(code)
+        # fo.write(loquetepinte)
         for code in code_list:
-            loquetepinte += '{:032b} '.format(code)
-        fo.write(loquetepinte)
-            #fo.write(code.to_bytes(4, byteorder='little', signed=False))
+            fo.write(code.to_bytes(4, byteorder='big', signed=False))
