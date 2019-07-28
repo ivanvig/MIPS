@@ -179,7 +179,7 @@ module microblaze_mips_interface
 
    always @(posedge i_clock)
      begin
-        if (i_reset)
+        if (i_reset | o_reset)
           run <= 1'b0;
         else if (instruction_code == START)
           run <= 1'b1;

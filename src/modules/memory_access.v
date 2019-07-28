@@ -30,11 +30,13 @@ module memory_access
     input wire               i_valid
 ) ;
    localparam NB_ADDR = NB_REG ;
+   localparam LOG2_N_INSMEM_ADDR = clogb2(N_ADDR-1);
 
    //Data mem signals
    wire                      re;
    wire                      we;
    wire [NB_MEM-3-1:0]       dsize;
+   reg [NB_REG-1:0]          shifted_alu_to_mem;
    //Sign extension
    wire                      s_u;
 
@@ -60,7 +62,7 @@ module memory_access
 
    assign {re,we,s_u,dsize} = i_mem ;
 
-   assign offset = i_b_o[1:0];
+   assign offset = i_alu_o[1:0];
 
    assign mux_16 = (offset[1]) ? mem_o[NB_REG-1-:NB_REG/2] : mem_o[NB_REG/2-1-:NB_REG/2];
    assign mux_8 = (offset[0]) ? mux_16[NB_REG/2-1-:NB_REG/4] : mux_16[NB_REG/4-1-:NB_REG/4];
@@ -73,6 +75,18 @@ module memory_access
    assign we_11 = we_1 & offset[1];
 
    assign extended_we = {{4{we & dsize[1]}} | {{2{we_1}},{2{we_0}}} & {4{dsize[0]}} | {we_00,we_01,we_10,we_11} &  {4{(~&dsize)}}} ; //
+
+   always @ (*)
+     begin
+        casez (offset)
+          2'b00: shifted_alu_to_mem = i_b_o;
+          2'b01: shifted_alu_to_mem = {i_b_o[NB_REG-1:8],{8{1'b0}}};
+          2'b10: shifted_alu_to_mem = {i_b_o[NB_REG-1:16],{16{1'b0}}};
+          2'b11: shifted_alu_to_mem = {i_b_o[NB_REG-1:24],{24{1'b0}}};
+        endcase // casez (offset)
+     end
+
+
 
    always @ (*)
      begin
@@ -102,29 +116,29 @@ module memory_access
 
    byte_enabled_dual_port
      #(
-       .NB_COL          (4                ),
-       .COL_WIDTH       (8                ),
-       .RAM_DEPTH       (N_ADDR           ),
-       .RAM_PERFORMANCE ("LOW_LATENCY"    ),
-       .INIT_FILE       (DATA_FILE        )
+       .NB_COL          (4                                                 ),
+       .COL_WIDTH       (8                                                 ),
+       .RAM_DEPTH       (N_ADDR                                            ),
+       .RAM_PERFORMANCE ("LOW_LATENCY"                                     ),
+       .INIT_FILE       (DATA_FILE                                         )
        )
    u_instruction_memory
      (
-      .o_data_a         (mem_o                  ),
-      .o_data_b         (o_debug_datamem_data   ), //For debugging
-      .i_addr_a         (i_alu_o                ),
-      .i_addr_b         (i_debug_datamem_addr   ),
-      .i_data_a         (i_b_o                  ),
-      .i_data_b         ({NB_REG{1'b0}}         ),
-      .i_clock          (i_clock                ),
-      .wea              (extended_we            ),
-      .web              (4'b0000                ),
-      .ena              (re | |extended_we      ),
-      .enb              (i_debug_datamem_re     ),
-      .i_reset_a        (i_reset                ),
-      .i_reset_b        (i_reset                ),
-      .i_rea            (1'b1                   ),
-      .i_reb            (1'b1                   )
+      .o_data_a         (mem_o                                             ),
+      .o_data_b         (o_debug_datamem_data                              ), //For debugging
+      .i_addr_a         (i_alu_o[LOG2_N_INSMEM_ADDR+2-1-:LOG2_N_INSMEM_ADDR] ),
+      .i_addr_b         (i_debug_datamem_addr                              ),
+      .i_data_a         (shifted_alu_to_mem                                ),
+      .i_data_b         ({NB_REG{1'b0}}                                    ),
+      .i_clock          (i_clock                                           ),
+      .wea              (extended_we                                       ),
+      .web              (4'b0000                                           ),
+      .ena              (re | |extended_we                                 ),
+      .enb              (i_debug_datamem_re                                ),
+      .i_reset_a        (i_reset                                           ),
+      .i_reset_b        (i_reset                                           ),
+      .i_rea            (1'b1                                              ),
+      .i_reb            (1'b1                                              )
       );
 
 /*
@@ -143,5 +157,11 @@ module memory_access
     .wea(extended_we),         // Byte-write enable, width determined from NB_COL
     .ena(re)         // RAM Enable, for additional power savings, disable port when not in use
   );*/
+
+   function integer clogb2;
+      input integer                   depth;
+      for (clogb2=0; depth>0; clogb2=clogb2+1)
+        depth = depth >> 1;
+   endfunction // clogb2
 
 endmodule
