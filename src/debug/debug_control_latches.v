@@ -53,10 +53,10 @@ module debug_control_latches
    wire [NB_PADDED_DATA-1:0]           padded_data_from_mips;
    wire [NB_TIMER-1:0]                 data_pointer;
 
-   assign o_frame_to_interface = padded_data_from_mips[NB_PADDED_DATA-(data_pointer*NB_LATCH)-1-:NB_LATCH];
+   assign o_frame_to_interface = padded_data_from_mips[(data_pointer*NB_LATCH)+:NB_LATCH];
    assign o_writing = processing_reg & ~data_done;
 
-   assign padded_data_from_mips = {i_data_from_mips, {NB_PADDING{1'b0}}};
+   assign padded_data_from_mips = {{NB_PADDING{1'b0}}, i_data_from_mips};
    assign request_match = i_request_select == CONTROLLER_ID;
    assign data_done = TIMER_MAX == timer;
    assign data_pointer = timer & ~{NB_TIMER{data_done}};
