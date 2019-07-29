@@ -82,7 +82,7 @@ with open(sys.argv[1], 'r') as fp:
                 print('ln. {}: Comment, ignoring.'.format(ln))
             continue
 
-        op = parsed[0]
+        op = parsed[0].upper()
 
         if op[-1] == ':': # label
             if __debug__:
@@ -94,7 +94,7 @@ with open(sys.argv[1], 'r') as fp:
         elif len(op_dict[op]['args']) != len(parsed) - n_none - 1:
             raise SyntaxError("Error: invalid number of arguments. Expected {} got {} at ln. {}".format(len(op_dict['args']), len(parsed)-n_none-1), ln)
 
-        opdata = op_dict[op.upper()]
+        opdata = op_dict[op]
         opcode = opdata['bin']
         if __debug__:
             print('ln. {}: {}° Instruction {} found -> {:06b}.'.format(ln, len(code_list), op.upper(), opcode))
