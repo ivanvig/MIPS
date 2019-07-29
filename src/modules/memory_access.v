@@ -71,18 +71,18 @@ module memory_access
    assign we_1 = offset[1] & we;
    assign we_00 = we_0 & !offset[0];
    assign we_01 = we_0 & offset[0];
-   assign we_10 = we_1 & !offset[1];
-   assign we_11 = we_1 & offset[1];
+   assign we_10 = we_1 & !offset[0];
+   assign we_11 = we_1 & offset[0];
 
-   assign extended_we = {{4{we & dsize[1]}} | {{2{we_1}},{2{we_0}}} & {4{dsize[0]}} | {we_00,we_01,we_10,we_11} &  {4{(~&dsize)}}} ; //
+   assign extended_we = {{4{we & dsize[1]}} | {{2{we_1}},{2{we_0}}} & {4{dsize[0]}} | {we_11,we_10,we_01,we_00} & {4{(~&dsize)}}} ; //
 
    always @ (*)
      begin
         casez (offset)
-          2'b00: shifted_alu_to_mem = i_b_o;
-          2'b01: shifted_alu_to_mem = {i_b_o[NB_REG-1:8],{8{1'b0}}};
-          2'b10: shifted_alu_to_mem = {i_b_o[NB_REG-1:16],{16{1'b0}}};
-          2'b11: shifted_alu_to_mem = {i_b_o[NB_REG-1:24],{24{1'b0}}};
+          2'b00: shifted_alu_to_mem = {i_b_o};
+          2'b01: shifted_alu_to_mem = {i_b_o[NB_REG-8-1:0],{8{1'b0}}};
+          2'b10: shifted_alu_to_mem = {i_b_o[NB_REG-16-1:0],{16{1'b0}}};
+          2'b11: shifted_alu_to_mem = {i_b_o[NB_REG-24-1:0],{24{1'b0}}};
         endcase // casez (offset)
      end
 
