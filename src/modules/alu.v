@@ -10,13 +10,15 @@ module alu
     )
    (
     // Outputs.
-    output reg [NB_DATA-1:0]      o_result , // Result of the operation
+    output [NB_DATA-1:0]      o_result , // Result of the operation
 
     // Inputs.
     input wire [NB_DATA-1:0]      i_data_a,
     input wire [NB_DATA-1:0]      i_data_b,
     input wire [NB_OPERATION-1:0] i_op
     ) ;
+
+   localparam NB_SHIFT = clogb2(NB_DATA);
 
    localparam ADD          = 4'b0000;
    localparam SUB          = 4'b0001;
@@ -32,59 +34,80 @@ module alu
    localparam LUI          = 4'b1011;
 
    integer                        i;
+   reg [NB_DATA-1:0]              result;
+
+   assign o_result = result;
 
    always @(*)
      begin
         case(i_op)
           ADD: // ADD
-            o_result = i_data_a + i_data_b ;
+            result = i_data_a + i_data_b ;
           SUB: // SUB
-            o_result = i_data_a - i_data_b ;
+            result = i_data_a - i_data_b ;
           AND: // AND
-            o_result = i_data_a & i_data_b ;
+            result = i_data_a & i_data_b ;
           OR: // OR
-            o_result = i_data_a | i_data_b ;
+            result = i_data_a | i_data_b ;
           XOR: // XOR
-            o_result = i_data_a ^ i_data_b ;
+            result = i_data_a ^ i_data_b ;
           NOR: // NOR
-            o_result = ~ (i_data_a & i_data_b);
+            result = ~ (i_data_a & i_data_b);
           SRL: begin// SRL (Logical: fills with zero)
-             // o_result = 'b0;
+             result = 'b0;
              // for(i = 0; i<2**NB_DATA; i=i+1) begin
              //    if(i_data_b == i)
-             //      o_result = i_data_a >> i;
+             //      result = i_data_a[4:0] >> i;
              // end
-             o_result = i_data_b >> i_data_a;
+             for(i = 0; i<2**NB_SHIFT; i=i+1) begin
+                if(i_data_a[NB_SHIFT-1:0] == i)
+                  result = i_data_b >> i;
+             end
+             // result = i_data_b >> i_data_a[4:0];
           end
           SLL: begin// SLL (Logical: fills with zero)
-             // o_result = 'b0;
-             // for(i = 0; i<2**NB_DATA; i=i+1) begin
-             //    if(i_data_b == i)
-             //      o_result = i_data_a << i;
-             // end
-             o_result = i_data_b << i_data_a;
+             result = 'b0;
+             for(i = 0; i<2**NB_SHIFT; i=i+1) begin
+                if(i_data_a[NB_SHIFT-1:0] == i)
+                  result = i_data_b << i;
+             end
+             // result = i_data_b << i_data_a[4:0];
           end
           SRA: begin// SRA (Arithmetic: keep sign)
-             // o_result = 'b0;
+             result = 'b0;
              // for(i = 0; i<2**NB_DATA; i=i+1) begin
              //    if(i_data_b == i)
-             //      o_result = $signed(i_data_a) >>> i;
+             //      result = $signed(i_data_a[4:0]) >>> i;
              // end
-             o_result = $signed(i_data_b) >>> i_data_a;
+             for(i = 0; i<2**NB_SHIFT; i=i+1) begin
+                if(i_data_a[NB_SHIFT-1:0] == i)
+                  result = $signed(i_data_b) >>> i;
+             end
+             // result = $signed(i_data_b) >>> i_data_a[4:0];
           end
           SLA: begin// SLA (Arithmetic: keep sign)
-             // o_result = 'b0;
+             result = 'b0;
              // for(i = 0; i<2**NB_DATA; i=i+1) begin
              //    if(i_data_b == i)
-             //      o_result = $signed(i_data_a) <<< i;
+             //      result = $signed(i_data_a[4:0]) <<< i;
              // end
-             o_result = $signed(i_data_b) <<< i_data_a;
+             for(i = 0; i<2**NB_SHIFT; i=i+1) begin
+                if(i_data_a[NB_SHIFT-1:0] == i)
+                  result = $signed(i_data_b) <<< i;
+             end
+             // result = $signed(i_data_b) <<< i_data_a[4:0];
           end
           SLT:
-            o_result = (i_data_a < i_data_b) ? {{NB_DATA-1{1'b0}}, 1'b1} : {NB_DATA{1'b0}};
+            result = (i_data_a < i_data_b) ? {{NB_DATA-1{1'b0}}, 1'b1} : {NB_DATA{1'b0}};
           LUI:
-            o_result = $signed(i_data_b) << 16 ;
-          default: o_result = {NB_DATA{1'b1}};
+            result = $signed(i_data_b) << 16 ;
+          default: result = {NB_DATA{1'b1}};
         endcase
      end
+     
+     function integer clogb2;
+        input integer                   depth;
+        for (clogb2=0; depth>0; clogb2=clogb2+1)
+          depth = depth >> 1;
+     endfunction // clogb2
 endmodule
