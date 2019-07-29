@@ -48,7 +48,6 @@ module debug_control_latches
    wire                                request_match_pos;
    reg                                 processing_reg;
    wire                                data_done;
-   reg                                 data_done_reg;
 
    wire [NB_PADDED_DATA-1:0]           padded_data_from_mips;
    wire [NB_TIMER-1:0]                 data_pointer;
@@ -64,10 +63,8 @@ module debug_control_latches
    always @(posedge i_clock)
      if (i_reset) begin
        request_match_reg <= 1'b0;
-        data_done_reg <= 1'b0;
      end else begin
        request_match_reg <= request_match;
-        data_done_reg <= data_done;
      end
 
    always @(posedge i_clock)

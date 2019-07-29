@@ -1,5 +1,5 @@
-/* Con el request de tiras de latches, viaja una señal de control a los escritores de cada bloque
-Las tiras son de tamaño fijo igual al tamaño de la mayor tira, cuando termina se manda un EoD
+/* Con el request de tiras de latches, viaja una se??al de control a los escritores de cada bloque
+Las tiras son de tama??o fijo igual al tama??o de la mayor tira, cuando termina se manda un EoD
  */
 
 
@@ -160,7 +160,7 @@ module microblaze_mips_interface
    assign o_instr_data = (instruction_code == LOAD_INSTR_MSB) ? {instruction_data,{NB_ADDR_DATA{1'b0}}} : {{NB_ADDR_DATA{1'b0}},instruction_data};
    assign o_instr_addr = (instruction_code == REQ_DATA) ? instruction_data : {{(NB_ADDR_DATA-NB_INSTR_ADDR){1'b0}}, address_type[NB_INSTR_ADDR-1:0]};
    assign o_mem_addr = instruction_data;
-   assign o_request_select = (pos_instr_valid) ? request_select : {6{1'b1}};
+   assign o_request_select = request_select;
 
    assign {instruction_code, address_type, instruction_data} = i_frame_from_blaze;
 
@@ -193,7 +193,7 @@ module microblaze_mips_interface
         o_instr_mem_we = 4'b0000;
         //o_read_request = 1'b0;
         use_type_lut = 1'b0;
-        // return_mode = 1'b0;
+        return_mode = 1'b0;
         set_capture = 1'b0;
         set_mode = 1'b0;
         if (pos_instr_valid) begin
@@ -298,6 +298,8 @@ module microblaze_mips_interface
                REQ_LATCH_MEM_CTRL: request_select = 6'b1010_11 ;
                default: request_select = 6'b1111_11;
              endcase // casez (address_type)
+           else
+               request_select = 6'b1111_11;
         end // if (pos_instr_valid)
         else
           request_select = 6'b1111_11;
