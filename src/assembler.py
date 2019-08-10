@@ -42,14 +42,16 @@ class LabelReplacer:
 
             return 0
 
-def toint(str):
-    if str[0:3] == '0x':
+def toint(wrd):
+    if wrd[0:2] == '0x':
         base = 16
-    elif str[0:3] == '0b':
+        wrd = wrd[2:]
+    elif wrd[0:2] == '0b':
         base = 2
+        wrd = wrd[2:]
     else:
         base = 10
-    return int(str, base)
+    return int(wrd, base)
 
 
 code_list = list()

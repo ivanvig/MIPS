@@ -11,6 +11,7 @@
 
 #define UARTLITE_DEVICE_ID      XPAR_UARTLITE_0_DEVICE_ID
 
+#define END_OF_PROGRAM       0b1 << 31
 #define INIT                 0b101010 << 26
 #define START                0b000001 << 26
 #define RESET                0b000010 << 26
@@ -88,6 +89,8 @@ int main()
                         break;
                 case STEP:
                         send(STEP, &gpio, 2);
+                        recv_data = XGpio_DiscreteRead(&gpio, 1);
+                        send_data(&UartLite, &recv_data, sizeof(recv_data));
                         break;
                 case LOAD_INSTR_LSB:
                         send(recv_msg, &gpio, 2);

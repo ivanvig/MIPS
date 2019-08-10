@@ -1,6 +1,7 @@
 from enum import IntEnum
 
 class MipsFrame(IntEnum):
+    EOP                  = 0b1000_00 << 26
     INIT                 = 0b1010_10 << 26
     START                = 0b0000_01 << 26
     RESET                = 0b0000_10 << 26
@@ -49,7 +50,7 @@ class Mips:
         self.send_msg(self.frame.RESET)
 
     def step(self):
-        self.send_msg(self.frame.STEP)
+        return self.req_data(self.frame.STEP, 0)
 
     def send_msg(self, msg):
         self.safe_write(msg.to_bytes(4, byteorder='little'))

@@ -1,9 +1,11 @@
   or    $t0, $0, $0
   ori   $t1, $0, 2048
-  ori   $t4, $0, 15
+  ori   $t4, $0, 65535
+  ori   $t5, $0, 0xaaaa
 LOOP:
-  sb    $t4,  0($t0)
-  addi  $t0, $t0, 1
+  sh    $t4,  0($t0)
+  sh    $t5,  2($t0)
+  addi  $t0, $t0, 4
   slt   $t2, $t0, $t1
   bne   $t2, $0, LOOP
 
