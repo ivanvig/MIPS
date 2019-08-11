@@ -204,5 +204,6 @@ if args.name:
         with open(args.name, 'w') as fo:
             loquetepinte = ''
             for code in code_list:
-                loquetepinte += '{:032b} '.format(code)
-                fo.write(loquetepinte)
+                # loquetepinte += '{:032b} '.format(code)
+                # fo.write(loquetepinte)
+                fo.write('{:032b} '.format(code))
