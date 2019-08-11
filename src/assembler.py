@@ -1,7 +1,18 @@
 import ctypes
-import sys
 import re
 from asm_dicts import *
+import argparse
+
+parser = argparse.ArgumentParser(description='Compilador mips')
+
+parser.add_argument('input_name',
+                    help='Nombre del archivo')
+parser.add_argument('name',
+                    help='Nombre del archivo')
+parser.add_argument('--binary', '-b', action='store_true',
+                    help='Binary')
+
+args = parser.parse_args()
 
 regexp = re.compile(r'^\s*(?:(\w+:?)(?:\s+(\$?\w+)(?:\s*,\s*(\$?\w+)(?:(?:\s*,\s*(\$?\w+))|(?:\s*\(\s*(\$?\w+)\s*\)\s*))?)?)?)?\s*(?:#.*)?$')
 
@@ -57,7 +68,7 @@ def toint(wrd):
 code_list = list()
 labels = LabelReplacer(code_list)
 
-with open(sys.argv[1], 'r') as fp:
+with open(args.input_name, 'r') as fp:
 
 
     if __debug__:
@@ -184,11 +195,14 @@ with open(sys.argv[1], 'r') as fp:
     if labels.reqlabel_dict:
         raise EOFError("WHERE'S THE LABEL LEBOWSKI?")
 
-if len(sys.argv) > 2:
-    with open(sys.argv[2], 'wb') as fo:
-        # loquetepinte = ''
-        # for code in code_list:
-        #     loquetepinte += '{:032b} '.format(code)
-        # fo.write(loquetepinte)
-        for code in code_list:
-            fo.write(code.to_bytes(4, byteorder='big', signed=False))
+if args.name:
+    if args.binary:
+        with open(args.name, 'wb') as fo:
+            for code in code_list:
+                fo.write(code.to_bytes(4, byteorder='big', signed=False))
+    else:
+        with open(args.name, 'w') as fo:
+            loquetepinte = ''
+            for code in code_list:
+                loquetepinte += '{:032b} '.format(code)
+                fo.write(loquetepinte)
