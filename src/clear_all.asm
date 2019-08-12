@@ -1,15 +1,16 @@
   or    $t0, $0, $0
-  ori   $t1, $0, 2048
-  ori   $t4, $0, 65535
-  ori   $t5, $0, 0xaaaa
+  ori   $t1, $0, 32
+  ori   $t4, $0, 0xcaca
+  ori   $t5, $0, 0xcafe
 LOOP:
-  sh    $t4,  0($t0)
-  sh    $t5,  2($t0)
+  sb    $t5,  0($t0)
+  sb    $t5,  1($t0)
+  sb    $t4,  2($t0)
+	sb    $t4,  3($t0)
   addi  $t0, $t0, 4
-  slt   $t2, $t0, $t1
-  bne   $t2, $0, LOOP
+  #slt   $t2, $t0, $t1
+  bne   $t1, $t0, LOOP
 
-  or    $t0, $0, $0
 	or    $at, $0, $0
 	or    $v0, $0, $0
 	or    $v1, $0, $0
