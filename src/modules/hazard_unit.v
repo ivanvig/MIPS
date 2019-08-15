@@ -7,9 +7,11 @@ module hazard_unit
    (
     output                  o_hazard,
 
-    input                   i_re, // es un LOAD
+    input                   i_re_exec, //LOAD en exec
+    input                   i_re_mem, //LOAD en mem
     input                   i_jmp_branch, // es un jmp RS o branch
-    input [NB_REG_ADDR-1:0] i_rd,
+    input [NB_REG_ADDR-1:0] i_rd_exec, //dato del LOAD en exec
+    input [NB_REG_ADDR-1:0] i_rd_mem, //dato del LOAD en mem
     input [NB_REG_ADDR-1:0] i_rs,
     input [NB_REG_ADDR-1:0] i_rt,
 
@@ -21,6 +23,10 @@ module hazard_unit
    reg                      jump_branch_reg;
    reg [NB_REG_ADDR-1:0]    rs_reg;
    reg [NB_REG_ADDR-1:0]    rt_reg;
+
+   wire                     instr_after_load; //ADD -> LOAD
+   wire                     branch_after_instr; //BRANCH -> ADD
+   wire                     branch_after_load; //BRANCH -> X -> LOAD
 
    always @ (negedge i_clock)
      begin
@@ -36,6 +42,10 @@ module hazard_unit
           end
      end
 
-   assign o_hazard = ((i_rd == rs_reg) | (i_rd == rt_reg)) & (i_re | jump_branch_reg);
+   assign instr_after_load = ((i_rd_exec == rs_reg) | (i_rd_exec == rt_reg)) & i_re_exec;
+   assign branch_after_instr = ((i_rd_exec == rs_reg) | (i_rd_exec == rt_reg)) & jump_branch_reg;
+   assign branch_after_load = ((i_rd_mem == rs_reg) | (i_rd_mem == rt_reg)) & (i_re_mem & jump_branch_reg);
+
+   assign o_hazard = instr_after_load | branch_after_instr | branch_after_load;
 
 endmodule
