@@ -15,7 +15,7 @@ module microblaze_mips_interface
    (
     output reg [NB_CONTROL_FRAME-1:0] o_frame_to_blaze,
     output wire                       o_valid,
-    output reg                        o_reset,
+    output                            o_reset,
     output wire [NB_REG-1:0]          o_instr_data,
     output wire [NB_ADDR_DATA-1:0]    o_instr_addr,
     output reg [4-1:0]                o_instr_mem_we,
@@ -93,6 +93,8 @@ module microblaze_mips_interface
 
    reg                                 enable_data_capture;
    reg                                 set_capture;
+   reg                                 reset_reg;
+   reg                                 reset;
    reg [NB_COUNTER-1:0]                timer;
    reg [NB_COUNTER-1:0]                buffer_p;
    reg [NB_BUFFER-1:0]                 data_to_blaze;
@@ -104,6 +106,10 @@ module microblaze_mips_interface
    //Interface to blaze
    //cuando llega EOD, cambiar request_select a algo que no matchee con ningun ID para no dejar el match de los
    //comparadores con el ID en alto
+
+   assign o_reset = reset | reset_reg;
+
+   always @(posedge i_clock) reset_reg <= reset;
 
    always @(posedge i_clock) begin
       if (i_reset)
@@ -179,7 +185,7 @@ module microblaze_mips_interface
 
    always @(posedge i_clock)
      begin
-        if (i_reset | o_reset)
+        if (i_reset | reset)
           run <= 1'b0;
         else if (instruction_code == START)
           run <= 1'b1;
@@ -189,7 +195,7 @@ module microblaze_mips_interface
 
    always @(*)
      begin
-        o_reset = 1'b0;
+        reset = 1'b0;
         o_instr_mem_we = 4'b0000;
         //o_read_request = 1'b0;
         use_type_lut = 1'b0;
@@ -199,35 +205,35 @@ module microblaze_mips_interface
         if (pos_instr_valid) begin
            casez (instruction_code)
              START: begin
-                o_reset = 1'b0;
+                reset = 1'b0;
                 o_instr_mem_we = 4'b0000;
                 //o_read_request = 1'b0;
                 use_type_lut = 1'b0;
                 return_mode = 1'b0;
              end
              RESET: begin
-                o_reset = 1'b1;
+                reset = 1'b1;
                 o_instr_mem_we = 4'b0000;
                 //o_read_request = 1'b0;
                 use_type_lut = 1'b0;
                 return_mode = 1'b0;
              end
              LOAD_INSTR_LSB: begin
-                o_reset = 1'b0;
+                reset = 1'b0;
                 o_instr_mem_we = 4'b0011;
                 //o_read_request = 1'b0;
                 use_type_lut = 1'b0;
                 return_mode = 1'b0;
              end
              LOAD_INSTR_MSB: begin
-                o_reset = 1'b0;
+                reset = 1'b0;
                 o_instr_mem_we = 4'b1100;
                 //o_read_request = 1'b0;
                 use_type_lut = 1'b0;
                 return_mode = 1'b0;
              end
              REQ_DATA: begin
-                o_reset = 1'b0;
+                reset = 1'b0;
                 o_instr_mem_we = 4'b0000;
                 //o_read_request = 1'b1;
                 use_type_lut = 1'b1;
@@ -235,7 +241,7 @@ module microblaze_mips_interface
                 set_capture = 1'b1;
              end
              MODE_GET: begin
-                o_reset = 1'b0;
+                reset = 1'b0;
                 o_instr_mem_we = 4'b0000;
                 //o_read_request = 1'b0;
                 use_type_lut = 1'b0;
@@ -244,7 +250,7 @@ module microblaze_mips_interface
              MODE_SET_CONT: begin
                 set_mode = 1'b0;
 
-                o_reset = 1'b0;
+                reset = 1'b0;
                 o_instr_mem_we = 4'b0000;
                 //o_read_request = 1'b0;
                 use_type_lut = 1'b0;
@@ -253,21 +259,21 @@ module microblaze_mips_interface
              MODE_SET_STEP: begin
                 set_mode = 1'b1;
 
-                o_reset = 1'b0;
+                reset = 1'b0;
                 o_instr_mem_we = 4'b0000;
                 //o_read_request = 1'b0;
                 use_type_lut = 1'b0;
                 return_mode = 1'b0;
              end
              STEP: begin
-                o_reset = 1'b0;
+                reset = 1'b0;
                 o_instr_mem_we = 4'b0000;
                 //o_read_request = 1'b0;
                 use_type_lut = 1'b0;
                 return_mode = 1'b0;
              end
              default: begin
-                o_reset = 1'b0;
+                reset = 1'b0;
                 o_instr_mem_we = 4'b0000;
                 //o_read_request = 1'b0;
                 use_type_lut = 1'b0;
