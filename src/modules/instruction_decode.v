@@ -305,7 +305,7 @@ module instruction_decode
       if(i_rst)
         wb_reg <= {NB_WB{1'b0}};
       else if (valid)
-        wb_reg <= {dest, reg_we && dest, mem_alu, data_pc};
+        wb_reg <= {dest, reg_we & |dest, mem_alu, data_pc};
    end
 
    // Main LUT
