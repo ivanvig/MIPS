@@ -131,6 +131,8 @@ module pipeline
    wire [NB_REG-1:0] sc_datab_deco;
 
    wire [NB_INSTR-1:0] mux_ir_deco;
+   wire [NB_REG-1:0]   mux_dataa_deco_exec;
+   wire [NB_REG-1:0]   mux_datab_deco_exec;
 
    wire                deco_isbrancho_sc;
    wire                deco_halt;
@@ -195,9 +197,12 @@ module pipeline
    assign deco_inm_i_if = deco_inm_exec ;
    assign mux_ir_deco = (hazard | deco_nop_reg_if) ? 32'h0000_0000 : if_ir_deco;
 
-   assign fetch_data_to_debug_unit= if_ir_deco;
+   assign mux_dataa_deco_exec = sc_muxa_ex ? sc_dataa_ex : deco_a_exec;
+   assign mux_datab_deco_exec = sc_muxb_ex ? sc_datab_ex : deco_b_exec;
+
+   assign fetch_data_to_debug_unit= mux_ir_deco;
    assign fetch_control_to_debug_unit= {if_system_pc,if_pc_deco};
-   assign decode_data_to_debug_unit= {deco_shamt_exec, deco_a_exec, deco_b_exec, deco_inm_exec};
+   assign decode_data_to_debug_unit= {deco_shamt_exec, mux_dataa_deco_exec, mux_datab_deco_exec, deco_inm_exec};
    assign decode_control_to_debug_unit= {deco_ex_ctrl_exec, deco_mem_ctrl_exec, deco_wb_ctrl_exec, deco_pc_exec};
    assign exec_data_to_debug_unit= {exec_alu_mem, exec_b_mem};
    assign exec_control_to_debug_unit= {exec_mem_mem, exec_wb_mem, exec_pc_mem};
@@ -313,8 +318,8 @@ module pipeline
        .o_wb                (exec_wb_mem),
        .o_pc                (exec_pc_mem),
 
-       .i_a                 (sc_muxa_ex ? sc_dataa_ex : deco_a_exec),
-       .i_b                 (sc_muxb_ex ? sc_datab_ex : deco_b_exec),
+       .i_a                 (mux_dataa_deco_exec),
+       .i_b                 (mux_datab_deco_exec),
        .i_inm               (deco_inm_exec),
        .i_shamt             (deco_shamt_exec),
        .i_ex                (deco_ex_ctrl_exec),
