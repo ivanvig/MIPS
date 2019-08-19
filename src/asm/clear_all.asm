@@ -8,8 +8,8 @@ LOOP:
   sb    $t4,  2($t0)
 	sb    $t4,  3($t0)
   addi  $t0, $t0, 4
-  #slt   $t2, $t0, $t1
-  bne   $t1, $t0, LOOP
+  slt   $t2, $t0, $t1
+  bne   $t2, $0, LOOP
 
 	or    $at, $0, $0
 	or    $v0, $0, $0

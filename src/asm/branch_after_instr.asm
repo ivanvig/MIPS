@@ -5,7 +5,7 @@
   ORI $t2, $0, 1
 
 LOOP:
-  SW $t1, 0($t1)
+  SB $t1, 0($t1)
   ADDU $t1, $t1, $t2
   BNE $t1, $t0, LOOP
 
