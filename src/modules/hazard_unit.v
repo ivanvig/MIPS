@@ -12,6 +12,8 @@ module hazard_unit
     input                   i_jmp_branch, // es un jmp RS o branch
     input [NB_REG_ADDR-1:0] i_rd_exec, //dato del LOAD en exec
     input [NB_REG_ADDR-1:0] i_rd_mem, //dato del LOAD en mem
+    input                   i_rd_exec_we, //se va a escribir en WB rd en exec
+    input                   i_rd_mem_we, //se va a escribir en WB rd en mem
     input [NB_REG_ADDR-1:0] i_rs,
     input [NB_REG_ADDR-1:0] i_rt,
 
@@ -52,8 +54,8 @@ module hazard_unit
      end
 
    assign instr_after_load = ((i_rd_exec == rs_reg) | (i_rd_exec == rt_reg)) & i_re_exec;
-   assign branch_after_instr = ((i_rd_exec == rs_reg) | (i_rd_exec == rt_reg)) & jump_branch_reg;
-   assign branch_after_load = ((i_rd_mem == rs_reg) | (i_rd_mem == rt_reg)) & (i_re_mem & jump_branch_reg);
+   assign branch_after_instr = ((i_rd_exec == rs_reg) | (i_rd_exec == rt_reg)) & jump_branch_reg & i_rd_exec_we;
+   assign branch_after_load = ((i_rd_mem == rs_reg) | (i_rd_mem == rt_reg)) & (i_re_mem & jump_branch_reg) & i_rd_mem_we;
 
    assign o_hazard = (instr_after_load | branch_after_instr | branch_after_load) & ~hazard_pos;
 

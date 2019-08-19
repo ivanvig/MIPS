@@ -429,6 +429,8 @@ module pipeline
       .i_jmp_branch    (deco_isbrancho_sc|deco_jump_rs_if       ),
       .i_rd_exec       (deco_wb_ctrl_exec[NB_WB-1-:NB_REG_ADDR] ),
       .i_rd_mem        (exec_wb_mem[NB_WB-1-:NB_REG_ADDR]       ),
+      .i_rd_exec_we    (deco_wb_ctrl_exec[2]),
+      .i_rd_mem_we     (exec_wb_mem[2]),
       .i_rs            (if_ir_deco[MSB_RS-:NB_REG_ADDR]         ),
       .i_rt            (if_ir_deco[MSB_RT-:NB_REG_ADDR]         ),
       .i_re_exec       (deco_mem_ctrl_exec[NB_MEM-1]            ),
