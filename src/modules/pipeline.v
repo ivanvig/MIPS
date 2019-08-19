@@ -394,6 +394,7 @@ module pipeline
       .o_mux_b         (sc_muxb_ex),
       .i_we_ex         (deco_wb_ctrl_exec[2]),
       .i_we_mem        (exec_wb_mem[2]),
+      .i_we_wb         (wb_regfile_we_deco),
       .i_rinst         (deco_rinst_sc),
       .i_store         (deco_store_sc),
       .i_jump_rs       (deco_jump_rs_if),
@@ -403,6 +404,7 @@ module pipeline
       .i_data_mem      (wb_regfile_data_deco),
       .i_rd_ex         (deco_wb_ctrl_exec[NB_WB-1-:NB_REG_ADDR]),
       .i_rd_mem        (exec_wb_mem[NB_WB-1-:NB_REG_ADDR]),
+      .i_rd_wb         (mem_wb_wb[NB_WB-1-:NB_REG_ADDR]),
       .i_rs            (if_ir_deco[MSB_RS-:NB_REG_ADDR]),
       .i_rt            (if_ir_deco[MSB_RT-:NB_REG_ADDR]),
 
@@ -420,11 +422,13 @@ module pipeline
      (
       .o_hazard        (hazard                                  ),
       .i_jmp_branch    (deco_isbrancho_sc|deco_jump_rs_if       ),
-      .i_rd            (deco_wb_ctrl_exec[NB_WB-1-:NB_REG_ADDR] ),
+      .i_rd_exec       (deco_wb_ctrl_exec[NB_WB-1-:NB_REG_ADDR] ),
+      .i_rd_mem        (exec_wb_mem[NB_WB-1-:NB_REG_ADDR]       ),
       .i_rs            (if_ir_deco[MSB_RS-:NB_REG_ADDR]         ),
       .i_rt            (if_ir_deco[MSB_RT-:NB_REG_ADDR]         ),
-      .i_re            (deco_mem_ctrl_exec[NB_MEM-1]            ),
-      .i_reset         (reset                                 ),
+      .i_re_exec       (deco_mem_ctrl_exec[NB_MEM-1]            ),
+      .i_re_mem        (exec_mem_mem[NB_MEM-1]                  ),
+      .i_reset         (reset                                   ),
       .i_clock         (i_clock                                 ),
       .i_valid         (deco_halt                               )
       );
