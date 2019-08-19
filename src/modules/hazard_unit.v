@@ -23,6 +23,7 @@ module hazard_unit
    reg                      jump_branch_reg;
    reg [NB_REG_ADDR-1:0]    rs_reg;
    reg [NB_REG_ADDR-1:0]    rt_reg;
+   reg                      hazard_pos;
 
    wire                     instr_after_load; //ADD -> LOAD
    wire                     branch_after_instr; //BRANCH -> ADD
@@ -42,10 +43,18 @@ module hazard_unit
           end
      end
 
+   always @ (posedge i_clock)
+     begin
+        if (i_reset)
+          hazard_pos <= 1'b0;
+        else if (i_valid)
+          hazard_pos <= instr_after_load | branch_after_instr | branch_after_load ;
+     end
+
    assign instr_after_load = ((i_rd_exec == rs_reg) | (i_rd_exec == rt_reg)) & i_re_exec;
    assign branch_after_instr = ((i_rd_exec == rs_reg) | (i_rd_exec == rt_reg)) & jump_branch_reg;
    assign branch_after_load = ((i_rd_mem == rs_reg) | (i_rd_mem == rt_reg)) & (i_re_mem & jump_branch_reg);
 
-   assign o_hazard = instr_after_load | branch_after_instr | branch_after_load;
+   assign o_hazard = (instr_after_load | branch_after_instr | branch_after_load) & ~hazard_pos;
 
 endmodule
