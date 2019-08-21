@@ -52,7 +52,7 @@ module alu
           XOR: // XOR
             result = i_data_a ^ i_data_b ;
           NOR: // NOR
-            result = ~ (i_data_a & i_data_b);
+            result = ~ (i_data_a | i_data_b);
           SRL: begin// SRL (Logical: fills with zero)
              result = 'b0;
              // for(i = 0; i<2**NB_DATA; i=i+1) begin
