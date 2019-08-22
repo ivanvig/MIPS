@@ -100,6 +100,7 @@ module instruction_decode
     input                   i_sc_muxb,
     input [NB_REG-1:0]      i_sc_dataa,
     input [NB_REG-1:0]      i_sc_datab,
+    input                   i_hazard,
 
     //For debug
     input [NB_REG_ADDR-1:0] i_debug_regfile_addr,
@@ -272,7 +273,7 @@ module instruction_decode
       if (i_rst) begin
          nop_reg <= 1'b0;
       end else if (valid)begin
-         nop_reg <= ((jrs&use_2nd_lut) | jinm | (branch_result & is_branch));
+         nop_reg <= ((jrs&use_2nd_lut) | jinm | (branch_result & is_branch)) & ~i_hazard;
       end
    end
 

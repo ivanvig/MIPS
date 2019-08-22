@@ -16,34 +16,38 @@ module hazard_unit
     input                   i_rd_mem_we, //se va a escribir en WB rd en mem
     input [NB_REG_ADDR-1:0] i_rs,
     input [NB_REG_ADDR-1:0] i_rt,
+    input                   i_rinst,
 
     input                   i_clock,
     input                   i_reset,
     input                   i_valid
     ) ;
 
-   reg                      jump_branch_reg;
-   reg [NB_REG_ADDR-1:0]    rs_reg;
-   reg [NB_REG_ADDR-1:0]    rt_reg;
+   // reg                      jump_branch_reg;
+   // reg [NB_REG_ADDR-1:0]    rs_reg;
+   // reg [NB_REG_ADDR-1:0]    rt_reg;
+   // reg                      r_inst_reg;
    // reg                      hazard_pos;
 
    wire                     instr_after_load; //ADD -> LOAD
    wire                     branch_after_instr; //BRANCH -> ADD
    wire                     branch_after_load; //BRANCH -> X -> LOAD
 
-   always @ (negedge i_clock)
-     begin
-        if (i_reset) begin
-           jump_branch_reg <= 1'b0;
-           rs_reg <= {NB_REG_ADDR{1'b0}};
-           rt_reg <= {NB_REG_ADDR{1'b0}};
-        end else
-          if (i_valid) begin
-             jump_branch_reg <= i_jmp_branch;
-             rs_reg <= i_rs;
-             rt_reg <= i_rt;
-          end
-     end
+   // always @ (negedge i_clock)
+   //   begin
+   //      if (i_reset) begin
+   //         jump_branch_reg <= 1'b0;
+   //         rs_reg <= {NB_REG_ADDR{1'b0}};
+   //         rt_reg <= {NB_REG_ADDR{1'b0}};
+   //         r_inst_reg <= 1'b0;
+   //      end else
+   //        if (i_valid) begin
+   //           jump_branch_reg <= i_jmp_branch;
+   //           rs_reg <= i_rs;
+   //           rt_reg <= i_rt;
+   //           r_inst_reg <= i_rinst;
+   //        end
+   //   end
 
    // always @ (posedge i_clock)
    //   begin
@@ -53,9 +57,9 @@ module hazard_unit
    //        hazard_pos <= instr_after_load | branch_after_instr | branch_after_load ;
    //   end
 
-   assign instr_after_load = ((i_rd_exec == rs_reg) | (i_rd_exec == rt_reg)) & i_re_exec;
-   assign branch_after_instr = ((i_rd_exec == rs_reg) | (i_rd_exec == rt_reg)) & jump_branch_reg & i_rd_exec_we;
-   assign branch_after_load = ((i_rd_mem == rs_reg) | (i_rd_mem == rt_reg)) & (i_re_mem & jump_branch_reg) & i_rd_mem_we;
+   assign instr_after_load = ((i_rd_exec == i_rs) | ((i_rd_exec == i_rt) /*& i_rinst*/)) & i_re_exec;
+   assign branch_after_instr = ((i_rd_exec == i_rs) | (i_rd_exec == i_rt)) & i_jmp_branch & i_rd_exec_we;
+   assign branch_after_load = ((i_rd_mem == i_rs) | (i_rd_mem == i_rt)) & (i_re_mem & i_jmp_branch) & i_rd_mem_we;
 
    assign o_hazard = (instr_after_load | branch_after_instr | branch_after_load); //& ~hazard_pos;
 

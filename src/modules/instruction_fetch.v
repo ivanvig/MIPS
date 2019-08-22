@@ -51,7 +51,7 @@ module instruction_fetch
              4'b1000: pc <= $signed({1'b0, pc})+($signed(i_inm_i)-1)*4; //BEQ/BNE
              4'b0100: pc <= i_rs; //JR/JALR
              4'b0010: pc <= (pc & 32'hF0000000) | (i_inm_j << 2); //J/JAL
-             4'b0001: pc <= pc;
+             4'b???1: pc <= pc;
              4'b0000: pc <= pc+4 ;
              default: pc <= pc;
            endcase // case

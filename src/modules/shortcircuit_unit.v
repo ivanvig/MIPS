@@ -58,6 +58,8 @@ module shortcircuit_unit
       if (i_reset) begin
          o_mux_a <= 1'b0;
          o_mux_b <= 1'b0;
+         data_source_a_reg <= 1'b0;
+         data_source_b_reg <= 1'b0;
       end else if (i_valid) begin
          o_mux_a <= mux_a;
          o_mux_b <= mux_b;

@@ -188,14 +188,22 @@ module pipeline
    wire                                    data_mem_controller_writing;
    wire                                    regfile_controller_writing;
 
+   reg                                     hazard_reg;
+   wire [NB_MEM-1:0]                       deco_mem_ctrl_exec_before_hazard;
+   wire [NB_WB-1:0]                        deco_wb_ctrl_exec_before_hazard;
+
    wire                                    reset;
+
+   //Masked control con hazard
+   assign deco_mem_ctrl_exec = {deco_mem_ctrl_exec_before_hazard[NB_MEM-1], deco_mem_ctrl_exec_before_hazard[NB_MEM-2]&~hazard_reg, deco_mem_ctrl_exec_before_hazard[NB_MEM-3:0]};
+   assign deco_wb_ctrl_exec  = {deco_wb_ctrl_exec_before_hazard[NB_WB-1-:NB_REG_ADDR], deco_wb_ctrl_exec_before_hazard[2]&~hazard_reg, deco_wb_ctrl_exec_before_hazard[1:0]};
 
    assign reset = i_reset | interface_reset;
    assign o_iface_valid = interface_valid;
    assign o_deco_valid = deco_halt;
 
    assign deco_inm_i_if = deco_inm_exec ;
-   assign mux_ir_deco = (hazard | deco_nop_reg_if) ? 32'h0000_0000 : if_ir_deco;
+   assign mux_ir_deco = (deco_nop_reg_if) ? 32'h0000_0000 : if_ir_deco;
 
    assign mux_dataa_deco_exec = sc_muxa_ex ? sc_dataa_ex : deco_a_exec;
    assign mux_datab_deco_exec = sc_muxb_ex ? sc_datab_ex : deco_b_exec;
@@ -208,6 +216,12 @@ module pipeline
    assign exec_control_to_debug_unit= {exec_mem_mem, exec_wb_mem, exec_pc_mem};
    assign mem_data_to_debug_unit= {mem_reg_wb_wb, mem_ext_mem_o_wb};
    assign mem_control_to_debug_unit= {mem_wb_wb, mem_pc_wb};
+
+   always @(posedge i_clock)
+     if (i_reset)
+       hazard_reg <= 1'b0;
+     else if (i_valid)
+       hazard_reg <= hazard;
 
    instruction_fetch
      #(
@@ -260,9 +274,9 @@ module pipeline
        )
    u_instruction_decode
      (
-      .o_mem_ctrl      (deco_mem_ctrl_exec),
+      .o_mem_ctrl      (deco_mem_ctrl_exec_before_hazard),
       .o_ex_ctrl       (deco_ex_ctrl_exec),
-      .o_wb_ctrl       (deco_wb_ctrl_exec),
+      .o_wb_ctrl       (deco_wb_ctrl_exec_before_hazard),
       .o_pc            (deco_pc_exec),
       .o_a             (deco_a_exec),
       .o_b             (deco_b_exec),
@@ -293,6 +307,7 @@ module pipeline
       .i_sc_muxb       (sc_muxb_deco),
       .i_sc_dataa      (sc_dataa_deco),
       .i_sc_datab      (sc_datab_deco),
+      .i_hazard        (hazard),
 
       .i_debug_regfile_addr (debug_regfile_addr),
 
@@ -427,14 +442,15 @@ module pipeline
      (
       .o_hazard        (hazard                                  ),
       .i_jmp_branch    (deco_isbrancho_sc|deco_jump_rs_if       ),
-      .i_rd_exec       (deco_wb_ctrl_exec[NB_WB-1-:NB_REG_ADDR] ),
+      .i_rd_exec       (deco_wb_ctrl_exec_before_hazard[NB_WB-1-:NB_REG_ADDR] ),
       .i_rd_mem        (exec_wb_mem[NB_WB-1-:NB_REG_ADDR]       ),
-      .i_rd_exec_we    (deco_wb_ctrl_exec[2]),
+      .i_rd_exec_we    (deco_wb_ctrl_exec_before_hazard[2]),
       .i_rd_mem_we     (exec_wb_mem[2]),
       .i_rs            (if_ir_deco[MSB_RS-:NB_REG_ADDR]         ),
       .i_rt            (if_ir_deco[MSB_RT-:NB_REG_ADDR]         ),
-      .i_re_exec       (deco_mem_ctrl_exec[NB_MEM-1]            ),
+      .i_re_exec       (deco_mem_ctrl_exec_before_hazard[NB_MEM-1]),
       .i_re_mem        (exec_mem_mem[NB_MEM-1]                  ),
+      .i_rinst         (deco_rinst_sc),
       .i_reset         (reset                                   ),
       .i_clock         (i_clock                                 ),
       .i_valid         (deco_halt                               )
