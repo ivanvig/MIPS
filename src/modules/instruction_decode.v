@@ -271,7 +271,7 @@ module instruction_decode
 
    always @ (posedge i_clk) begin
       if (i_rst) begin
-         nop_reg <= 1'b0;
+         nop_reg <= 1'b1;
       end else if (valid)begin
          nop_reg <= ((jrs&use_2nd_lut) | jinm | (branch_result & is_branch)) & ~i_hazard;
       end

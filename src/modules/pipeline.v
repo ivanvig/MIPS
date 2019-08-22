@@ -219,8 +219,8 @@ module pipeline
 
    always @(posedge i_clock)
      if (i_reset)
-       hazard_reg <= 1'b0;
-     else if (i_valid)
+       hazard_reg <= 1'b1;
+     else if (deco_halt)
        hazard_reg <= hazard;
 
    instruction_fetch
