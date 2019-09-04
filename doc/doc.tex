@@ -1,4 +1,4 @@
-% Created 2019-09-04 mié 11:23
+% Created 2019-09-04 mié 12:03
 % Intended LaTeX compiler: pdflatex
 \documentclass[11pt]{article}
 \usepackage[utf8]{inputenc}
@@ -15,414 +15,440 @@
 \usepackage{capt-of}
 \usepackage{hyperref}
 \date{\today}
+\renewcommand{\contentsname}{Contenido}
 \title{}
 \hypersetup{
  pdfauthor={},
  pdftitle={},
  pdfkeywords={},
  pdfsubject={},
- pdfcreator={Emacs 26.3 (Org mode 9.2)}, 
+ pdfcreator={Emacs 26.3 (Org mode 9.1.14)}, 
  pdflang={English}}
 \begin{document}
 
 \tableofcontents
-
+\pagebreak
 \section{Implementacion del MIPS}
-\label{sec:org51af1a1}
+\label{sec:orgbad5bd8}
 \subsection{Intrucciones implementadas}
-\label{sec:org3d5085e}
+\label{sec:orgc93bc0c}
 \subsubsection{Tipo R}
-\label{sec:org11ce782}
+\label{sec:org8ca212c}
 \begin{enumerate}
 \item Descripcion
-\label{sec:org9c14c90}
+\label{sec:org2c2eabb}
 \begin{center}
-\begin{tabular}{|l|p{10cm}|}
-\hline
-Instruccion & Descripcion\\
-\hline
-SLL & Shiftea hacia la izquierda un registro (T) una cantidad listada en la instruccion (H) y lo almacena en otro registro (D)\\
-\hline
-SRL & Shiftea hacia la derecha un registro (T) una cantidad listada en la instruccion (H) y lo almacena en otro registro (D)\\
-\hline
-SRA & Shiftea aritmetico hacia la derecha un registro (T) una cantidad listada en la instruccion (H) y lo almacena en otro registro (D)\\
-\hline
-SLLV & Shiftea hacia la izquierda un registro (T) una cantidad que esta en otro registro (S) y lo almacena en otro registro (D)\\
-\hline
-SRLV & Shiftea hacia la derecha un registro (T) una cantidad que esta en otro registro (S) y lo almacena en otro registro (D)\\
-\hline
-SRAV & Shiftea aritmetico hacia la derecha un registro (T) una cantidad que esta en otro registro (S) y lo almacena en otro registro (D)\\
-\hline
-ADDU & Add unsigned, suma dos registros y almacena el resultado en un registro\\
-\hline
-SUBU & Substract unsigned, resta dos registros y almacena el resultado en un registro\\
-\hline
-AND & Bitwise AND dos registros y almacena el resultado en un registro\\
-\hline
-OR & Bitwise OR dos registros y almacena el resultado en un registro\\
-\hline
-XOR & Bitwise XOR dos registros y almacena el resultado en un registro\\
-\hline
-NOR & Bitwise NOR dos registros y almacena el resultado en un registro\\
-\hline
-SLT & Si S < T setea D a 1 else 0\\
-\hline
-JR & Jumpea a la addr del registro S\\
-\hline
-JALR & Jumpea a la addr del registro S y guarda PC + 4 en D\\
-\hline
+  \texttt{\scriptsize
+\begin{tabular}{l p{10cm}}
+Instruccion & Descripcion\\ \hline
+SLL         & Shiftea hacia la izquierda un registro (T) una cantidad listada en la instruccion (H) y lo almacena en otro registro (D)\\ \\
+SRL         & Shiftea hacia la derecha un registro (T) una cantidad listada en la instruccion (H) y lo almacena en otro registro (D)\\ \\
+SRA         & Shiftea aritmetico hacia la derecha un registro (T) una cantidad listada en la instruccion (H) y lo almacena en otro registro (D)\\ \\
+SLLV        & Shiftea hacia la izquierda un registro (T) una cantidad que esta en otro registro (S) y lo almacena en otro registro (D)\\ \\
+SRLV        & Shiftea hacia la derecha un registro (T) una cantidad que esta en otro registro (S) y lo almacena en otro registro (D)\\ \\
+SRAV        & Shiftea aritmetico hacia la derecha un registro (T) una cantidad que esta en otro registro (S) y lo almacena en otro registro (D)\\ \\
+ADDU        & Add unsigned, suma dos registros y almacena el resultado en un registro\\ \\
+SUBU        & Substract unsigned, resta dos registros y almacena el resultado en un registro\\ \\
+AND         & Bitwise AND dos registros y almacena el resultado en un registro\\ \\
+OR          & Bitwise OR dos registros y almacena el resultado en un registro\\ \\
+XOR         & Bitwise XOR dos registros y almacena el resultado en un registro\\ \\
+NOR         & Bitwise NOR dos registros y almacena el resultado en un registro\\ \\
+SLT         & Si S < T setea D a 1 else 0\\ \\
+JR          & Jumpea a la addr del registro S\\ \\
+JALR        & Jumpea a la addr del registro S y guarda PC + 4 en D\\
 \end{tabular}
+}
 \end{center}
 
 \item Señales
-\label{sec:orgc9b3083}
+\label{sec:org378509c}
 \begin{center}
-\begin{tabular}{lllrrrrrrrlrrrlrrrrlrrr}
-Instruccion & Codigo &  & 2nd LUT & Branch & BEQ/BNE & JRS & JINM & RA & SHAMT &  & ALU & B/I & S/U &  & RE & WE & S/U & DATASIZE &  & REGWE & MEM/ALU & DATA/PC\\
+  \texttt{\scriptsize
+\begin{tabular}{llrrrrrr}
+Instruccion & Codigo                                                                                                                                           & 2LUT & Branch & BEQ/BNE & JRS & JINM & RA\\
 \hline
-SLL & {\small 000000SSSSSTTTTTDDDDDHHHHH000000} &  & 1 & 0 & 0 & 0 & 0 & 0 & 1 &  & 0111 & 0 & 0 &  & 0 & 0 & 0 & 00 &  & 1 & 1 & 0\\
-SRL & {\small 000000SSSSSTTTTTDDDDDHHHHH000010} &  & 1 & 0 & 0 & 0 & 0 & 0 & 1 &  & 0110 & 0 & 0 &  & 0 & 0 & 0 & 00 &  & 1 & 1 & 0\\
-SRA & {\small 000000SSSSSTTTTTDDDDDHHHHH000011} &  & 1 & 0 & 0 & 0 & 0 & 0 & 1 &  & 1000 & 0 & 0 &  & 0 & 0 & 0 & 00 &  & 1 & 1 & 0\\
-SLLV & {\small 000000SSSSSTTTTTDDDDDHHHHH000100} &  & 1 & 0 & 0 & 0 & 0 & 0 & 0 &  & 0111 & 0 & 0 &  & 0 & 0 & 0 & 00 &  & 1 & 1 & 0\\
-SRLV & {\small 000000SSSSSTTTTTDDDDDHHHHH000110} &  & 1 & 0 & 0 & 0 & 0 & 0 & 0 &  & 0110 & 0 & 0 &  & 0 & 0 & 0 & 00 &  & 1 & 1 & 0\\
-SRAV & {\small 000000SSSSSTTTTTDDDDDHHHHH000111} &  & 1 & 0 & 0 & 0 & 0 & 0 & 0 &  & 1000 & 0 & 0 &  & 0 & 0 & 0 & 00 &  & 1 & 1 & 0\\
-ADDU & {\small 000000SSSSSTTTTTDDDDD00000100001} &  & 1 & 0 & 0 & 0 & 0 & 0 & 0 &  & 0000 & 0 & 0 &  & 0 & 0 & 0 & 00 &  & 1 & 1 & 0\\
-SUBU & {\small 000000SSSSSTTTTTDDDDD00000100011} &  & 1 & 0 & 0 & 0 & 0 & 0 & 0 &  & 0001 & 0 & 0 &  & 0 & 0 & 0 & 00 &  & 1 & 1 & 0\\
-AND & {\small 000000SSSSSTTTTTDDDDD00000100100} &  & 1 & 0 & 0 & 0 & 0 & 0 & 0 &  & 0010 & 0 & 0 &  & 0 & 0 & 0 & 00 &  & 1 & 1 & 0\\
-OR & {\small 000000SSSSSTTTTTDDDDD00000100101} &  & 1 & 0 & 0 & 0 & 0 & 0 & 0 &  & 0011 & 0 & 0 &  & 0 & 0 & 0 & 00 &  & 1 & 1 & 0\\
-XOR & {\small 000000SSSSSTTTTTDDDDD00000100110} &  & 1 & 0 & 0 & 0 & 0 & 0 & 0 &  & 0100 & 0 & 0 &  & 0 & 0 & 0 & 00 &  & 1 & 1 & 0\\
-NOR & {\small 000000SSSSSTTTTTDDDDD00000100111} &  & 1 & 0 & 0 & 0 & 0 & 0 & 0 &  & 0101 & 0 & 0 &  & 0 & 0 & 0 & 00 &  & 1 & 1 & 0\\
-SLT & {\small 000000SSSSSTTTTTDDDDD00000101010} &  & 1 & 0 & 0 & 0 & 0 & 0 & 0 &  & 1010 & 0 & 0 &  & 0 & 0 & 0 & 00 &  & 1 & 1 & 0\\
-JR & {\small 000000SSSSSTTTTTDDDDD00000001000} &  & 1 & 0 & 0 & 1 & 0 & 0 & 0 &  & 0000 & 0 & 0 &  & 0 & 0 & 0 & 00 &  & 0 & 0 & 0\\
-JALR & {\small 000000SSSSSTTTTTDDDDD00000001001} &  & 1 & 0 & 0 & 1 & 0 & 0 & 0 &  & 0000 & 0 & 0 &  & 0 & 0 & 0 & 00 &  & 1 & 0 & 1\\
+SLL         & 0000\textunderscore 00SS\textunderscore SSST\textunderscore TTTT\textunderscore DDDD\textunderscore DHHH\textunderscore HH00\textunderscore 0000 & 1    & 0      & 0       & 0   & 0    & 0\\
+SRL         & 0000\textunderscore 00SS\textunderscore SSST\textunderscore TTTT\textunderscore DDDD\textunderscore DHHH\textunderscore HH00\textunderscore 0010 & 1    & 0      & 0       & 0   & 0    & 0\\
+SRA         & 0000\textunderscore 00SS\textunderscore SSST\textunderscore TTTT\textunderscore DDDD\textunderscore DHHH\textunderscore HH00\textunderscore 0011 & 1    & 0      & 0       & 0   & 0    & 0\\
+SLLV        & 0000\textunderscore 00SS\textunderscore SSST\textunderscore TTTT\textunderscore DDDD\textunderscore DHHH\textunderscore HH00\textunderscore 0100 & 1    & 0      & 0       & 0   & 0    & 0\\
+SRLV        & 0000\textunderscore 00SS\textunderscore SSST\textunderscore TTTT\textunderscore DDDD\textunderscore DHHH\textunderscore HH00\textunderscore 0110 & 1    & 0      & 0       & 0   & 0    & 0\\
+SRAV        & 0000\textunderscore 00SS\textunderscore SSST\textunderscore TTTT\textunderscore DDDD\textunderscore DHHH\textunderscore HH00\textunderscore 0111 & 1    & 0      & 0       & 0   & 0    & 0\\
+ADDU        & 0000\textunderscore 00SS\textunderscore SSST\textunderscore TTTT\textunderscore DDDD\textunderscore D000\textunderscore 0010\textunderscore 0001 & 1    & 0      & 0       & 0   & 0    & 0\\
+SUBU        & 0000\textunderscore 00SS\textunderscore SSST\textunderscore TTTT\textunderscore DDDD\textunderscore D000\textunderscore 0010\textunderscore 0011 & 1    & 0      & 0       & 0   & 0    & 0\\
+AND         & 0000\textunderscore 00SS\textunderscore SSST\textunderscore TTTT\textunderscore DDDD\textunderscore D000\textunderscore 0010\textunderscore 0100 & 1    & 0      & 0       & 0   & 0    & 0\\
+OR          & 0000\textunderscore 00SS\textunderscore SSST\textunderscore TTTT\textunderscore DDDD\textunderscore D000\textunderscore 0010\textunderscore 0101 & 1    & 0      & 0       & 0   & 0    & 0\\
+XOR         & 0000\textunderscore 00SS\textunderscore SSST\textunderscore TTTT\textunderscore DDDD\textunderscore D000\textunderscore 0010\textunderscore 0110 & 1    & 0      & 0       & 0   & 0    & 0\\
+NOR         & 0000\textunderscore 00SS\textunderscore SSST\textunderscore TTTT\textunderscore DDDD\textunderscore D000\textunderscore 0010\textunderscore 0111 & 1    & 0      & 0       & 0   & 0    & 0\\
+SLT         & 0000\textunderscore 00SS\textunderscore SSST\textunderscore TTTT\textunderscore DDDD\textunderscore D000\textunderscore 0010\textunderscore 1010 & 1    & 0      & 0       & 0   & 0    & 0\\
+JR          & 0000\textunderscore 00SS\textunderscore SSST\textunderscore TTTT\textunderscore DDDD\textunderscore D000\textunderscore 0000\textunderscore 1000 & 1    & 0      & 0       & 1   & 0    & 0\\
+JALR        & 0000\textunderscore 00SS\textunderscore SSST\textunderscore TTTT\textunderscore DDDD\textunderscore D000\textunderscore 0000\textunderscore 1001 & 1    & 0      & 0       & 1   & 0    & 0\\
 \end{tabular}
+}
 \end{center}
 
 \begin{center}
-\begin{tabular}{llrrrrlrrrrlrrr}
-Instruccion &  & ALU & B/I & S/U & SHAMT &  & RE & WE & S/U & DATA\textsubscript{SIZE} &  & REG\textsubscript{WE} & MEM/ALU & DATA/PC\\
+  \texttt{\scriptsize
+\begin{tabular}{l|rrrr|rrrr|rrr}
+Instruccion & ALU & B/I & S/U & SHAMT & RE & WE & S/U & DATA\textunderscore SIZE & REG\textunderscore WE & MEM/ALU & DATA/PC\\
 \hline
-SLL &  & 0111 & 0 & 0 & 1 &  & 0 & 0 & 0 & 00 &  & 1 & 1 & 0\\
-SRL &  & 0110 & 0 & 0 & 1 &  & 0 & 0 & 0 & 00 &  & 1 & 1 & 0\\
-SRA &  & 1000 & 0 & 0 & 1 &  & 0 & 0 & 0 & 00 &  & 1 & 1 & 0\\
-SLLV &  & 0111 & 0 & 0 & 0 &  & 0 & 0 & 0 & 00 &  & 1 & 1 & 0\\
-SRLV &  & 0110 & 0 & 0 & 0 &  & 0 & 0 & 0 & 00 &  & 1 & 1 & 0\\
-SRAV &  & 1000 & 0 & 0 & 0 &  & 0 & 0 & 0 & 00 &  & 1 & 1 & 0\\
-ADDU &  & 0000 & 0 & 0 & 0 &  & 0 & 0 & 0 & 00 &  & 1 & 1 & 0\\
-SUBU &  & 0001 & 0 & 0 & 0 &  & 0 & 0 & 0 & 00 &  & 1 & 1 & 0\\
-AND &  & 0010 & 0 & 0 & 0 &  & 0 & 0 & 0 & 00 &  & 1 & 1 & 0\\
-OR &  & 0011 & 0 & 0 & 0 &  & 0 & 0 & 0 & 00 &  & 1 & 1 & 0\\
-XOR &  & 0100 & 0 & 0 & 0 &  & 0 & 0 & 0 & 00 &  & 1 & 1 & 0\\
-NOR &  & 0101 & 0 & 0 & 0 &  & 0 & 0 & 0 & 00 &  & 1 & 1 & 0\\
-SLT &  & 1010 & 0 & 0 & 0 &  & 0 & 0 & 0 & 00 &  & 1 & 1 & 0\\
-JR &  & 0000 & 0 & 0 & 0 &  & 0 & 0 & 0 & 00 &  & 0 & 0 & 0\\
-JALR &  & 0000 & 0 & 0 & 0 &  & 0 & 0 & 0 & 00 &  & 1 & 0 & 1\\
+SLL  & 0111 & 0 & 0 & 1 & 0 & 0 & 0 & 00 & 1 & 1 & 0\\
+SRL  & 0110 & 0 & 0 & 1 & 0 & 0 & 0 & 00 & 1 & 1 & 0\\
+SRA  & 1000 & 0 & 0 & 1 & 0 & 0 & 0 & 00 & 1 & 1 & 0\\
+SLLV & 0111 & 0 & 0 & 0 & 0 & 0 & 0 & 00 & 1 & 1 & 0\\
+SRLV & 0110 & 0 & 0 & 0 & 0 & 0 & 0 & 00 & 1 & 1 & 0\\
+SRAV & 1000 & 0 & 0 & 0 & 0 & 0 & 0 & 00 & 1 & 1 & 0\\
+ADDU & 0000 & 0 & 0 & 0 & 0 & 0 & 0 & 00 & 1 & 1 & 0\\
+SUBU & 0001 & 0 & 0 & 0 & 0 & 0 & 0 & 00 & 1 & 1 & 0\\
+AND  & 0010 & 0 & 0 & 0 & 0 & 0 & 0 & 00 & 1 & 1 & 0\\
+OR   & 0011 & 0 & 0 & 0 & 0 & 0 & 0 & 00 & 1 & 1 & 0\\
+XOR  & 0100 & 0 & 0 & 0 & 0 & 0 & 0 & 00 & 1 & 1 & 0\\
+NOR  & 0101 & 0 & 0 & 0 & 0 & 0 & 0 & 00 & 1 & 1 & 0\\
+SLT  & 1010 & 0 & 0 & 0 & 0 & 0 & 0 & 00 & 1 & 1 & 0\\
+JR   & 0000 & 0 & 0 & 0 & 0 & 0 & 0 & 00 & 0 & 0 & 0\\
+JALR & 0000 & 0 & 0 & 0 & 0 & 0 & 0 & 00 & 1 & 0 & 1\\
 \end{tabular}
+}
 \end{center}
 \end{enumerate}
 
 \subsubsection{Tipo I}
-\label{sec:orgfc33cee}
+\label{sec:orgee392e4}
 
 \begin{enumerate}
 \item Descripcion
-\label{sec:org222d39f}
+\label{sec:org39ea6fe}
 
 \begin{center}
-\begin{tabular}{ll}
+  \texttt{\scriptsize
+\begin{tabular}{l p{10cm}}
 Instruccion & Descripcion\\
 \hline
-LB & Load byte, carga un byte a un registro (T) desde MEM(S + I)\\
-LH & Load half word, carga half word a un registro (T) desde MEM(S + I)\\
-LW & Load word, carga word a un registro (T) desde MEM(S + I)\\
-LBU & Load byte unsigned, carga unsigned byte a un registro (T) desde MEM(S + I)\\
-LHU & Load half word unsigned, carga unsigned half word a un registro (T) desde MEM(S + I)\\
-LWU & Load word unsigned, carga unsigned word a un registro (T) desde MEM(S + I)\\
-SB & Store byte, carga el byte menos significativo desde un registro (T) a MEM(S + I)\\
-SH & Store half word, carga el half word menos significativo desde un registro (T) a MEM(S + I)\\
-SW & Store word, carga el word desde un registro (T) a MEM(S + I)\\
-ADDI & Suma un registro (S) con el inmediato (I) y lo guarda en otro registro (T)\\
-ANDI & Bitwise AND un registro (S) con el inmediato (I) y lo guarda en otro registro (T)\\
-ORI & Bitwise OR un registro (S) con el inmediato (I) y lo guarda en otro registro (T)\\
-XORI & Bitwise XOR un registro (S) con el inmediato (I) y lo guarda en otro registro (T)\\
-LUI & El valor inmediato (I) es shifteado a la izquierda 16 bits y guardado en el registro (T)\\
-SLTI & If S < I => T = 1, else T = 0\\
-BEQ & Branchea a PC + I*4 si ambos registros (S y T) equalean\\
-BNE & Branchea a PC + I*4 si ambos registros (S y T) no equalean\\
+LB          & Load byte, carga un byte a un registro (T) desde MEM(S + I)\\\\
+LH          & Load half word, carga half word a un registro (T) desde MEM(S + I)\\\\
+LW          & Load word, carga word a un registro (T) desde MEM(S + I)\\\\
+LBU         & Load byte unsigned, carga unsigned byte a un registro (T) desde MEM(S + I)\\\\
+LHU         & Load half word unsigned, carga unsigned half word a un registro (T) desde MEM(S + I)\\\\
+LWU         & Load word unsigned, carga unsigned word a un registro (T) desde MEM(S + I)\\\\
+SB          & Store byte, carga el byte menos significativo desde un registro (T) a MEM(S + I)\\\\
+SH          & Store half word, carga el half word menos significativo desde un registro (T) a MEM(S + I)\\\\
+SW          & Store word, carga el word desde un registro (T) a MEM(S + I)\\\\
+ADDI        & Suma un registro (S) con el inmediato (I) y lo guarda en otro registro (T)\\\\
+ANDI        & Bitwise AND un registro (S) con el inmediato (I) y lo guarda en otro registro (T)\\\\
+ORI         & Bitwise OR un registro (S) con el inmediato (I) y lo guarda en otro registro (T)\\\\
+XORI        & Bitwise XOR un registro (S) con el inmediato (I) y lo guarda en otro registro (T)\\\\
+LUI         & El valor inmediato (I) es shifteado a la izquierda 16 bits y guardado en el registro (T)\\\\
+SLTI        & If S < I => T = 1, else T = 0\\\\
+BEQ         & Branchea a PC + I*4 si ambos registros (S y T) equalean\\\\
+BNE         & Branchea a PC + I*4 si ambos registros (S y T) no equalean\\
 \end{tabular}
+}
 \end{center}
 
 \item Señales
-\label{sec:org92c7d11}
+\label{sec:org8f63dfe}
 
 \begin{center}
-\begin{tabular}{lllrrrrrrrlrrrlrrrrlrrr}
-Instruccion & Codigo &  & 2nd LUT & Branch & BEQ/BNE & JRS & JINM & RA & SHAMT &  & ALU & B/I & S/U &  & RE & WE & S/U & DATA\textsubscript{SIZE} &  & REG\textsubscript{WE} & MEM/ALU & DATA/PC\\
+  \texttt{\scriptsize
+\begin{tabular}{llrrrrrr}
+Instruccion & Codigo                                                                                                                                           & 2LUT & Branch & BEQ/BNE & JRS & JINM & RA \\
 \hline
-LB & 1000\textsubscript{00SS}\textsubscript{SSST}\textsubscript{TTTT}\textsubscript{IIII}\textsubscript{IIII}\textsubscript{IIII}\textsubscript{IIII} &  & 0 & 0 & 0 & 0 & 0 & 0 & 0 &  & 0000 & 1 & 0 &  & 1 & 0 & 0 & 00 &  & 1 & 0 & 0\\
-LH & 1000\textsubscript{01SS}\textsubscript{SSST}\textsubscript{TTTT}\textsubscript{IIII}\textsubscript{IIII}\textsubscript{IIII}\textsubscript{IIII} &  & 0 & 0 & 0 & 0 & 0 & 0 & 0 &  & 0000 & 1 & 0 &  & 1 & 0 & 0 & 01 &  & 1 & 0 & 0\\
-LW & 1000\textsubscript{11SS}\textsubscript{SSST}\textsubscript{TTTT}\textsubscript{IIII}\textsubscript{IIII}\textsubscript{IIII}\textsubscript{IIII} &  & 0 & 0 & 0 & 0 & 0 & 0 & 0 &  & 0000 & 1 & 0 &  & 1 & 0 & 0 & 10 &  & 1 & 0 & 0\\
-LBU & 1001\textsubscript{00SS}\textsubscript{SSST}\textsubscript{TTTT}\textsubscript{IIII}\textsubscript{IIII}\textsubscript{IIII}\textsubscript{IIII} &  & 0 & 0 & 0 & 0 & 0 & 0 & 0 &  & 0000 & 1 & 0 &  & 1 & 0 & 1 & 00 &  & 1 & 0 & 0\\
-LHU & 1001\textsubscript{01SS}\textsubscript{SSST}\textsubscript{TTTT}\textsubscript{IIII}\textsubscript{IIII}\textsubscript{IIII}\textsubscript{IIII} &  & 0 & 0 & 0 & 0 & 0 & 0 & 0 &  & 0000 & 1 & 0 &  & 1 & 0 & 1 & 01 &  & 1 & 0 & 0\\
-LWU & 1001\textsubscript{11SS}\textsubscript{SSST}\textsubscript{TTTT}\textsubscript{IIII}\textsubscript{IIII}\textsubscript{IIII}\textsubscript{IIII} &  & 0 & 0 & 0 & 0 & 0 & 0 & 0 &  & 0000 & 1 & 0 &  & 1 & 0 & 1 & 10 &  & 1 & 0 & 0\\
-SB & 1010\textsubscript{00SS}\textsubscript{SSST}\textsubscript{TTTT}\textsubscript{IIII}\textsubscript{IIII}\textsubscript{IIII}\textsubscript{IIII} &  & 0 & 0 & 0 & 0 & 0 & 0 & 0 &  & 0000 & 1 & 0 &  & 0 & 1 & 0 & 00 &  & 0 & 0 & 0\\
-SH & 1010\textsubscript{01SS}\textsubscript{SSST}\textsubscript{TTTT}\textsubscript{IIII}\textsubscript{IIII}\textsubscript{IIII}\textsubscript{IIII} &  & 0 & 0 & 0 & 0 & 0 & 0 & 0 &  & 0000 & 1 & 0 &  & 0 & 1 & 0 & 01 &  & 0 & 0 & 0\\
-SW & 1010\textsubscript{11SS}\textsubscript{SSST}\textsubscript{TTTT}\textsubscript{IIII}\textsubscript{IIII}\textsubscript{IIII}\textsubscript{IIII} &  & 0 & 0 & 0 & 0 & 0 & 0 & 0 &  & 0000 & 1 & 0 &  & 0 & 1 & 0 & 10 &  & 0 & 0 & 0\\
-ADDI & 0010\textsubscript{01SS}\textsubscript{SSST}\textsubscript{TTTT}\textsubscript{IIII}\textsubscript{IIII}\textsubscript{IIII}\textsubscript{IIII} &  & 0 & 0 & 0 & 0 & 0 & 0 & 0 &  & 0000 & 1 & 0 &  & 0 & 0 & 0 & 00 &  & 1 & 1 & 0\\
-ANDI & 0011\textsubscript{00SS}\textsubscript{SSST}\textsubscript{TTTT}\textsubscript{IIII}\textsubscript{IIII}\textsubscript{IIII}\textsubscript{IIII} &  & 0 & 0 & 0 & 0 & 0 & 0 & 0 &  & 0010 & 1 & 1 &  & 0 & 0 & 0 & 00 &  & 1 & 1 & 0\\
-ORI & 0011\textsubscript{01SS}\textsubscript{SSST}\textsubscript{TTTT}\textsubscript{IIII}\textsubscript{IIII}\textsubscript{IIII}\textsubscript{IIII} &  & 0 & 0 & 0 & 0 & 0 & 0 & 0 &  & 0011 & 1 & 1 &  & 0 & 0 & 0 & 00 &  & 1 & 1 & 0\\
-XORI & 0011\textsubscript{10SS}\textsubscript{SSST}\textsubscript{TTTT}\textsubscript{IIII}\textsubscript{IIII}\textsubscript{IIII}\textsubscript{IIII} &  & 0 & 0 & 0 & 0 & 0 & 0 & 0 &  & 0100 & 1 & 1 &  & 0 & 0 & 0 & 00 &  & 1 & 1 & 0\\
-LUI & 0011\textsubscript{11SS}\textsubscript{SSST}\textsubscript{TTTT}\textsubscript{IIII}\textsubscript{IIII}\textsubscript{IIII}\textsubscript{IIII} &  & 0 & 0 & 0 & 0 & 0 & 0 & 0 &  & 1011 & 1 & 1 &  & 0 & 0 & 0 & 00 &  & 1 & 1 & 0\\
-SLTI & 0010\textsubscript{10SS}\textsubscript{SSST}\textsubscript{TTTT}\textsubscript{IIII}\textsubscript{IIII}\textsubscript{IIII}\textsubscript{IIII} &  & 0 & 0 & 0 & 0 & 0 & 0 & 0 &  & 1010 & 1 & 0 &  & 0 & 0 & 0 & 00 &  & 1 & 1 & 0\\
-BEQ & 0001\textsubscript{00SS}\textsubscript{SSST}\textsubscript{TTTT}\textsubscript{IIII}\textsubscript{IIII}\textsubscript{IIII}\textsubscript{IIII} &  & 0 & 1 & 0 & 0 & 0 & 0 & 0 &  & 0000 & 1 & 0 &  & 0 & 0 & 0 & 00 &  & 0 & 0 & 0\\
-BNE & 0001\textsubscript{01SS}\textsubscript{SSST}\textsubscript{TTTT}\textsubscript{IIII}\textsubscript{IIII}\textsubscript{IIII}\textsubscript{IIII} &  & 0 & 1 & 1 & 0 & 0 & 0 & 0 &  & 0000 & 1 & 0 &  & 0 & 0 & 0 & 00 &  & 0 & 0 & 0\\
+LB          & 1000\textunderscore 00SS\textunderscore SSST\textunderscore TTTT\textunderscore IIII\textunderscore IIII\textunderscore IIII\textunderscore IIII & 0    & 0      & 0       & 0   & 0    & 0  \\
+LH          & 1000\textunderscore 01SS\textunderscore SSST\textunderscore TTTT\textunderscore IIII\textunderscore IIII\textunderscore IIII\textunderscore IIII & 0    & 0      & 0       & 0   & 0    & 0  \\
+LW          & 1000\textunderscore 11SS\textunderscore SSST\textunderscore TTTT\textunderscore IIII\textunderscore IIII\textunderscore IIII\textunderscore IIII & 0    & 0      & 0       & 0   & 0    & 0  \\
+LBU         & 1001\textunderscore 00SS\textunderscore SSST\textunderscore TTTT\textunderscore IIII\textunderscore IIII\textunderscore IIII\textunderscore IIII & 0    & 0      & 0       & 0   & 0    & 0  \\
+LHU         & 1001\textunderscore 01SS\textunderscore SSST\textunderscore TTTT\textunderscore IIII\textunderscore IIII\textunderscore IIII\textunderscore IIII & 0    & 0      & 0       & 0   & 0    & 0  \\
+LWU         & 1001\textunderscore 11SS\textunderscore SSST\textunderscore TTTT\textunderscore IIII\textunderscore IIII\textunderscore IIII\textunderscore IIII & 0    & 0      & 0       & 0   & 0    & 0  \\
+SB          & 1010\textunderscore 00SS\textunderscore SSST\textunderscore TTTT\textunderscore IIII\textunderscore IIII\textunderscore IIII\textunderscore IIII & 0    & 0      & 0       & 0   & 0    & 0  \\
+SH          & 1010\textunderscore 01SS\textunderscore SSST\textunderscore TTTT\textunderscore IIII\textunderscore IIII\textunderscore IIII\textunderscore IIII & 0    & 0      & 0       & 0   & 0    & 0  \\
+SW          & 1010\textunderscore 11SS\textunderscore SSST\textunderscore TTTT\textunderscore IIII\textunderscore IIII\textunderscore IIII\textunderscore IIII & 0    & 0      & 0       & 0   & 0    & 0  \\
+ADDI        & 0010\textunderscore 01SS\textunderscore SSST\textunderscore TTTT\textunderscore IIII\textunderscore IIII\textunderscore IIII\textunderscore IIII & 0    & 0      & 0       & 0   & 0    & 0  \\
+ANDI        & 0011\textunderscore 00SS\textunderscore SSST\textunderscore TTTT\textunderscore IIII\textunderscore IIII\textunderscore IIII\textunderscore IIII & 0    & 0      & 0       & 0   & 0    & 0  \\
+ORI         & 0011\textunderscore 01SS\textunderscore SSST\textunderscore TTTT\textunderscore IIII\textunderscore IIII\textunderscore IIII\textunderscore IIII & 0    & 0      & 0       & 0   & 0    & 0  \\
+XORI        & 0011\textunderscore 10SS\textunderscore SSST\textunderscore TTTT\textunderscore IIII\textunderscore IIII\textunderscore IIII\textunderscore IIII & 0    & 0      & 0       & 0   & 0    & 0  \\
+LUI         & 0011\textunderscore 11SS\textunderscore SSST\textunderscore TTTT\textunderscore IIII\textunderscore IIII\textunderscore IIII\textunderscore IIII & 0    & 0      & 0       & 0   & 0    & 0  \\
+SLTI        & 0010\textunderscore 10SS\textunderscore SSST\textunderscore TTTT\textunderscore IIII\textunderscore IIII\textunderscore IIII\textunderscore IIII & 0    & 0      & 0       & 0   & 0    & 0  \\
+BEQ         & 0001\textunderscore 00SS\textunderscore SSST\textunderscore TTTT\textunderscore IIII\textunderscore IIII\textunderscore IIII\textunderscore IIII & 0    & 1      & 0       & 0   & 0    & 0  \\
+BNE         & 0001\textunderscore 01SS\textunderscore SSST\textunderscore TTTT\textunderscore IIII\textunderscore IIII\textunderscore IIII\textunderscore IIII & 0    & 1      & 1       & 0   & 0    & 0  \\
 \end{tabular}
+}
 \end{center}
 
 \begin{center}
-\begin{tabular}{llrrrrlrrrrlrrr}
-Instruccion &  & ALU & B/I & S/U & SHAMT &  & RE & WE & S/U & DATA\textsubscript{SIZE} &  & REG\textsubscript{WE} & MEM/ALU & DATA/PC\\
+  \texttt{\scriptsize
+\begin{tabular}{l|rrrr|rrrr|rrr}
+Instruccion & ALU  & B/I & S/U & SHAMT & RE & WE & S/U & DATA\textunderscore SIZE & REG\textunderscore WE & MEM/ALU & DATA/PC \\
 \hline
-LB &  & 0000 & 1 & 0 & 0 &  & 1 & 0 & 0 & 00 &  & 1 & 0 & 0\\
-LH &  & 0000 & 1 & 0 & 0 &  & 1 & 0 & 0 & 01 &  & 1 & 0 & 0\\
-LW &  & 0000 & 1 & 0 & 0 &  & 1 & 0 & 0 & 10 &  & 1 & 0 & 0\\
-LBU &  & 0000 & 1 & 0 & 0 &  & 1 & 0 & 1 & 00 &  & 1 & 0 & 0\\
-LHU &  & 0000 & 1 & 0 & 0 &  & 1 & 0 & 1 & 01 &  & 1 & 0 & 0\\
-LWU &  & 0000 & 1 & 0 & 0 &  & 1 & 0 & 1 & 10 &  & 1 & 0 & 0\\
-SB &  & 0000 & 1 & 0 & 0 &  & 0 & 1 & 0 & 00 &  & 0 & 0 & 0\\
-SH &  & 0000 & 1 & 0 & 0 &  & 0 & 1 & 0 & 01 &  & 0 & 0 & 0\\
-SW &  & 0000 & 1 & 0 & 0 &  & 0 & 1 & 0 & 10 &  & 0 & 0 & 0\\
-ADDI &  & 0000 & 1 & 0 & 0 &  & 0 & 0 & 0 & 00 &  & 1 & 1 & 0\\
-ANDI &  & 0010 & 1 & 1 & 0 &  & 0 & 0 & 0 & 00 &  & 1 & 1 & 0\\
-ORI &  & 0011 & 1 & 1 & 0 &  & 0 & 0 & 0 & 00 &  & 1 & 1 & 0\\
-XORI &  & 0100 & 1 & 1 & 0 &  & 0 & 0 & 0 & 00 &  & 1 & 1 & 0\\
-LUI &  & 1011 & 1 & 1 & 0 &  & 0 & 0 & 0 & 00 &  & 1 & 1 & 0\\
-SLTI &  & 1010 & 1 & 0 & 0 &  & 0 & 0 & 0 & 00 &  & 1 & 1 & 0\\
-BEQ &  & 0000 & 1 & 0 & 0 &  & 0 & 0 & 0 & 00 &  & 0 & 0 & 0\\
-BNE &  & 0000 & 1 & 0 & 0 &  & 0 & 0 & 0 & 00 &  & 0 & 0 & 0\\
+LB          & 0000 & 1   & 0   & 0     & 1  & 0  & 0   & 00                       & 1                     & 0       & 0       \\
+LH          & 0000 & 1   & 0   & 0     & 1  & 0  & 0   & 01                       & 1                     & 0       & 0       \\
+LW          & 0000 & 1   & 0   & 0     & 1  & 0  & 0   & 10                       & 1                     & 0       & 0       \\
+LBU         & 0000 & 1   & 0   & 0     & 1  & 0  & 1   & 00                       & 1                     & 0       & 0       \\
+LHU         & 0000 & 1   & 0   & 0     & 1  & 0  & 1   & 01                       & 1                     & 0       & 0       \\
+LWU         & 0000 & 1   & 0   & 0     & 1  & 0  & 1   & 10                       & 1                     & 0       & 0       \\
+SB          & 0000 & 1   & 0   & 0     & 0  & 1  & 0   & 00                       & 0                     & 0       & 0       \\
+SH          & 0000 & 1   & 0   & 0     & 0  & 1  & 0   & 01                       & 0                     & 0       & 0       \\
+SW          & 0000 & 1   & 0   & 0     & 0  & 1  & 0   & 10                       & 0                     & 0       & 0       \\
+ADDI        & 0000 & 1   & 0   & 0     & 0  & 0  & 0   & 00                       & 1                     & 1       & 0       \\
+ANDI        & 0010 & 1   & 1   & 0     & 0  & 0  & 0   & 00                       & 1                     & 1       & 0       \\
+ORI         & 0011 & 1   & 1   & 0     & 0  & 0  & 0   & 00                       & 1                     & 1       & 0       \\
+XORI        & 0100 & 1   & 1   & 0     & 0  & 0  & 0   & 00                       & 1                     & 1       & 0       \\
+LUI         & 1011 & 1   & 1   & 0     & 0  & 0  & 0   & 00                       & 1                     & 1       & 0       \\
+SLTI        & 1010 & 1   & 0   & 0     & 0  & 0  & 0   & 00                       & 1                     & 1       & 0       \\
+BEQ         & 0000 & 1   & 0   & 0     & 0  & 0  & 0   & 00                       & 0                     & 0       & 0       \\
+BNE         & 0000 & 1   & 0   & 0     & 0  & 0  & 0   & 00                       & 0                     & 0       & 0       \\
 \end{tabular}
+}
 \end{center}
 \end{enumerate}
 \subsubsection{Tipo J}
-\label{sec:org62b1fa6}
+\label{sec:orgc876194}
 \begin{enumerate}
 \item Descripcion
-\label{sec:org9860f64}
+\label{sec:org95db1bc}
 \begin{center}
-\begin{tabular}{ll}
+  \texttt{\scriptsize
+\begin{tabular}{l p{10cm}}
 Instruccion & Descripcion\\
 \hline
-J & PC = (PC \& 0xF0000000) OR (I << 2)\\
-JAL & Jumpea a la direccion calculada [PC = (PC \& 0xF0000000) OR (I << 2)] y storea la direccion de retorno en RA = PC + 4\\
+J           & PC = (PC \& 0xF0000000) OR (I << 2)\\\\
+JAL         & Jumpea a la direccion calculada [PC = (PC \& 0xF0000000) OR (I << 2)] y storea la direccion de retorno en RA = PC + 4\\
 \end{tabular}
+}
 \end{center}
 
 \item Señales
-\label{sec:org4943e73}
+\label{sec:orgfe5c7fd}
 
 \begin{center}
-\begin{tabular}{lllrrrrrrrlrrrlrrrrlrrr}
-Instruccion & Codigo &  & 2nd LUT & Branch & BEQ/BNE & JRS & JINM & RA & SHAMT &  & ALU & B/I & S/U &  & RE & WE & S/U & DATA\textsubscript{SIZE} &  & REG\textsubscript{WE} & MEM/ALU & DATA/PC\\
-\hline
-J & 0000\textsubscript{10II}\textsubscript{IIII}\textsubscript{IIII}\textsubscript{IIII}\textsubscript{IIII}\textsubscript{IIII}\textsubscript{IIII} &  & 0 & 0 & 0 & 0 & 1 & 0 & 0 &  & 0000 & 0 & 0 &  & 0 & 0 & 0 & 00 &  & 0 & 0 & 0\\
-JAL & 0000\textsubscript{11II}\textsubscript{IIII}\textsubscript{IIII}\textsubscript{IIII}\textsubscript{IIII}\textsubscript{IIII}\textsubscript{IIII} &  & 0 & 0 & 0 & 0 & 1 & 1 & 0 &  & 0000 & 0 & 0 &  & 0 & 0 & 0 & 00 &  & 1 & 0 & 1\\
+  \texttt{\scriptsize
+\begin{tabular}{llrrrrrr}
+Instruccion & Codigo                                                                                                                                           & 2LUT & Branch & BEQ/BNE & JRS & JINM & RA \\
+\hline                                                                                                                                                                                                     \\
+J           & 0000\textunderscore 10II\textunderscore IIII\textunderscore IIII\textunderscore IIII\textunderscore IIII\textunderscore IIII\textunderscore IIII & 0    & 0      & 0       & 0   & 1    & 0  \\
+JAL         & 0000\textunderscore 11II\textunderscore IIII\textunderscore IIII\textunderscore IIII\textunderscore IIII\textunderscore IIII\textunderscore IIII & 0    & 0      & 0       & 0   & 1    & 1  \\
 \end{tabular}
+}
 \end{center}
 
 \begin{center}
-\begin{tabular}{llrrrrlrrrrlrrr}
-Instruccion &  & ALU & B/I & S/U & SHAMT &  & RE & WE & S/U & DATA\textsubscript{SIZE} &  & REG\textsubscript{WE} & MEM/ALU & DATA/PC\\
+  \texttt{\scriptsize
+\begin{tabular}{l|rrrr|rrrr|rrr}
+Instruccion & ALU  & B/I & S/U & SHAMT & RE & WE & S/U & DATA\textunderscore SIZE &  REG\textunderscore WE & MEM/ALU & DATA/PC \\
 \hline
-J &  & 0000 & 0 & 0 & 0 &  & 0 & 0 & 0 & 00 &  & 0 & 0 & 0\\
-JAL &  & 0000 & 0 & 0 & 0 &  & 0 & 0 & 0 & 00 &  & 1 & 0 & 1\\
+J           & 0000 & 0   & 0   & 0     & 0  & 0  & 0   & 00                       &  0                     & 0       & 0       \\
+JAL         & 0000 & 0   & 0   & 0     & 0  & 0  & 0   & 00                       &  1                     & 0       & 1       \\
 \end{tabular}
+}
 \end{center}
 \end{enumerate}
 
 \subsection{Señales de control}
-\label{sec:org550633a}
+\label{sec:orgef3c8c6}
 
 \subsubsection{DEC}
-\label{sec:org8cb6506}
+\label{sec:org4799bf3}
 \begin{itemize}
 \item RA
 \item SHAMT
 \end{itemize}
 
 \subsubsection{EX}
-\label{sec:org737023a}
+\label{sec:org18f4118}
 
 \begin{itemize}
 \item ALU [4bits]                                                                                                                                                                   
+  \texttt{
 \begin{itemize}
-\item 0000 -> ADD
-\item 0001 -> SUB
-\item 0010 -> AND
-\item 0011 -> OR
-\item 0100 -> XOR
-\item 0101 -> NOR
-\item 0110 -> SRL
-\item 0111 -> SLL
-\item 1000 -> SRA
-\item 1001 -> SLA
-\item 1010 -> SLT
-\item 1011 -> LUI
+\item 0000 $\rightarrow$ ADD
+\item 0001 $\rightarrow$ SUB
+\item 0010 $\rightarrow$ AND
+\item 0011 $\rightarrow$ OR 
+\item 0100 $\rightarrow$ XOR
+\item 0101 $\rightarrow$ NOR
+\item 0110 $\rightarrow$ SRL
+\item 0111 $\rightarrow$ SLL
+\item 1000 $\rightarrow$ SRA
+\item 1001 $\rightarrow$ SLA
+\item 1010 $\rightarrow$ SLT
+\item 1011 $\rightarrow$ LUI
+}
 \end{itemize}
 \item B/I
 \item S/U
 \end{itemize}
 
 \subsubsection{MEM}
-\label{sec:orgae442cc}
+\label{sec:orga5cf714}
 
 \begin{itemize}
 \item RE
 \item WE
 \item S/U
-\item DATA\textsubscript{SIZE} [2bits]
+\item DATA\textunderscore SIZE [2bits]
+  \texttt{
 \begin{itemize}
-\item 00 -> byte
-\item 01 -> half-word
-\item 10 -> word
-\item 11 -> NO!
+\item 00 $\rightarrow$ byte
+\item 01 $\rightarrow$ half-word
+\item 10 $\rightarrow$ word
+\item 11 $\rightarrow$ NO!
+}
 \end{itemize}
 \end{itemize}
 
 \subsubsection{WB}
-\label{sec:orge0f648c}
+\label{sec:orga653cea}
 
 \begin{itemize}
-\item REG\textsubscript{WE}
+\item REG\textunderscore WE
 \item MEM/ALU
 \item DATA/PC
 \end{itemize}
 
 \subsection{Estructura de bits de control}
-\label{sec:org178ebe2}
+\label{sec:org15220bb}
 
 \subsubsection{EX (7 bits)}
-\label{sec:org4c191eb}
+\label{sec:org255dd86}
 
 \begin{center}
-\begin{tabular}{rrrr}
-6 & 2 & 1 & 0\\
+  \texttt{
+\begin{tabular}{|r|r|r|r|}
+  \hline
+6       & 2   & 1   & 0\\
+  \hline
 ALUCTRL & B/I & S/U & SHAMT\\
+  \hline
 \end{tabular}
+}
 \end{center}
 
 \subsubsection{MEM (5 bits)}
-\label{sec:org6e27b75}
+\label{sec:orga221720}
 
 \begin{center}
-\begin{tabular}{rrrr}
-4 & 3 & 2 & 1-0\\
+  \texttt{
+\begin{tabular}{|r|r|r|r|}
+  \hline
+4  & 3  & 2   & 1-0\\
+  \hline
 RE & WE & S/U & DSIZE\\
+  \hline
 \end{tabular}
+}
 \end{center}
 
 \subsubsection{WB (8 bits)}
-\label{sec:orgc270fc3}
+\label{sec:org13b0b54}
 
 \begin{center}
-\begin{tabular}{rrrr}
-7 & 2 & 1 & 0\\
-DEST & REG\textsubscript{WE} & MEM/ALU & DATA/PC\\
+  \texttt{
+\begin{tabular}{|r|r|r|r|}
+  \hline
+7    & 2                     & 1       & 0\\
+  \hline
+DEST & REG\textunderscore WE & MEM/ALU & DATA/PC\\
+  \hline
 \end{tabular}
+}
 \end{center}
 
 \subsection{Register File}
-\label{sec:orgefc7ded}
+\label{sec:orge5a3a80}
 
 \begin{center}
-\begin{tabular}{lll}
+  \texttt{\scriptsize
+\begin{tabular}{llp{10cm}}
 Register Number & Conventional Name & Usage\\
 \hline
-\$0 & \$zero & Hard-wired to 0\\
-\$1 & \$at & Reserved for pseudo-instructions\\
-\$2 - \$3 & \$v0, \$v1 & Return values from functions\\
-\$4 - \$7 & \$a0 - \$a3 & Arguments to functions - not preserved by subprograms\\
-\$8 - \$15 & \$t0 - \$t7 & Temporary data, not preserved by subprograms\\
-\$16 - \$23 & \$s0 - \$s7 & Saved registers, preserved by subprograms\\
-\$24 - \$25 & \$t8 - \$t9 & More temporary registers, not preserved by subprograms\\
-\$26 - \$27 & \$k0 - \$k1 & Reserved for kernel. Do not use.\\
-\$28 & \$gp & Global Area Pointer (base of global data segment)\\
-\$29 & \$sp & Stack Pointer\\
-\$30 & \$fp & Frame Pointer\\
-\$31 & \$ra & Return Address\\
- &  & \\
+\$0             & \$zero            & Hard-wired to 0\\\\
+\$1             & \$at              & Reserved for pseudo-instructions\\\\
+\$2 - \$3       & \$v0, \$v1        & Return values from functions\\\\
+\$4 - \$7       & \$a0 - \$a3       & Arguments to functions - not preserved by subprograms\\\\
+\$8 - \$15      & \$t0 - \$t7       & Temporary data, not preserved by subprograms\\\\
+\$16 - \$23     & \$s0 - \$s7       & Saved registers, preserved by subprograms\\\\
+\$24 - \$25     & \$t8 - \$t9       & More temporary registers, not preserved by subprograms\\\\
+\$26 - \$27     & \$k0 - \$k1       & Reserved for kernel. Do not use.\\\\
+\$28            & \$gp              & Global Area Pointer (base of global data segment)\\\\
+\$29            & \$sp              & Stack Pointer\\\\
+\$30            & \$fp              & Frame Pointer\\\\
+\$31            & \$ra              & Return Address\\\\
 \end{tabular}
+}
 \end{center}
 \subsection{Interfaz MIPS - MicroBlaze}
-\label{sec:org26d47eb}
-\subsubsection{MicroBlaze -> Interfaz}
-\label{sec:orgd0c2da9}
+\label{sec:orgf54c29b}
+\subsubsection{MicroBlaze $\rightarrow$ Interfaz}
+\label{sec:org8904ce5}
 \begin{enumerate}
 \item Tipo CTRL
-\label{sec:orgdf73183}
+\label{sec:org1a555d2}
 
 \begin{center}
+  \texttt{\scriptsize
 \begin{tabular}{llll}
-NAME & 31 & 25 & 15\\
+NAME                                                                    & 31                                   & 25   & 15\\
 \hline
-START & 0000\textsubscript{01} & VXXX & XXXX\\
-RESET & 0000\textsubscript{10} & VXXX & XXXX\\
-MODE\textsubscript{GET} & 0010\textsubscript{00} & VXXX & XXXX\\
-MODE\textsubscript{SET}\textsubscript{CONT} & 0010\textsubscript{01} & VXXX & XXXX\\
-MODE\textsubscript{SET}\textsubscript{STEP} & 0010\textsubscript{10} & VXXX & XXXX\\
-STEP & 1000\textsubscript{00} & VXXX & XXXX\\
-GOT\textsubscript{DATA} & 1001\textsubscript{00} & VXXX & XXXX\\
-GIB\textsubscript{DATA} & 1001\textsubscript{01} & VXXX & XXXX\\
-\end{tabular}
+START                                                                   & 0000\( \textunderscore {\text{01}}\) & VXXX & XXXX\\
+RESET                                                                   & 0000\( \textunderscore {\text{10}}\) & VXXX & XXXX\\
+MODE\( \textunderscore {\text{GET}}\)                                   & 0010\( \textunderscore {\text{00}}\) & VXXX & XXXX\\
+MODE\( \textunderscore {\text{SET}}\)\( \textunderscore {\text{CONT}}\) & 0010\( \textunderscore {\text{01}}\) & VXXX & XXXX\\
+MODE\( \textunderscore {\text{SET}}\)\( \textunderscore {\text{STEP}}\) & 0010\( \textunderscore {\text{10}}\) & VXXX & XXXX\\
+STEP                                                                    & 1000\( \textunderscore {\text{00}}\) & VXXX & XXXX\\
+GOT\( \textunderscore {\text{DATA}}\)                                   & 1001\( \textunderscore {\text{00}}\) & VXXX & XXXX\\
+GIB\( \textunderscore {\text{DATA}}\)                                   & 1001\( \textunderscore {\text{01}}\) & VXXX & XXXX\\
+\end{tabular}}
 \end{center}
 
 \item Tipo LOAD
-\label{sec:org57cdecf}
+\label{sec:org2cf0961}
 
 \begin{center}
+  \texttt{\scriptsize
 \begin{tabular}{llll}
-NAME & 31 & 25 & 15\\
+NAME                                                                     & 31                                   & 25   & 15\\
 \hline
-LOAD\textsubscript{INSTR}\textsubscript{LSB} & 0001\textsubscript{00} & VAAA & DDDD\\
-LOAD\textsubscript{INSTR}\textsubscript{MSB} & 0001\textsubscript{01} & VAAA & DDDD\\
-\end{tabular}
+LOAD\( \textunderscore {\text{INSTR}}\)\( \textunderscore {\text{LSB}}\) & 0001\( \textunderscore {\text{00}}\) & VAAA & DDDD\\
+LOAD\( \textunderscore {\text{INSTR}}\)\( \textunderscore {\text{MSB}}\) & 0001\( \textunderscore {\text{01}}\) & VAAA & DDDD\\
+\end{tabular}}
 \end{center}
 
 \item Tipo REQ
-\label{sec:orgbecd9b7}
+\label{sec:org35a7b75}
 
 \begin{center}
+  \texttt{\scriptsize
 \begin{tabular}{llll}
-NAME & 31 & 25 & 15\\
+NAME                                                                                                        & 31                                   & 25                                                                     & 15\\
 \hline
-REQ\textsubscript{MEM}\textsubscript{DATA} & 0000\textsubscript{11} & V0\textsubscript{0000}\textsubscript{0001} & AAAA\\
-REQ\textsubscript{MEM}\textsubscript{INSTR} & 0000\textsubscript{11} & V0\textsubscript{0000}\textsubscript{0010} & AAAA\\
-REQ\textsubscript{REG} & 0000\textsubscript{11} & V0\textsubscript{0000}\textsubscript{0100} & AAAA\\
-REQ\textsubscript{REG}\textsubscript{PC} & 0000\textsubscript{11} & V0\textsubscript{0000}\textsubscript{0101} & XXXX\\
-REQ\textsubscript{LATCH}\textsubscript{FETCH}\textsubscript{DATA} & 0000\textsubscript{11} & V0\textsubscript{0000}\textsubscript{1000} & XXXX\\
-REQ\textsubscript{LATCH}\textsubscript{FETCH}\textsubscript{CTRL} & 0000\textsubscript{11} & V0\textsubscript{0000}\textsubscript{1001} & XXXX\\
-REQ\textsubscript{LATCH}\textsubscript{DECO}\textsubscript{DATA} & 0000\textsubscript{11} & V0\textsubscript{0001}\textsubscript{0000} & XXXX\\
-REQ\textsubscript{LATCH}\textsubscript{DECO}\textsubscript{CTRL} & 0000\textsubscript{11} & V0\textsubscript{0001}\textsubscript{0001} & XXXX\\
-REQ\textsubscript{LATCH}\textsubscript{EXEC}\textsubscript{DATA} & 0000\textsubscript{11} & V0\textsubscript{0010}\textsubscript{0000} & XXXX\\
-REQ\textsubscript{LATCH}\textsubscript{EXEC}\textsubscript{CTRL} & 0000\textsubscript{11} & V0\textsubscript{0010}\textsubscript{0001} & XXXX\\
-REQ\textsubscript{LATCH}\textsubscript{MEM}\textsubscript{DATA} & 0000\textsubscript{11} & V0\textsubscript{0100}\textsubscript{0000} & XXXX\\
-REQ\textsubscript{LATCH}\textsubscript{MEM}\textsubscript{CTRL} & 0000\textsubscript{11} & V0\textsubscript{0100}\textsubscript{0001} & XXXX\\
-\end{tabular}
+REQ\( \textunderscore {\text{MEM}}\)\( \textunderscore {\text{DATA}}\)                                      & 0000\( \textunderscore {\text{11}}\) & V0\( \textunderscore {\text{0000}}\)\( \textunderscore {\text{0001}}\) & AAAA\\
+REQ\( \textunderscore {\text{MEM}}\)\( \textunderscore {\text{INSTR}}\)                                     & 0000\( \textunderscore {\text{11}}\) & V0\( \textunderscore {\text{0000}}\)\( \textunderscore {\text{0010}}\) & AAAA\\
+REQ\( \textunderscore {\text{REG}}\)                                                                        & 0000\( \textunderscore {\text{11}}\) & V0\( \textunderscore {\text{0000}}\)\( \textunderscore {\text{0100}}\) & AAAA\\
+REQ\( \textunderscore {\text{REG}}\)\( \textunderscore {\text{PC}}\)                                        & 0000\( \textunderscore {\text{11}}\) & V0\( \textunderscore {\text{0000}}\)\( \textunderscore {\text{0101}}\) & XXXX\\
+REQ\( \textunderscore {\text{LATCH}}\)\( \textunderscore {\text{FETCH}}\)\( \textunderscore {\text{DATA}}\) & 0000\( \textunderscore {\text{11}}\) & V0\( \textunderscore {\text{0000}}\)\( \textunderscore {\text{1000}}\) & XXXX\\
+REQ\( \textunderscore {\text{LATCH}}\)\( \textunderscore {\text{FETCH}}\)\( \textunderscore {\text{CTRL}}\) & 0000\( \textunderscore {\text{11}}\) & V0\( \textunderscore {\text{0000}}\)\( \textunderscore {\text{1001}}\) & XXXX\\
+REQ\( \textunderscore {\text{LATCH}}\)\( \textunderscore {\text{DECO}}\)\( \textunderscore {\text{DATA}}\)  & 0000\( \textunderscore {\text{11}}\) & V0\( \textunderscore {\text{0001}}\)\( \textunderscore {\text{0000}}\) & XXXX\\
+REQ\( \textunderscore {\text{LATCH}}\)\( \textunderscore {\text{DECO}}\)\( \textunderscore {\text{CTRL}}\)  & 0000\( \textunderscore {\text{11}}\) & V0\( \textunderscore {\text{0001}}\)\( \textunderscore {\text{0001}}\) & XXXX\\
+REQ\( \textunderscore {\text{LATCH}}\)\( \textunderscore {\text{EXEC}}\)\( \textunderscore {\text{DATA}}\)  & 0000\( \textunderscore {\text{11}}\) & V0\( \textunderscore {\text{0010}}\)\( \textunderscore {\text{0000}}\) & XXXX\\
+REQ\( \textunderscore {\text{LATCH}}\)\( \textunderscore {\text{EXEC}}\)\( \textunderscore {\text{CTRL}}\)  & 0000\( \textunderscore {\text{11}}\) & V0\( \textunderscore {\text{0010}}\)\( \textunderscore {\text{0001}}\) & XXXX\\
+REQ\( \textunderscore {\text{LATCH}}\)\( \textunderscore {\text{MEM}}\)\( \textunderscore {\text{DATA}}\)   & 0000\( \textunderscore {\text{11}}\) & V0\( \textunderscore {\text{0100}}\)\( \textunderscore {\text{0000}}\) & XXXX\\
+REQ\( \textunderscore {\text{LATCH}}\)\( \textunderscore {\text{MEM}}\)\( \textunderscore {\text{CTRL}}\)   & 0000\( \textunderscore {\text{11}}\) & V0\( \textunderscore {\text{0100}}\)\( \textunderscore {\text{0001}}\) & XXXX\\
+\end{tabular}}
 \end{center}
 \end{enumerate}
 
 
-\subsubsection{Interfaz -> MicroBlaze}
-\label{sec:org7cc8362}
+\subsubsection{Interfaz $\rightarrow$ MicroBlaze}
+\label{sec:org5cb7f57}
 
 \begin{center}
+  \texttt{\scriptsize
 \begin{tabular}{llll}
 NAME & 31 & 25 & 15\\
 \hline
-OK & 0000\textsubscript{11} & XXXX & XXXX\\
-NOK & 0000\textsubscript{10} & XXXX & XXXX\\
-EOP & 0001\textsubscript{00} & XXXX & XXXX\\
-MODE\textsubscript{CONT} & 0010\textsubscript{01} & XXXX & XXXX\\
-MODE\textsubscript{STEP} & 0010\textsubscript{10} & XXXX & XXXX\\
-\end{tabular}
+OK & 0000\( \textunderscore {\text{11}}\) & XXXX & XXXX\\
+NOK & 0000\( \textunderscore {\text{10}}\) & XXXX & XXXX\\
+EOP & 0001\( \textunderscore {\text{00}}\) & XXXX & XXXX\\
+MODE\( \textunderscore {\text{CONT}}\) & 0010\( \textunderscore {\text{01}}\) & XXXX & XXXX\\
+MODE\( \textunderscore {\text{STEP}}\) & 0010\( \textunderscore {\text{10}}\) & XXXX & XXXX\\
+\end{tabular}}
 \end{center}
 \end{document}
