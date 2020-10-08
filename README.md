@@ -9,7 +9,7 @@ Currently supports the following instructions:
 * J-Type
     * JR, JALR
     
- ![core architecture](doc/instr_decoder.png)
+ ![core architecture](doc/inst_decoder.png)
 
 ## Project compilation
 
