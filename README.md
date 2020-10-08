@@ -8,7 +8,8 @@ Currently supports the following instructions:
     * LB, LH, LW, LWU, LBU, LHU, SB, SH, SW, ADDI, ANDI, ORI, XORI, LUI, SLTI, BEQ, BNE, J, JAL
 * J-Type
     * JR, JALR
- 
+    
+ ![core architecture](doc/instr_decoder.png)
 
 ## Project compilation
 
